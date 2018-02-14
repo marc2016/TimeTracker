@@ -17,15 +17,15 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~1.7.8"
+    "electron": "^1.7.12"
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "moment": "^2.20.1",
     "nedb": "^1.8.0",
     "popper": "^1.0.1",
-    "popper.js": "^1.12.9"
+    "popper.js": "^1.13.0"
   }
 }

@@ -21,7 +21,7 @@ onload = function() {
   }
 
   currentDate = new moment();
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD-MM-YYYY')
+  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
 
   var btnPreviousDay = document.getElementById('btnPreviousDay')
   btnPreviousDay.addEventListener("click",previousDay )
@@ -52,7 +52,7 @@ function nextDay(){
   clearList()
 
   currentDate.add(1,'days');
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD-MM-YYYY')
+  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
 
   db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
     createList(docs)
@@ -89,7 +89,7 @@ function previousDay(){
   clearList()
 
   currentDate.subtract(1,'days');
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD-MM-YYYY')
+  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
 
   db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
     createList(docs)

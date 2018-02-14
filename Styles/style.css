@@ -7,13 +7,23 @@
 .currentDate{
   margin: auto;
   vertical-align: middle;
+  font-size: 20px;
 }
 
 .mainMenu{
   margin: 3px;
 }
 
+#textTimer{
+  margin: 5px;
+  font-size: 20px;
+}
 
+#footerContent{
+  margin: 5px;
+  float: right;
+  font-size: 15px;
+}
 
 .hLine{
   background-color: #a4244a;
