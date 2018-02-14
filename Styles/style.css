@@ -1,0 +1,50 @@
+.dateSelector{
+  height: 38px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.currentDate{
+  margin: auto;
+  vertical-align: middle;
+}
+
+.mainMenu{
+  margin: 3px;
+}
+
+
+
+.hLine{
+  background-color: #a4244a;
+  width: 100%;
+  height: 1px;
+  display: block;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.btn-default {
+    background-color: #a4244a;
+    color: #fff !important;
+    border-color: #adadad;
+    border-radius: 25px;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active    {
+    background-color: #a46c7d;
+    color: #333;
+    border-color: #adadad;
+}
+
+#footer {
+  color: #FFFFFF;
+  background-color:#a4244a;
+  height:30px;
+  border-top:1px solid #000000;
+  position:fixed;
+  left:0;
+  bottom:0;
+  width:100%
+}

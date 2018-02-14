@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Time Tracker</title>
+    <link rel="stylesheet" href="./Styles/style.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+  </head>
+  <body>
+    <script>
+window.jQuery = window.$ = require('jquery');
+</script>
+    <!-- <script src="node_modules/jquery/dist/jquery.js"></script> -->
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+    <div id="mainMenu" class="mainMenu">
+      <a class="btn btn-default" id="btnAddNew" >
+        <i class="fa fa-cog"></i> Neuer Eintrag
+      </a>
+      <a class="btn btn-default" id="btnSave">
+        <i class="fa fa-save" title="Speichern"></i> Speichern
+      </a>
+    </div>
+
+    <hr class="hLine">
+
+    <div class="dateSelector">
+      <a class="btn btn-default" id="btnPreviousDay" style="float: left;">
+        <i class="fa fa-angle-double-left" title="Zurück"></i>
+      </a>
+
+      <span id="textCurrentDate" class="currentDate">01.01.2018</span>
+
+      <a class="btn btn-default" id="btnNextDay" style="float: right;">
+        <i class="fa fa-angle-double-right" title="Weiter"></i>
+      </a>
+    </div>
+
+    <hr class="hLine">
+
+    <div>
+      <ul class="list-group" id="list"></ul>
+    </div>
+
+    <li class="list-group-item" style="display:none;" id="first-element">
+      <table style="width:100%">
+        <tr>
+          <td><input class="form-control" type="text" placeholder="Tätigkeit" id="text-input-job"></td>
+          <td width="1px"><div id="textTimer"></div></td>
+          <td width="1px">
+            <div class="btn-group" role="group" >
+              <a class="btn btn-default" id="btnStart">
+                <i class="fa fa-play" title="Start"></i>
+              </a>
+              <a class="btn btn-default disabled" id="btnPause">
+                <i class="fa fa-pause" title="Pause"></i>
+              </a>
+              <a class="btn btn-default" id="btnRemoveEntry">
+                <i class="fa fa-trash" title="Löschen"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </li>
+    <div id="footer">Summe: <span id="textTimeSum"></span></div>
+
+  </body>
+</html>
