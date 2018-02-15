@@ -1,18 +1,14 @@
 {
-  "name": "electron-quick-start",
+  "name": "TimeTracker",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/marc2016/TimeTracker",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Electron"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
@@ -24,6 +20,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "moment": "^2.20.1",
+    "moment-duration-format": "^2.2.1",
     "nedb": "^1.8.0",
     "popper": "^1.0.1",
     "popper.js": "^1.13.0"
