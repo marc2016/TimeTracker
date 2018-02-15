@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 //require('jquery')
 var moment = require('moment');
+var momentDurationFormatSetup = require("moment-duration-format");
 
 var db = undefined;
 
@@ -80,9 +81,19 @@ function createListEntry(dbEntry){
 
   $(clone).find('#text-input-job')[0].value = dbEntry.description;
   clone.savedTime = dbEntry.elapsedSeconds
-  $(clone).find('#textTimer')[0].textContent = dbEntry.elapsedSeconds ? dbEntry.elapsedSeconds.toHHMMSS():"00:00:00"
+  $(clone).find('#textTimer')[0].textContent = getTimeString(dbEntry.elapsedSeconds)
 
   document.getElementById("list").appendChild(clone);
+}
+
+function getTimeString(seconds){
+  if(!seconds)
+    return "00:00:00/0.00"
+
+  var formated = moment.duration(seconds, "seconds").format("hh:mm:ss",{trim: false})
+  var decimal = moment.duration(seconds, "seconds").format("h", 2)
+
+  return formated + "/" + decimal
 }
 
 function previousDay(){
@@ -167,7 +178,7 @@ function timerStep(){
   elapsedTime += offsetSeconds
 
   entry.savedTime = elapsedTime
-  $(entry).find('#textTimer')[0].textContent = elapsedTime.toHHMMSS()
+  $(entry).find('#textTimer')[0].textContent = getTimeString(elapsedTime)
 
   saveAll()
 
@@ -177,7 +188,7 @@ function timerStep(){
       var dbEntry = docs[i];
       timeSum += dbEntry.elapsedSeconds
     }
-    $.find('#textTimeSum')[0].textContent = timeSum.toHHMMSS()
+    $.find('#textTimeSum')[0].textContent = getTimeString(timeSum)
   })
 }
 
