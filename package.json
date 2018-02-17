@@ -1,4 +1,5 @@
 {
+  "productName": "TimeTracker",
   "name": "TimeTracker",
   "version": "0.0.1",
   "description": "Simple time tracking tool.",
@@ -23,7 +24,6 @@
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.1",
     "nedb": "^1.8.0",
-    "popper": "^1.0.1",
     "popper.js": "^1.13.0"
   }
 }
