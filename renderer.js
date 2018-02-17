@@ -43,6 +43,7 @@ onload = function() {
 
   db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
     createList(docs)
+    refreshTimeSum()
   });
 };
 
@@ -98,6 +99,7 @@ function createListEntry(dbEntry){
       element.savedTime = time/1000
       $(element).find('#textTimer')[0].textContent = getTimeString(time/1000)
       saveAll()
+      refreshTimeSum()
       $('#timerCell').tooltip('hide')
     })
   })
@@ -207,15 +209,18 @@ function timerStep(){
   $(entry).find('#textTimer')[0].textContent = getTimeString(elapsedTime)
 
   saveAll()
+  refreshTimeSum()
+}
 
-  db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
-    var timeSum = 0
-    for (var i = 0; i < docs.length; i++) {
-      var dbEntry = docs[i];
-      timeSum += dbEntry.elapsedSeconds
+function refreshTimeSum(){
+  var timeSum = 0
+  $('#list').children('li').each(function(){
+    if(this.id != 'first-element')
+    {
+      timeSum += this.savedTime
     }
-    $.find('#textTimeSum')[0].textContent = getTimeString(timeSum)
   })
+  $.find('#textTimeSum')[0].textContent = getTimeString(timeSum)
 }
 
 function calculate(timestamp) {

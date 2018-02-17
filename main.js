@@ -1,4 +1,6 @@
 const electron = require('electron')
+const {Menu, Tray} = require('electron')
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -60,6 +62,22 @@ app.on('activate', function () {
     createWindow()
   }
 })
+
+let tray = null
+ app.on('ready', () => {
+   tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
+   tray.on('click', () => {
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+  })
+  mainWindow.on('show', () => {
+    tray.setHighlightMode('always')
+  })
+  mainWindow.on('hide', () => {
+    tray.setHighlightMode('never')
+  })
+   tray.setToolTip('TimeTracker')
+
+ })
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
