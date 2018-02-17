@@ -21,6 +21,8 @@ onload = function() {
       return hours+':'+minutes+':'+seconds;
   }
 
+
+
   currentDate = new moment();
   $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
 
@@ -78,12 +80,32 @@ function createListEntry(dbEntry){
   btnStart.addEventListener("click", startTimer)
   var btnPause = $(clone).find('#btnPause')[0]
   btnPause.addEventListener("click", pauseTimer)
+  // var btnTime = $(clone).find('#textTime')[0]
+  // btnTime.addEventListener("click", changeTime)
 
   $(clone).find('#text-input-job')[0].value = dbEntry.description;
   clone.savedTime = dbEntry.elapsedSeconds
   $(clone).find('#textTimer')[0].textContent = getTimeString(dbEntry.elapsedSeconds)
 
   document.getElementById("list").appendChild(clone);
+  $(clone).find('#timerCell').tooltip();
+  $(clone).find('#timerCell').on('shown.bs.tooltip', function () {
+    var element = $(this).closest('li')[0]
+    var savedTime = element.savedTime
+    $('#inputTime').val(moment.duration(savedTime, "seconds").format("hh:mm:ss",{trim: false}))
+    $('#btnSaveTime').on('click', function(){
+      var time = duration.parse($('#inputTime')[0].value, "HH:mm:ss")
+      element.savedTime = time/1000
+      $(element).find('#textTimer')[0].textContent = getTimeString(time/1000)
+      saveAll()
+      $('#timerCell').tooltip('hide')
+    })
+  })
+
+}
+
+function saveEntryTime(){
+  console.log("kdsm");
 }
 
 function getTimeString(seconds){
@@ -94,6 +116,10 @@ function getTimeString(seconds){
   var decimal = moment.duration(seconds, "seconds").format("h", 2)
 
   return formated + "/" + decimal
+}
+
+function changeTime(){
+
 }
 
 function previousDay(){

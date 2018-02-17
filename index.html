@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./Styles/style.css">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./Styles/timingfield.css"
   </head>
   <body>
     <script>
@@ -14,6 +15,8 @@ window.jQuery = window.$ = require('jquery');
     <!-- <script src="node_modules/jquery/dist/jquery.js"></script> -->
     <script src="node_modules/popper.js/dist/umd/popper.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/duration-pattern/duration-pattern.js"></script>
+    <script src="./libs/timingfield.min.js"></script>
     <script>
       // You can also require other files to run in this process
       require('./renderer.js')
@@ -51,7 +54,7 @@ window.jQuery = window.$ = require('jquery');
       <table style="width:100%">
         <tr>
           <td><input class="form-control" type="text" placeholder="Tätigkeit" id="text-input-job"></td>
-          <td width="1px"><div id="textTimer"></div></td>
+          <td width="1px" id="timerCell" data-toggle="tooltip" href="#" data-trigger="click" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'><div id="textTimer" ></div></td>
           <td width="1px">
             <div class="btn-group" role="group" >
               <a class="btn btn-default" id="btnStart">

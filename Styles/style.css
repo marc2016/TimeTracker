@@ -14,6 +14,14 @@
   margin: 3px;
 }
 
+.inputTimeGroup{
+  margin: 3px;
+}
+
+#inputTime{
+  width: 100px;
+}
+
 #textTimer{
   margin: 5px;
   font-size: 20px;
