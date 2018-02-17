@@ -1,6 +1,6 @@
 {
   "name": "TimeTracker",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
