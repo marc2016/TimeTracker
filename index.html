@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8">
     <title>Time Tracker</title>
-    <link rel="stylesheet" href="./Styles/style.css">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/air-datepicker/dist/css/datepicker.min.css">
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./Styles/timingfield.css"
+    <link rel="stylesheet" href="./Styles/style.css">
   </head>
   <body>
     <script>
@@ -16,6 +16,8 @@ window.jQuery = window.$ = require('jquery');
     <script src="node_modules/popper.js/dist/umd/popper.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="node_modules/duration-pattern/duration-pattern.js"></script>
+    <script src="node_modules/air-datepicker/dist/js/datepicker.min.js"></script>
+    <script src="node_modules/air-datepicker/dist/js/i18n/datepicker.de.js"></script>
     <script src="./libs/timingfield.min.js"></script>
     <script>
       // You can also require other files to run in this process
@@ -33,13 +35,14 @@ window.jQuery = window.$ = require('jquery');
     <hr class="hLine">
 
     <div class="dateSelector">
-      <a class="btn btn-default" id="btnPreviousDay" style="float: left;">
+      <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
         <i class="fa fa-angle-double-left" title="Zurück"></i>
       </a>
 
-      <span id="textCurrentDate" class="currentDate">01.01.2018</span>
+      <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly/>
 
-      <a class="btn btn-default" id="btnNextDay" style="float: right;">
+
+      <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
         <i class="fa fa-angle-double-right" title="Weiter"></i>
       </a>
     </div>

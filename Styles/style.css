@@ -7,7 +7,14 @@
 .currentDate{
   margin: auto;
   vertical-align: middle;
+  width: auto;
   font-size: 20px;
+  border: 0px;
+  width: 100px;
+}
+
+.datepicker--day-name {
+  color: #a4244a;
 }
 
 .mainMenu{
@@ -16,6 +23,11 @@
 
 .inputTimeGroup{
   margin: 3px;
+}
+
+.btnDateChange{
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 #inputTime{
@@ -46,7 +58,7 @@
     background-color: #a4244a;
     color: #fff !important;
     border-color: #adadad;
-    border-radius: 25px;
+    border-radius: 5px;
 }
 .btn-default:hover,
 .btn-default:focus,

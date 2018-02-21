@@ -21,10 +21,14 @@ onload = function() {
       return hours+':'+minutes+':'+seconds;
   }
 
-
-
   currentDate = new moment();
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
+  $("#textCurrentDate").change(currentDateChanged)
+
+  $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
+  $('#textCurrentDate').datepicker({language: 'de',autoClose:true,todayButton: true,onSelect:function onSelect(fd, date) {
+    currentDate = moment(date)
+    currentDateChanged()
+  }})
 
   var btnPreviousDay = document.getElementById('btnPreviousDay')
   btnPreviousDay.addEventListener("click",previousDay )
@@ -52,15 +56,18 @@ function clearList(){
   ul.innerHTML = "";
 }
 
-function nextDay(){
+function currentDateChanged(){
+  $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   clearList()
-
-  currentDate.add(1,'days');
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
-
   db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
     createList(docs)
+    refreshTimeSum()
   });
+}
+
+function nextDay(){
+  currentDate.add(1,'days');
+  currentDateChanged()
 }
 
 function createList(docs){
@@ -106,10 +113,6 @@ function createListEntry(dbEntry){
 
 }
 
-function saveEntryTime(){
-  console.log("kdsm");
-}
-
 function getTimeString(seconds){
   if(!seconds)
     return "00:00:00/0.00"
@@ -120,19 +123,10 @@ function getTimeString(seconds){
   return formated + "/" + decimal
 }
 
-function changeTime(){
-
-}
 
 function previousDay(){
-  clearList()
-
   currentDate.subtract(1,'days');
-  $.find('#textCurrentDate')[0].textContent = currentDate.format('DD.MM.YYYY')
-
-  db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
-    createList(docs)
-  });
+  currentDateChanged()
 }
 
 function saveAll(){
