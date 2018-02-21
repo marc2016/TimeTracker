@@ -1,3 +1,3 @@
 # TimeTracker
 Simple TimeTracker Tool made with electron js
-![alt text](TimeTracker/example.png)
+![example](https://github.com/marc2016/TimeTracker/blob/master/example.png?raw=true)
