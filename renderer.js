@@ -4,6 +4,7 @@
 //require('jquery')
 var moment = require('moment');
 var momentDurationFormatSetup = require("moment-duration-format");
+var remote = require('electron').remote;
 
 var db = undefined;
 
@@ -204,9 +205,16 @@ function timerStep(){
 
   saveAll()
   refreshTimeSum()
+  refreshTray()
 }
 
 function refreshTimeSum(){
+  var timeSum = getTimeSum()
+
+  $.find('#textTimeSum')[0].textContent = getTimeString(timeSum)
+}
+
+function getTimeSum(){
   var timeSum = 0
   $('#list').children('li').each(function(){
     if(this.id != 'first-element')
@@ -214,7 +222,14 @@ function refreshTimeSum(){
       timeSum += this.savedTime
     }
   })
-  $.find('#textTimeSum')[0].textContent = getTimeString(timeSum)
+
+  return timeSum
+}
+
+function refreshTray(){
+  var tray = remote.getGlobal('tray');
+  var timeSum = getTimeSum()
+  tray.setToolTip("Ʃ "+getTimeString(timeSum)+", Aufgabe: "+getTimeString(elapsedTime))
 }
 
 function calculate(timestamp) {
