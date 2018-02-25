@@ -105,7 +105,7 @@ function createListEntry(dbEntry){
 function showTooltip(){
   var that = this
   $(".tooltip").remove();
-  $(this).tooltip("show");
+  $(this).tooltip("toggle");
   var element = $(this).closest('li')[0]
   var savedTime = element.savedTime
   $('#inputTime').val(moment.duration(savedTime, "seconds").format("hh:mm:ss",{trim: false}))
