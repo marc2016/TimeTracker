@@ -97,21 +97,26 @@ function createListEntry(dbEntry){
   $(clone).find('#textTimer')[0].textContent = getTimeString(dbEntry.elapsedSeconds)
 
   document.getElementById("list").appendChild(clone);
+  $(clone).find('#timerCell')[0].addEventListener("click", showTooltip)
   $(clone).find('#timerCell').tooltip();
-  $(clone).find('#timerCell').on('shown.bs.tooltip', function () {
-    var element = $(this).closest('li')[0]
-    var savedTime = element.savedTime
-    $('#inputTime').val(moment.duration(savedTime, "seconds").format("hh:mm:ss",{trim: false}))
-    $('#btnSaveTime').on('click', function(){
-      var time = duration.parse($('#inputTime')[0].value, "HH:mm:ss")
-      element.savedTime = time/1000
-      $(element).find('#textTimer')[0].textContent = getTimeString(time/1000)
-      saveAll()
-      refreshTimeSum()
-      $('#timerCell').tooltip('hide')
-    })
-  })
 
+}
+
+function showTooltip(){
+  var that = this
+  $(".tooltip").remove();
+  $(this).tooltip("show");
+  var element = $(this).closest('li')[0]
+  var savedTime = element.savedTime
+  $('#inputTime').val(moment.duration(savedTime, "seconds").format("hh:mm:ss",{trim: false}))
+  $('#btnSaveTime').on('click', function(){
+    var time = duration.parse($('#inputTime')[0].value, "HH:mm:ss")
+    element.savedTime = time/1000
+    $(element).find('#textTimer')[0].textContent = getTimeString(time/1000)
+    saveAll()
+    refreshTimeSum()
+    $(that).tooltip('hide')
+  })
 }
 
 function getTimeString(seconds){
