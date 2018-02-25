@@ -172,15 +172,15 @@ var offsetSeconds = undefined;
 var timer = undefined;
 var elapsedTime = undefined;
 var currentDate = new moment();
+var currentEntry = undefined;
 
 function pauseTimer(){
   if(!timeRunning){
     return
   }
-  $(this).addClass('disabled');
-  var entry = $(this).closest('li')[0]
-  entry.savedTime = elapsedTime
-  $(entry).find('#btnStart').removeClass('disabled')
+  $(currentEntry).find('#btnStop').addClass('disabled');
+  $(currentEntry).find('#btnStart').removeClass('disabled')
+  currentEntry.savedTime = elapsedTime
   clearInterval(timer)
   timer = undefined
   timeRunning = false
@@ -188,13 +188,13 @@ function pauseTimer(){
 
 function startTimer(){
   if(timeRunning){
-    return
+    pauseTimer()
   }
-  $(this).addClass('disabled');
-  var entry = $(this).closest('li')[0]
-  $(entry).find('#btnPause').removeClass('disabled')
+  currentEntry = $(this).closest('li')[0]
+  $(currentEntry).find('#btnStart').addClass('disabled');
+  $(currentEntry).find('#btnPause').removeClass('disabled')
   startTime = performance.now()
-  offsetSeconds = entry.savedTime
+  offsetSeconds = currentEntry.savedTime
   stopping = undefined;
   timeRunning = true;
   timer = setInterval(timerStep.bind(this), 1000);

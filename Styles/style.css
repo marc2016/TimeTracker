@@ -41,9 +41,15 @@
   font-size: 20px;
 }
 
-#footerContent{
+#footerRightContent{
   margin: 5px;
   float: right;
+  font-size: 15px;
+}
+
+#footerLeftContent{
+  margin: 5px;
+  float: left;
   font-size: 15px;
 }
 
