@@ -67,6 +67,10 @@ function currentDateChanged(){
 }
 
 function nextDay(){
+  if(timeRunning)
+  {
+    return
+  }
   currentDate.add(1,'days');
   currentDateChanged()
 }
@@ -131,6 +135,10 @@ function getTimeString(seconds){
 
 
 function previousDay(){
+  if(timeRunning)
+  {
+    return
+  }
   currentDate.subtract(1,'days');
   currentDateChanged()
 }
@@ -178,7 +186,7 @@ function pauseTimer(){
   if(!timeRunning){
     return
   }
-  $(currentEntry).find('#btnStop').addClass('disabled');
+  $(currentEntry).find('#btnPause').addClass('disabled');
   $(currentEntry).find('#btnStart').removeClass('disabled')
   currentEntry.savedTime = elapsedTime
   clearInterval(timer)
