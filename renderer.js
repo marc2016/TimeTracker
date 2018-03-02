@@ -46,11 +46,51 @@ onload = function() {
   var btnSave = document.getElementById('btnSave')
   btnSave.addEventListener("click",saveAll )
 
-  db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
+  var btnSortTime = document.getElementById('btnSortTime')
+  btnSortTime.addEventListener("click", sortByTime )
+
+  var btnSortTitle = document.getElementById('btnSortTitle')
+  btnSortTitle.addEventListener("click", sortByTitle )
+
+  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
     createList(docs)
     refreshTimeSum()
   });
 };
+
+function sortByTime(){
+  var lastEntryId = currentEntryId
+  pauseTimer()
+  clearList()
+
+  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: timeSortDirection, description: -1 }).exec(function (err, docs) {
+    createList(docs)
+    refreshTimeSum()
+    if(lastEntryId){
+      var lastEntry = $('#'+lastEntryId)[0]
+      var tmpMethod = startTimer.bind(lastEntry)
+      tmpMethod()
+    }
+  });
+  timeSortDirection *= -1
+}
+
+function sortByTitle(){
+  var lastEntryId = currentEntryId
+  pauseTimer()
+  clearList()
+
+  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
+    createList(docs)
+    refreshTimeSum()
+    if(lastEntryId){
+      var lastEntry = $('#'+lastEntryId)[0]
+      var tmpMethod = startTimer.bind(lastEntry)
+      tmpMethod()
+    }
+  });
+  titleSortDirection *= -1
+}
 
 function clearList(){
   var ul = document.getElementById("list");
@@ -60,7 +100,7 @@ function clearList(){
 function currentDateChanged(){
   $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   clearList()
-  db.find({date: currentDate.format('YYYY-MM-DD')}, function (err, docs) {
+  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
   });
@@ -181,6 +221,9 @@ var timer = undefined;
 var elapsedTime = undefined;
 var currentDate = new moment();
 var currentEntry = undefined;
+var currentEntryId = undefined;
+var timeSortDirection = -1;
+var titleSortDirection = -1;
 
 function pauseTimer(){
   if(!timeRunning){
@@ -192,6 +235,8 @@ function pauseTimer(){
   clearInterval(timer)
   timer = undefined
   timeRunning = false
+  currentEntry = undefined
+  currentEntryId = undefined
 }
 
 function startTimer(){
@@ -199,6 +244,7 @@ function startTimer(){
     pauseTimer()
   }
   currentEntry = $(this).closest('li')[0]
+  currentEntryId = currentEntry.id;
   $(currentEntry).find('#btnStart').addClass('disabled');
   $(currentEntry).find('#btnPause').removeClass('disabled')
   startTime = performance.now()
