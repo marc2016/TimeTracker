@@ -98,19 +98,29 @@ function clearList(){
 }
 
 function currentDateChanged(){
+  var lastEntryId = currentEntryId
   $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   clearList()
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
+    if(lastEntryId){
+      db.find({_id: lastEntryId}).exec( function (err, docs) {
+        if(docs.length > 0)
+        {
+            createListEntry(docs[0])
+            var lastEntry = $('#'+lastEntryId)[0]
+            var tmpMethod = startTimer.bind(lastEntry)
+            tmpMethod()
+        }
+      })
+    }
+
   });
 }
 
 function nextDay(){
-  if(timeRunning)
-  {
-    return
-  }
+
   currentDate.add(1,'days');
   currentDateChanged()
 }
@@ -175,10 +185,7 @@ function getTimeString(seconds){
 
 
 function previousDay(){
-  if(timeRunning)
-  {
-    return
-  }
+
   currentDate.subtract(1,'days');
   currentDateChanged()
 }
