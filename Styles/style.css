@@ -87,6 +87,10 @@
   width:100%
 }
 
+.currentEntry{
+  background-color: #C9C9C9;
+}
+
 .navbar{
   background-color:#a4244a;
   color: #FFFFFF !important;

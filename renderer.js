@@ -229,6 +229,7 @@ function pauseTimer(){
   if(!timeRunning){
     return
   }
+  $(currentEntry).removeClass('currentEntry');
   $(currentEntry).find('#btnPause').addClass('disabled');
   $(currentEntry).find('#btnStart').removeClass('disabled')
   currentEntry.savedTime = elapsedTime
@@ -243,6 +244,7 @@ function startTimer(){
   if(timeRunning){
     pauseTimer()
   }
+  $(this).closest('li').addClass('currentEntry');
   currentEntry = $(this).closest('li')[0]
   currentEntryId = currentEntry.id;
   $(currentEntry).find('#btnStart').addClass('disabled');
