@@ -285,7 +285,7 @@ function refreshTimeSum(){
 function getTimeSum(){
   var timeSum = 0
   $('#list').children('li').each(function(){
-    if(this.id != 'first-element')
+    if(this.id != 'first-element' && this.savedTime)
     {
       timeSum += this.savedTime
     }
