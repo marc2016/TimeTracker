@@ -10,6 +10,9 @@ var db = undefined;
 
 onload = function() {
 
+  var tray = remote.getGlobal('tray');
+  tray.setContextMenu(trayContextMenu)
+
   Number.prototype.toHHMMSS = function () {
       var sec_num = parseInt(this, 10); // don't forget the second param
       var hours   = Math.floor(sec_num / 3600);
@@ -244,6 +247,7 @@ function pauseTimer(){
   timer = undefined
   timeRunning = false
   currentEntry = undefined
+  lastEntryId = currentEntryId
   currentEntryId = undefined
 }
 
@@ -299,6 +303,20 @@ function refreshTray(){
   var timeSum = getTimeSum()
   tray.setToolTip("Ʃ "+getTimeString(timeSum)+", Aufgabe: "+getTimeString(elapsedTime))
 }
+
+const trayContextMenu = remote.getGlobal('menu').buildFromTemplate([
+    {id: 0, label: 'Starte letzte Aufgabe', click() {
+      if(lastEntryId){
+        var lastEntry = $('#'+lastEntryId)[0]
+        var tmpMethod = startTimer.bind(lastEntry)
+        tmpMethod()
+      }
+    }},
+    {id: 1, label: 'Stoppe letzte Aufgabe', click() {
+      pauseTimer()
+    }}
+
+  ])
 
 function calculate(timestamp) {
         var diff = timestamp - this.time;

@@ -92,6 +92,7 @@ let tray = null
 
    global.tray = tray
 
+   global.menu = Menu
  })
 
 // In this file you can include the rest of your app's specific main process
