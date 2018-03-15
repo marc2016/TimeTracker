@@ -101,7 +101,7 @@ function currentDateChanged(){
   var lastEntryId = currentEntryId
   $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   clearList()
-  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
+  db.find({date: currentDate.format('YYYY-MM-DD'), _id: { $ne: lastEntryId }}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
     if(lastEntryId){
