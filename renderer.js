@@ -104,21 +104,9 @@ function currentDateChanged(){
   var lastEntryId = currentEntryId
   $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   clearList()
-  db.find({date: currentDate.format('YYYY-MM-DD'), _id: { $ne: lastEntryId }}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
+  db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
-    if(lastEntryId){
-      db.find({_id: lastEntryId}).exec( function (err, docs) {
-        if(docs.length > 0)
-        {
-            createListEntry(docs[0])
-            var lastEntry = $('#'+lastEntryId)[0]
-            var tmpMethod = startTimer.bind(lastEntry)
-            tmpMethod()
-        }
-      })
-    }
-
   });
 }
 
@@ -132,6 +120,11 @@ function createList(docs){
   for (var i = 0; i < docs.length; i++) {
     var dbEntry = docs[i];
     createListEntry(dbEntry)
+    if(currentEntryId != undefined && dbEntry._id == currentEntryId){
+      var current = $('#'+currentEntryId)[0]
+      var tmpMethod = startTimer.bind(current)
+      tmpMethod()
+    }
   }
 }
 
@@ -263,6 +256,7 @@ function pauseTimer(){
   currentEntry = undefined
   lastEntryId = currentEntryId
   currentEntryId = undefined
+  refreshStatusBarEntry(currentEntry)
 }
 
 function startTimer(){
@@ -281,6 +275,25 @@ function startTimer(){
   timer = setInterval(timerStep.bind(this), 1000);
 }
 
+function refreshStatusBarEntry(entry){
+  var leftFooter = document.getElementById('footerLeftContent')
+  if(entry == undefined){
+    $.find('#currentTaskDescription')[0].textContent = "-"
+    $.find('#currentTaskTime')[0].textContent = "-"
+    leftFooter.removeEventListener('click', goToToday)
+  } else {
+    var description = $(entry).find('#text-input-job')[0].value
+    $.find('#currentTaskDescription')[0].textContent = description
+    $.find('#currentTaskTime')[0].textContent = getTimeString(entry.savedTime)
+    leftFooter.addEventListener('click', goToToday)
+  }
+}
+
+function goToToday(){
+  currentDate = new moment()
+  currentDateChanged()
+}
+
 function timerStep(){
   elapsedTime =  Math.floor((performance.now()- startTime) / 1000)
   var entry = $(this).closest('li')[0]
@@ -292,6 +305,7 @@ function timerStep(){
   saveAll()
   refreshTimeSum()
   refreshTray()
+  refreshStatusBarEntry(entry)
 }
 
 function refreshTimeSum(){
