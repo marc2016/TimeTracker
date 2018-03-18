@@ -146,8 +146,11 @@ function createListEntry(dbEntry){
   btnStart.addEventListener("click", startTimer)
   var btnPause = $(clone).find('#btnPause')[0]
   btnPause.addEventListener("click", pauseTimer)
-  // var btnTime = $(clone).find('#textTime')[0]
-  // btnTime.addEventListener("click", changeTime)
+  var btnTransfer = $(clone).find('#btnTransfer')[0]
+  btnTransfer.addEventListener("click", transferEntry)
+  if((new moment()).isSame(currentDate, 'day')){
+    $(clone).find('#btnTransfer').addClass('disabled')
+  }
 
   $(clone).find('#text-input-job')[0].value = dbEntry.description;
   clone.savedTime = dbEntry.elapsedSeconds
@@ -186,6 +189,17 @@ function getTimeString(seconds){
   return formated + "/" + decimal
 }
 
+function transferEntry(){
+  var entry = $(this).closest('li').addClass('currentEntry');
+  var description = $(entry).find('#text-input-job')[0].value
+  var savedTime = this.savedTime
+  currentDate = new moment();
+  currentDateChanged()
+  var newEntry = {elapsedSeconds:0, description:description, date:currentDate.format('YYYY-MM-DD')}
+  db.insert(newEntry, function (err, dbEntry) {
+    createListEntry(dbEntry)
+  });
+}
 
 function previousDay(){
 
