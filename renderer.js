@@ -319,15 +319,20 @@ function refreshTray(){
 }
 
 const trayContextMenu = remote.getGlobal('menu').buildFromTemplate([
-    {id: 0, label: 'Starte letzte Aufgabe', click() {
+    {id: 0, label: 'Weiter', click() {
       if(lastEntryId){
         var lastEntry = $('#'+lastEntryId)[0]
         var tmpMethod = startTimer.bind(lastEntry)
         tmpMethod()
       }
     }},
-    {id: 1, label: 'Stoppe letzte Aufgabe', click() {
+    {id: 1, label: 'Stopp', click() {
       pauseTimer()
+    }},
+    {type: 'separator'},
+    {id: 2, label: 'Beenden', click() {
+      let w = remote.getCurrentWindow()
+      w.close()
     }}
 
   ])
