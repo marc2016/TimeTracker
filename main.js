@@ -29,8 +29,8 @@ if (shouldQuit) {
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 680,
+    height: 820,
     icon: path.join(__dirname, 'icons/stopwatch.ico')})
 
   mainWindow.setMenu(null);
