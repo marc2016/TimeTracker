@@ -86,8 +86,8 @@ function initChart(document){
       result[moment(key,'YYYY-MM-DD').format('D')] = sum;
       return true;
     }, []);
-    for (var i = 1; i <= lastDayOfMonth; i++) {
-      data[i] = result[i]
+    for (var i = 0; i <= lastDayOfMonth; i++) {
+      data[i] = result[i+1]
     }
 
     var daysArray = _.range(1,currentDate.clone().endOf('month').format('D'))
