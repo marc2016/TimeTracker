@@ -32,12 +32,13 @@ onload = function() {
   $.find('#textCurrentDate')[0].value = currentDate.format('DD.MM.YYYY')
   $('#textCurrentDate').datepicker({
     language: 'de',
-  autoClose:true,
-  todayButton: new Date(),
-  onSelect:function onSelect(fd, date) {
-    currentDate = moment(date)
-    currentDateChanged()
-  }})
+    autoClose:true,
+    todayButton: new Date(),
+    onSelect:function onSelect(fd, date) {
+      currentDate = moment(date)
+      currentDateChanged()
+    }
+  })
 
   var btnPreviousDay = document.getElementById('btnPreviousDay')
   btnPreviousDay.addEventListener("click",previousDay )

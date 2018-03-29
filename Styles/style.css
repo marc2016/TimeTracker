@@ -15,6 +15,10 @@
   width: 100px;
 }
 
+.datepicker {
+  z-index: 9999999;
+}
+
 .datepicker--day-name {
   color: #a4244a;
 }

@@ -27,19 +27,7 @@ window.jQuery = window.$ = require('jquery');
       // You can also require other files to run in this process
       require('./renderer.js')
     </script>
-    <div class="dateSelector fixed-top">
-      <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
-        <i class="fa fa-angle-double-left" title="Zurück"></i>
-      </a>
 
-      <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly/>
-
-
-      <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
-        <i class="fa fa-angle-double-right" title="Weiter"></i>
-      </a>
-      <hr class="hLine">
-    </div>
     <nav class="navbar navbar-expand-sm fixed-top navbar-dark">
       <div class="navbar-brand">
         <img src="icons/logo.png" width="30" height="30" alt="" class="d-inline-block align-top">
@@ -74,6 +62,18 @@ window.jQuery = window.$ = require('jquery');
         </ul>
       </div>
     </nav>
+
+    <div class="dateSelector fixed-top">
+      <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
+        <i class="fa fa-angle-double-left" title="Zurück"></i>
+      </a>
+      <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly/>
+      <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
+        <i class="fa fa-angle-double-right" title="Weiter"></i>
+      </a>
+      <hr class="hLine">
+    </div>
+
     <div>
       <ul class="list-group"  id="list"></ul>
     </div>
