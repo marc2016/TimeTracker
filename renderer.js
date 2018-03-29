@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 //require('jquery')
 var moment = require('moment');
+var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
@@ -61,12 +62,9 @@ onload = function() {
 
   $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
-  $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');})
+  $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
 
-  // var btnSideBar = document.getElementById('sidebarButton')
-  // btnSideBar.addEventListener("click", openDiagrams )
 
-  initChart(document)
 
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
     createList(docs)
@@ -75,44 +73,65 @@ onload = function() {
 };
 
 function initChart(document){
-  var ctx = document.getElementById("chart").getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-      maintainAspectRatio: false,
+  var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
+  db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
+
+    var lastDayOfMonth = currentDate.clone().endOf('month').format('D')
+    var data = []
+    var groups = _.groupBy(docs,'date')
+    var result = _.transform(groups, function(result, value, key) {
+      var seconds = _.sumBy(value,'elapsedSeconds')
+      var sum = moment.duration(seconds, "seconds").format("h", 2)
+      result[moment(key,'YYYY-MM-DD').format('D')] = sum;
+      return true;
+    }, []);
+    for (var i = 1; i <= lastDayOfMonth; i++) {
+      data[i] = result[i]
+    }
+
+    var daysArray = _.range(1,currentDate.clone().endOf('month').format('D'))
+    var ctx = document.getElementById("chart").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: daysArray,
+          datasets: [{
+              data: data,
+              backgroundColor: 'rgb(164, 36, 74)'
+          }]
+      },
+      options: {
+        maintainAspectRatio: false,
         scales: {
             yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
+
+                  ticks: {
+                      suggestedMax: 12,
+                      min: 0
+                  }
+
             }]
-        }
-    }
-});
+        },
+        annotation: {
+
+      		drawTime: 'afterDatasetsDraw',
+
+      		annotations: [{
+      			drawTime: 'afterDraw', // overrides annotation.drawTime if set
+      			id: 'a-line-1', // optional
+      			type: 'line',
+      			mode: 'horizontal',
+      			scaleID: 'y-axis-0',
+      			value: '8',
+      			borderColor: 'rgb(29, 173, 75)',
+      			borderWidth: 1,
+            borderDash: [2, 2]
+      		}]
+      	}
+      }
+    });
+  });
+
 }
 
 
