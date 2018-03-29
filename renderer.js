@@ -101,6 +101,9 @@ function initChart(document){
           }]
       },
       options: {
+        legend : {
+          display: false
+        },
         maintainAspectRatio: false,
         scales: {
             yAxes: [{
