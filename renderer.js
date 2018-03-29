@@ -186,6 +186,7 @@ function currentDateChanged(){
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
+    initChart(document)
   });
 }
 
