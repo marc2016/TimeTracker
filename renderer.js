@@ -8,6 +8,7 @@ var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
 var db = undefined;
+var monthChart = undefined;
 
 onload = function() {
 
@@ -92,7 +93,10 @@ function initChart(document){
 
     var daysArray = _.range(1,currentDate.clone().endOf('month').format('D'))
     var ctx = document.getElementById("chart").getContext('2d');
-    var myChart = new Chart(ctx, {
+    if(monthChart != undefined){
+      monthChart.destroy()
+    }
+    monthChart = new Chart(ctx, {
       type: 'bar',
       data: {
           labels: daysArray,
@@ -105,6 +109,10 @@ function initChart(document){
         legend : {
           display: false
         },
+        tooltips:{
+          mode: 'nearest'
+        },
+        responsive: true,
         maintainAspectRatio: false,
         scales: {
             yAxes: [{
