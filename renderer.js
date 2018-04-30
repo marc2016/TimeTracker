@@ -3,6 +3,9 @@
 // All of the Node.js APIs are available in this process.
 //require('jquery')
 var moment = require('moment');
+
+
+
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
@@ -110,7 +113,19 @@ function initChart(document){
           display: false
         },
         tooltips:{
-          mode: 'nearest'
+          mode: 'nearest',
+          callbacks: {
+            title: function(tooltipItem, data) {
+              var day = tooltipItem.xLabel
+              var momentObj = currentDate.clone()
+              momentObj.date(day)
+              momentObj.locale('de')
+              return momentObj.format("dddd, DD.MM.YYYY");
+            },
+            label: function(tooltipItem, data) {
+              return tooltipItem.yLabel + ' Stunden'
+            }
+        }
         },
         responsive: true,
         maintainAspectRatio: false,
