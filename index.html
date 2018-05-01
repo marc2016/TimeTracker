@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="./Styles/style.css">
     <link rel="stylesheet" href="./Styles/sidebar.css">
+    
   </head>
   <body style="padding-top: 101px;">
     <script>
@@ -79,28 +80,39 @@
     </div>
 
     <li class="list-group-item" style="display:none;" id="first-element">
-      <table style="width:100%">
-        <tr>
-          <td><input class="form-control" type="text" placeholder="Tätigkeit" id="text-input-job"></td>
-          <td width="1px" id="timerCell" data-toggle="tooltip" href="#" data-trigger="manual" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'><div id="textTimer" ></div></td>
-          <td width="1px">
-            <div class="btn-group" role="group" >
-              <a class="btn btn-default" id="btnStart">
-                <i class="fa fa-play" title="Start"></i>
-              </a>
-              <a class="btn btn-default disabled" id="btnPause">
-                <i class="fa fa-pause" title="Pause"></i>
-              </a>
-              <a class="btn btn-default" id="btnTransfer">
-                <i class="fa fa-external-link" title="Übertragen"></i>
-              </a>
-              <a class="btn btn-default" id="btnRemoveEntry">
-                <i class="fa fa-trash" title="Löschen"></i>
-              </a>
+            <div class="container-fluid" >
+              
+              <div class="row">
+                  <div class="col input-group-sm">
+                    <input class="form-control" type="text" placeholder="Tätigkeit" id="text-input-job">
+                    <div class="row">
+                      <div class="col-md-auto" id="timerCell" data-toggle="tooltip" href="#" data-trigger="manual" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'>
+                        <div class="row no-gutters" style="cursor: pointer;">
+                          <div class="col-sm-auto" style="margin-right: 3px">Dauer: </div>
+                          <div class="col-sm-auto" id="textTimer"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <div class="btn-group btn-group-sm" role="group" >
+                      <a class="btn btn-default" id="btnStart">
+                        <i class="fa fa-play" title="Start"></i>
+                      </a>
+                      <a class="btn btn-default disabled" id="btnPause">
+                        <i class="fa fa-pause" title="Pause"></i>
+                      </a>
+                      <a class="btn btn-default" id="btnTransfer">
+                        <i class="fa fa-external-link" title="Übertragen"></i>
+                      </a>
+                      <a class="btn btn-default" id="btnRemoveEntry">
+                        <i class="fa fa-trash" title="Löschen"></i>
+                      </a>
+                    </div>
+                    
+                  </div>
+                </div>              
             </div>
-          </td>
-        </tr>
-      </table>
     </li>
 
     <div id="footerContainer">
