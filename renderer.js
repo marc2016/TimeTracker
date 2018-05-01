@@ -257,7 +257,7 @@ function createListEntry(dbEntry){
   $(clone).find('#timerCell')[0].addEventListener("click", showTooltip)
   $(clone).find('#timerCell').tooltip();
 
-  db_projects.find({}, function (err, docs) {
+  db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
     var htmlString = ''
     for(var i = 0; i < docs.length;i++){
       var doc = docs[i]
