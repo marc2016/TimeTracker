@@ -4,13 +4,12 @@
 //require('jquery')
 var moment = require('moment');
 
-
-
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
 var db = undefined;
+var db_projects = undefined;
 var monthChart = undefined;
 
 onload = function() {
@@ -52,6 +51,7 @@ onload = function() {
 
   var Datastore = require('nedb')
   db = new Datastore({ filename: 'db', autoload: true });
+  db_projects = new Datastore({ filename: 'db_projects', autoload: true });
 
   var btnAddNew = document.getElementById('btnAddNew')
   btnAddNew.addEventListener("click",addNewItem )
@@ -69,12 +69,13 @@ onload = function() {
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
   $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
 
-
-
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
     createList(docs)
     refreshTimeSum()
   });
+
+  
+
 };
 
 function initChart(document){
@@ -256,6 +257,20 @@ function createListEntry(dbEntry){
   $(clone).find('#timerCell')[0].addEventListener("click", showTooltip)
   $(clone).find('#timerCell').tooltip();
 
+  db_projects.find({}, function (err, docs) {
+    var htmlString = ''
+    for(var i = 0; i < docs.length;i++){
+      var doc = docs[i]
+      var selected = ''
+      if(doc._id == dbEntry.projectId) {
+        selected = 'selected'
+      }
+      htmlString += '<option '+selected+' projectid="'+doc._id+'">'+doc.name+'</option>'
+    }
+    $(clone).find(".projectSelect")
+       .append(htmlString);
+  });
+
 }
 
 function showTooltip(){
@@ -307,9 +322,13 @@ function saveAll(){
   $('#list').children('li').each(function(){
     if(this.id != 'first-element')
     {
+      var attribute = $(this).find('.projectSelect')[0].selectedOptions[0].attributes.projectid;
+      if(attribute != undefined){
+        var projectId = attribute.nodeValue
+      }
       var description = $(this).find('#text-input-job')[0]
       var savedTime = this.savedTime
-      db.update({ _id:this.id }, { $set: { description: description.value, elapsedSeconds:savedTime } },{ multi: false }, function (err, numReplaced) {} )
+      db.update({ _id:this.id }, { $set: { projectId: projectId, description: description.value, elapsedSeconds:savedTime } },{ multi: false }, function (err, numReplaced) {} )
     }
   })
   db.persistence.compactDatafile()
