@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/air-datepicker/dist/css/datepicker.min.css">
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./Styles/style.css">
-    <link rel="stylesheet" href="./Styles/sidebar.css">
+    <link rel="stylesheet" href="./Styles/main.css">
     
   </head>
   <body style="padding-top: 101px;">
@@ -29,9 +28,10 @@
       require('./renderer.js')
     </script>
 
+    
     <nav class="navbar navbar-expand-sm fixed-top navbar-dark">
       <div class="navbar-brand">
-        <img src="icons/logo.png" width="30" height="30" alt="" class="d-inline-block align-top">
+        <img src="icons/logo.png" width="25" height="25" alt="" class="d-inline-block logo">
         TimeTracker
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,14 +39,19 @@
       </button>
       <div class="navbar-collapse collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" id="btnAddNew" href="#">
               <i class="fa fa-cog"></i> Neuer Eintrag
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" id="btnSave" href="#">
               <i class="fa fa-save" title="Speichern"></i> Speichern
+            </a>
+          </li>
+          <li class="nav-item" id="navProjectsSettings">
+            <a class="nav-link" id="btnProjectsSettings" href="#">
+              <i class="fa fa-inbox" title="Projekte"></i> Projekte
             </a>
           </li>
         </ul>
@@ -120,6 +125,8 @@
             </div>
     </li>
 
+    <div id="mainContent"></div>
+
     <div id="footerContainer">
       <div id="sidebarContainer">
         <div id="sidebarButton" href="#"><i class="fa fa-chevron-up fa-xs" id="buttonSymbol" aria-hidden="true" style="color: white;"></i></div>
@@ -139,5 +146,6 @@
       </div>
     </div>
 
+    <div id="modals"></div>
   </body>
 </html>

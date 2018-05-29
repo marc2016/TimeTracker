@@ -1,0 +1,115 @@
+// .modal-backdrop {
+//     position: fixed;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     background-color: #000000;
+//   }
+
+#mainContent {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 1031;
+    margin-top: $navbar-height;
+    margin-bottom: $footerHeight;
+}
+
+.logo {
+    vertical-align: sub;
+}
+
+.dateSelector {
+    height: 38px;
+    margin-top: $navbar-height + 2px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #FFFFFF;
+}
+
+.currentDate {
+    margin: auto;
+    vertical-align: middle;
+    width: auto;
+    font-size: 20px;
+    border: 0px;
+    width: 100px;
+}
+
+.datepicker {
+    z-index: 9999999;
+}
+
+.datepicker--day-name {
+    color: #a4244a;
+}
+
+.mainMenu {
+    margin: 3px;
+}
+
+.inputTimeGroup {
+    margin: 3px;
+}
+
+.btnDateChange {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+#inputTime {
+    width: 100px;
+}
+
+#footerRightContent {
+    margin: 5px;
+    float: right;
+    font-size: 15px;
+}
+
+#footerLeftContent {
+    margin: 5px;
+    float: left;
+    font-size: 15px;
+}
+
+.hLine {
+    background-color: #a4244a;
+    width: 100%;
+    height: 1px;
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 1px;
+}
+
+.btn-default {
+    background-color: #a4244a;
+    color: #fff !important;
+    border-color: #adadad;
+    border-radius: 5px;
+}
+
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+    background-color: #a46c7d;
+    color: #333;
+    border-color: #adadad;
+}
+
+.nav-item.selected {
+    background-color: #8d1e3f;
+}
+
+.currentEntry {
+    background-color: #C9C9C9;
+}
+
+.navbar {
+    background-color: #a4244a;
+    color: #FFFFFF !important; // padding: 0;
+    height: $navbar-height;
+}

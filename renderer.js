@@ -8,12 +8,16 @@ var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
-var db = undefined;
-var db_projects = undefined;
+var projectssettings = require('./js/projectssettings.js')
+
+var db = remote.getGlobal('db');
+var db_projects = remote.getGlobal('db_projects');
 var monthChart = undefined;
 
 onload = function() {
 
+  $('#modals').load("pages/modals.html")
+  $('#mainContent').hide()
   var tray = remote.getGlobal('tray');
   tray.setContextMenu(trayContextMenu)
 
@@ -49,10 +53,6 @@ onload = function() {
   var btnNextDay = document.getElementById('btnNextDay')
   btnNextDay.addEventListener("click", nextDay )
 
-  var Datastore = require('nedb')
-  db = new Datastore({ filename: 'db', autoload: true });
-  db_projects = new Datastore({ filename: 'db_projects', autoload: true });
-
   var btnAddNew = document.getElementById('btnAddNew')
   btnAddNew.addEventListener("click",addNewItem )
 
@@ -64,6 +64,9 @@ onload = function() {
 
   var btnSortTitle = document.getElementById('btnSortTitle')
   btnSortTitle.addEventListener("click", sortByTitle )
+
+  var btnProjectsSettings = document.getElementById('btnProjectsSettings')
+  btnProjectsSettings.addEventListener("click", openProjectsSettings )
 
   $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
@@ -77,6 +80,23 @@ onload = function() {
   
 
 };
+
+function openProjectsSettings(){
+  if($('#mainContent').is(":visible")) {
+    $('#list').show()
+    $('#mainContent').hide()
+    $('#mainContent').unload()
+    $('#navProjectsSettings').removeClass("selected");
+  } else {
+    $('#list').hide()
+    $('#mainContent').show()
+    $('#mainContent').load('pages/projectssettings.html', function(){
+      projectssettings.onLoad()
+    })
+    $('#navProjectsSettings').addClass("selected");
+  }
+  
+}
 
 function initChart(document){
   var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');

@@ -1,5 +1,8 @@
 const electron = require('electron')
-const {Menu, Tray} = require('electron')
+const {
+  Menu,
+  Tray
+} = require('electron')
 
 // Module to control application life.
 const app = electron.app
@@ -13,7 +16,7 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+var shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
@@ -26,12 +29,13 @@ if (shouldQuit) {
   return;
 }
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 680,
     height: 820,
-    icon: path.join(__dirname, 'icons/stopwatch.ico')})
+    icon: path.join(__dirname, 'icons/stopwatch.ico')
+  })
 
   mainWindow.setMenu(null);
 
@@ -77,9 +81,9 @@ app.on('activate', function () {
 })
 
 let tray = null
- app.on('ready', () => {
-   tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
-   tray.on('click', () => {
+app.on('ready', () => {
+  tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
+  tray.on('click', () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
   })
   mainWindow.on('show', () => {
@@ -88,12 +92,21 @@ let tray = null
   mainWindow.on('hide', () => {
     tray.setHighlightMode('never')
   })
-   tray.setToolTip('TimeTracker')
+  tray.setToolTip('TimeTracker')
 
-   global.tray = tray
+  global.tray = tray
 
-   global.menu = Menu
- })
+  global.menu = Menu
+})
+
+var Datastore = require('nedb')
+var db = undefined;
+var db_projects = undefined;
+db = new Datastore({ filename: 'db', autoload: true });
+db_projects = new Datastore({ filename: 'db_projects', autoload: true });
+
+global.db = db;
+global.db_projects = db_projects;
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

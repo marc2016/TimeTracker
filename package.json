@@ -5,7 +5,8 @@
   "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "sass": "sass SCSS/combined.scss Styles/main.css",
+    "start": "npm run sass && electron ."
   },
   "repository": "https://github.com/marc2016/TimeTracker",
   "keywords": [
