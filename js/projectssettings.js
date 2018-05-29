@@ -3,13 +3,32 @@ var remote = require('electron').remote;
 module.exports = {
 
     db_projects: remote.getGlobal('db_projects'),
+    selectedProject: undefined,
+
     onLoad: function(){
         this.clearProjectsList();
         this.createProjectList();
         var btnAddNewProject = document.getElementById('btnAddNewProject')
         var boundedAddNewProject =  this.addNewProject.bind(this)
         btnAddNewProject.addEventListener("click",boundedAddNewProject )
+
+        var btnSaveProject = document.getElementById('btnSaveProject')
+        var boundedSaveProject =  this.saveProject.bind(this)
+        btnSaveProject.addEventListener("click",boundedSaveProject )
         
+    },
+
+    saveProject: function() {
+        if(this.selectedProject == undefined){
+            return
+        }
+        var that = this
+        var inputProjectName = document.getElementById('inputProjectName')
+        this.db_projects.update({_id:this.selectedProject}, {name:inputProjectName.value}, {}, function (err, numReplaced) {
+            that.selectedProject = undefined
+            that.clearProjectsList();
+            that.createProjectList();
+        })
     },
 
     addNewProject: function(){
@@ -57,6 +76,7 @@ module.exports = {
     },
 
     projectSelected: function(projectId){
+        this.selectedProject = projectId
         this.db_projects.findOne({_id:projectId}).exec( function (err, doc) {
             var inputProjectName = document.getElementById('inputProjectName')
             inputProjectName.value = doc.name
