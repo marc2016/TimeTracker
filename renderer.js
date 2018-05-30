@@ -76,17 +76,14 @@ onload = function() {
     createList(docs)
     refreshTimeSum()
   });
-
-  
-
 };
 
 function openProjectsSettings(){
   if($('#mainContent').is(":visible")) {
     $('#list').show()
     $('#mainContent').hide()
-    $('#mainContent').unload()
     $('#navProjectsSettings').removeClass("selected");
+    currentDateChanged()
   } else {
     $('#list').hide()
     $('#mainContent').show()
@@ -95,7 +92,6 @@ function openProjectsSettings(){
     })
     $('#navProjectsSettings').addClass("selected");
   }
-  
 }
 
 function initChart(document){
