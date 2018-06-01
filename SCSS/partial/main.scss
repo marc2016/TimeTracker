@@ -24,10 +24,13 @@
 
 .dateSelector {
     height: 38px;
-    margin-top: $navbar-height + 2px;
     text-align: center;
     vertical-align: middle;
     background-color: #FFFFFF;
+    position: fixed;
+    width: 100%;
+    z-index: 1029;
+    top: $navbar-height + 2px;
 }
 
 .currentDate {
