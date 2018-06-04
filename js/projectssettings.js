@@ -1,45 +1,49 @@
 var remote = require('electron').remote;
 
-module.exports = {
+var self = module.exports = {
 
     db_projects: remote.getGlobal('db_projects'),
     selectedProject: undefined,
 
     onLoad: function(){
+        $('#projectForm *').prop('disabled', true);
         this.clearProjectsList();
         this.createProjectList();
         var btnAddNewProject = document.getElementById('btnAddNewProject')
-        var boundedAddNewProject =  this.addNewProject.bind(this)
-        btnAddNewProject.addEventListener("click",boundedAddNewProject )
+        btnAddNewProject.addEventListener("click", self.addNewProject )
 
         var btnSaveProject = document.getElementById('btnSaveProject')
-        var boundedSaveProject =  this.saveProject.bind(this)
-        btnSaveProject.addEventListener("click",boundedSaveProject )
+        btnSaveProject.addEventListener("click",self.saveProject )
         
     },
 
     saveProject: function() {
-        if(this.selectedProject == undefined){
+        if(self.selectedProject == undefined){
             return
         }
-        var that = this
         var inputProjectName = document.getElementById('inputProjectName')
         var checkboxProjectActive = document.getElementById('checkboxProjectActive')
-        this.db_projects.update({_id:this.selectedProject}, {name:inputProjectName.value, active:checkboxProjectActive.checked}, {}, function (err, numReplaced) {
-            that.selectedProject = undefined
-            that.clearProjectsList();
-            that.createProjectList();
+        self.db_projects.update({_id:self.selectedProject}, {name:inputProjectName.value, active:checkboxProjectActive.checked}, {}, function (err, numReplaced) {
+            self.selectedProject = undefined
+            self.clearProjectsList();
+            self.createProjectList();
+            self.clearForm();
         })
+    },
+
+    clearForm: function(){
+        $('#inputProjectName').prop('value', "")
+        $('#projectForm *').prop('disabled', true);
     },
 
     addNewProject: function(){
         var newProjectName = document.getElementById('inputNewProjectName')
         
         var newProject = {name:newProjectName.value, active:true}
-        var that = this
-        this.db_projects.insert(newProject, function (err, dbEntry) {
-            that.clearProjectsList()
-            that.createProjectList()
+        
+        self.db_projects.insert(newProject, function (err, dbEntry) {
+            self.clearProjectsList()
+            self.createProjectList()
             $('#modalAddNewProject').modal('toggle');
         });
     },
@@ -77,6 +81,7 @@ module.exports = {
     },
 
     projectSelected: function(projectId){
+        $('#projectForm *').prop('disabled', false);
         this.selectedProject = projectId
         this.db_projects.findOne({_id:projectId}).exec( function (err, doc) {
             var inputProjectName = document.getElementById('inputProjectName')
