@@ -24,7 +24,8 @@ module.exports = {
         }
         var that = this
         var inputProjectName = document.getElementById('inputProjectName')
-        this.db_projects.update({_id:this.selectedProject}, {name:inputProjectName.value}, {}, function (err, numReplaced) {
+        var checkboxProjectActive = document.getElementById('checkboxProjectActive')
+        this.db_projects.update({_id:this.selectedProject}, {name:inputProjectName.value, active:checkboxProjectActive.checked}, {}, function (err, numReplaced) {
             that.selectedProject = undefined
             that.clearProjectsList();
             that.createProjectList();
@@ -34,7 +35,7 @@ module.exports = {
     addNewProject: function(){
         var newProjectName = document.getElementById('inputNewProjectName')
         
-        var newProject = {name:newProjectName.value}
+        var newProject = {name:newProjectName.value, active:true}
         var that = this
         this.db_projects.insert(newProject, function (err, dbEntry) {
             that.clearProjectsList()
@@ -80,6 +81,8 @@ module.exports = {
         this.db_projects.findOne({_id:projectId}).exec( function (err, doc) {
             var inputProjectName = document.getElementById('inputProjectName')
             inputProjectName.value = doc.name
+            var checkboxProjectActive = document.getElementById('checkboxProjectActive')
+            checkboxProjectActive.checked = doc.active
         })
         
     }

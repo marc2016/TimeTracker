@@ -279,9 +279,12 @@ function createListEntry(dbEntry){
       var doc = docs[i]
       var selected = ''
       if(doc._id == dbEntry.projectId) {
-        selected = 'selected'
+        selected = 'selected disabled'
       }
-      htmlString += '<option '+selected+' projectid="'+doc._id+'">'+doc.name+'</option>'
+
+      if(doc._id == dbEntry.projectId || doc.active) {
+        htmlString += '<option '+selected+' projectid="'+doc._id+'">'+doc.name+'</option>'
+      }
     }
     $(clone).find(".projectSelect")
        .append(htmlString);
