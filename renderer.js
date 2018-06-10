@@ -9,6 +9,7 @@ var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
 var projectssettings = require('./js/projectssettings.js')
+var jobtable = require('./js/jobtable.js')
 
 var db = remote.getGlobal('db');
 var db_projects = remote.getGlobal('db_projects');
@@ -68,6 +69,9 @@ onload = function() {
   var btnProjectsSettings = document.getElementById('btnProjectsSettings')
   btnProjectsSettings.addEventListener("click", openProjectsSettings )
 
+  var btnJobTable = document.getElementById('btnJobTable')
+  btnJobTable.addEventListener("click", openJobTable )
+
   $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
   $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
@@ -77,6 +81,22 @@ onload = function() {
     refreshTimeSum()
   });
 };
+
+function openJobTable(){
+  if($('#mainContent').is(":visible")) {
+    $('#list').show()
+    $('#mainContent').hide()
+    $('#navJobTable').removeClass("selected");
+    currentDateChanged()
+  } else {
+    $('#list').hide()
+    $('#mainContent').show()
+    $('#mainContent').load('pages/jobtable.html', function(){
+      jobtable.onLoad()
+    })
+    $('#navJobTable').addClass("selected");
+  }
+}
 
 function openProjectsSettings(){
   if($('#mainContent').is(":visible")) {
