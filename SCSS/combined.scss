@@ -1,8 +1,8 @@
-@import "../node_modules/bootstrap/scss/functions";
-@import "../node_modules/bootstrap/scss/variables";
-@import "../node_modules/bootstrap/scss/mixins";
+@import "partial/customBootstrap.scss";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 @import "partial/variables.scss";
-@import "partial/sidebar.scss";
+@import "partial/navbar.scss";
 @import "partial/projectssettings.scss";
 @import "partial/jobtable.scss";
+@import "partial/sidebar.scss";
 @import "partial/main.scss";
