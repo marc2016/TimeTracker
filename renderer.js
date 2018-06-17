@@ -11,12 +11,13 @@ var remote = require('electron').remote;
 var projectssettings = require('./js/projectssettings.js')
 var jobtable = require('./js/jobtable.js')
 
-var db = remote.getGlobal('db');
+// var db = remote.getGlobal('db');
+var Datastore = require('nedb')
+var db = new Datastore({ filename: 'db', autoload: true });
 var db_projects = remote.getGlobal('db_projects');
 var monthChart = undefined;
 
 onload = function() {
-
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   var tray = remote.getGlobal('tray');
@@ -116,7 +117,7 @@ function openProjectsSettings(){
 
 function initChart(document){
   var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-  db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
+  db.find({}).sort({ date: 1 }).exec(function (err, docs) {
 
     var lastDayOfMonth = currentDate.clone().endOf('month').format('D')
     var data = []
