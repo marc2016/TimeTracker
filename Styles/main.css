@@ -8571,6 +8571,11 @@ h3 {
     display: none;
   }
 }
+@media (max-width: 550px) {
+  .collapsedBySize {
+    display: none;
+  }
+}
 #projectssettingsMainContent {
   background-color: white;
   width: 100%;
