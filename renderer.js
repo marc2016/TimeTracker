@@ -2,6 +2,9 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 //require('jquery')
+const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
+var jobtimer = require('./js/jobtimer.js')
+
 var moment = require('moment');
 
 var _ = require('lodash');
@@ -18,6 +21,7 @@ var db_projects = remote.getGlobal('db_projects');
 var monthChart = undefined;
 
 onload = function() {
+
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   var tray = remote.getGlobal('tray');
