@@ -3,24 +3,28 @@ const { map, takeWhile } = require('rxjs/operators');
 
 var moment = require('moment');
 
-var self = module.exports = {
-
-    
+var self = module.exports = {   
 
     currentJobId: undefined,
 
     timeSignal: undefined,
+    startSignal: undefined,
+    stopSignal: undefined,
+
+    _startEmitter: undefined,
+    _stopEmitter: undefined,
 
     _offsetSeconds: undefined,
     _startDate: undefined,
 
     start: function(seconds, jobId) {
-        if(self.isRunning)
+        if(self.isRunning())
             return false
         self.currentJobId = jobId
         self._offsetSeconds = seconds
         self._startDate = moment()
         self.timeSignal = interval(1000).pipe(takeWhile(() => self.currentJobId), map(self._timeUpdate))
+        self._startEmitter.next(true)
     },
 
     isRunning: function(){
@@ -42,11 +46,14 @@ var self = module.exports = {
 
     stop: function() {
         var returnValue = self._calculateDiff()
+        self._stopEmitter.next(true)
         self.currentJobId = undefined
         self._offsetSeconds = undefined
         self._startDate = undefined
-
+        
         return returnValue
     }
 }
 
+self.startSignal = Observable.create(e => self._startEmitter = e);
+self.stopSignal = Observable.create(e => self._stopEmitter = e);
