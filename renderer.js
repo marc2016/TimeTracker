@@ -81,6 +81,8 @@ onload = function() {
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
   $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
 
+  jobtimer.timeSignal.subscribe(timerStep)
+
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
     createList(docs)
     refreshTimeSum()
@@ -396,12 +398,11 @@ function removeItem(){
   $(this).closest('li').remove()
 }
 
-var stopping = undefined;
-var timeRunning = undefined;
+
 var startTime = undefined;
 var offsetSeconds = undefined;
-var timer = undefined;
-var elapsedTime = undefined;
+
+
 var currentDate = new moment();
 var currentEntry = undefined;
 var currentEntryId = undefined;
@@ -409,48 +410,40 @@ var timeSortDirection = -1;
 var titleSortDirection = -1;
 
 function pauseTimer(){
-  if(!timeRunning){
-    return
-  }
+  
   $(currentEntry).removeClass('currentEntry');
   $(currentEntry).find('#btnPause').addClass('disabled');
   $(currentEntry).find('#btnStart').removeClass('disabled')
-  currentEntry.savedTime = elapsedTime
-  clearInterval(timer)
-  timer = undefined
-  timeRunning = false
-  currentEntry = undefined
+
+  jobtimer.stop()
+
   lastEntryId = currentEntryId
   currentEntryId = undefined
-  refreshStatusBarEntry(currentEntry)
+  refreshStatusBarEntry()
 }
 
 function startTimer(){
-  if(timeRunning){
-    pauseTimer()
-  }
   $(this).closest('li').addClass('currentEntry');
   currentEntry = $(this).closest('li')[0]
   currentEntryId = currentEntry.id;
   $(currentEntry).find('#btnStart').addClass('disabled');
   $(currentEntry).find('#btnPause').removeClass('disabled')
-  startTime = performance.now()
+  
   offsetSeconds = currentEntry.savedTime
-  stopping = undefined;
-  timeRunning = true;
-  timer = setInterval(timerStep.bind(this), 1000);
+
+  jobtimer.start(currentEntryId, offsetSeconds)
 }
 
-function refreshStatusBarEntry(entry){
+function refreshStatusBarEntry(description, duration){
   var leftFooter = document.getElementById('footerLeftContent')
-  if(entry == undefined){
+  if(duration == undefined){
     $.find('#currentTaskDescription')[0].textContent = "-"
     $.find('#currentTaskTime')[0].textContent = "-"
     leftFooter.removeEventListener('click', goToToday)
   } else {
-    var description = $(entry).find('#text-input-job')[0].value
+    
     $.find('#currentTaskDescription')[0].textContent = description
-    $.find('#currentTaskTime')[0].textContent = getTimeString(entry.savedTime)
+    $.find('#currentTaskTime')[0].textContent = getTimeString(duration)
     leftFooter.addEventListener('click', goToToday)
   }
 }
@@ -460,18 +453,19 @@ function goToToday(){
   currentDateChanged()
 }
 
-function timerStep(){
-  elapsedTime =  Math.floor((performance.now()- startTime) / 1000)
-  var entry = $(this).closest('li')[0]
-  elapsedTime += offsetSeconds
-
-  entry.savedTime = elapsedTime
-  $(entry).find('#textTimer')[0].textContent = getTimeString(elapsedTime)
-
+function timerStep(updateValue){
+  var entry = document.getElementById(updateValue.jobId)
+  
+  if(entry){
+    entry.savedTime = updateValue.duration
+    $(entry).find('#textTimer')[0].textContent = getTimeString(updateValue.duration)  
+  }
+  
   saveAll()
   refreshTimeSum()
-  refreshTray()
-  refreshStatusBarEntry(entry)
+  refreshTray(updateValue.duration)
+  var description = $(currentEntry).find('#text-input-job')[0].value
+  refreshStatusBarEntry(description, updateValue.duration)
 }
 
 function refreshTimeSum(){
@@ -492,7 +486,7 @@ function getTimeSum(){
   return timeSum
 }
 
-function refreshTray(){
+function refreshTray(elapsedTime){
   var tray = remote.getGlobal('tray');
   var timeSum = getTimeSum()
   tray.setToolTip("Ʃ "+getTimeString(timeSum)+", Aufgabe: "+getTimeString(elapsedTime))
