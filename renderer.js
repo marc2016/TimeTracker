@@ -349,10 +349,14 @@ function getTimeString(seconds){
 function transferEntry(){
   var entry = $(this).closest('li').addClass('currentEntry');
   var description = $(entry).find('#text-input-job')[0].value
-  var savedTime = this.savedTime
+  var attribute = $(entry).find('.projectSelect')[0].selectedOptions[0].attributes.projectid;
+  if(attribute != undefined){
+    var projectId = attribute.nodeValue
+  }
+
   currentDate = new moment();
   currentDateChanged()
-  var newEntry = {elapsedSeconds:0, description:description, date:currentDate.format('YYYY-MM-DD')}
+  var newEntry = {projectId: projectId, elapsedSeconds:0, description:description, date:currentDate.format('YYYY-MM-DD')}
   db.insert(newEntry, function (err, dbEntry) {
     createListEntry(dbEntry)
   });
