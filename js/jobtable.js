@@ -1,5 +1,5 @@
 var remote = require('electron').remote;
-var dt = require( 'datatables.net' )();
+var dt = require( 'datatables.net-bs4' )( $ );
 var db = remote.getGlobal('db');
 var db_projects = remote.getGlobal('db_projects');
 var _ = require('lodash');
@@ -29,12 +29,16 @@ var self = module.exports = {
                     }
                 })
     
-                var htmlTable = new Table({'id': 'jobs'})
+                var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
                 .setHeaders(headers) 
                 .setData(jobDocs)
                 .render()
                 $('#table').html(htmlTable)
-                $('#jobs').DataTable();
+                $('#jobs').DataTable({
+                    "language": {
+                        "url": "resources/dataTables.german.lang"
+                    }
+                });
             });
         });
     }
