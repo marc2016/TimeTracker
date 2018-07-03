@@ -1,16 +1,31 @@
 var remote = require('electron').remote;
 var dt = require( 'datatables.net-bs4' )( $ );
-var db = remote.getGlobal('db');
-var db_projects = remote.getGlobal('db_projects');
+
 var _ = require('lodash');
 var moment = require('moment');
 var momentDurationFormatSetup = require("moment-duration-format");
 
 var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
 
+jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+    return this.flatten().reduce( function ( a, b ) {
+        if ( typeof a === 'string' ) {
+            a = a.replace(/[^\d.-]/g, '') * 1;
+        }
+        if ( typeof b === 'string' ) {
+            b = b.replace(/[^\d.-]/g, '') * 1;
+        }
+ 
+        return a + b;
+    }, 0 );
+} );
+
 var self = module.exports = {
 
     onLoad: function(){
+        var Datastore = require('nedb')
+        var db = new Datastore({ filename: 'db', autoload: true });
+        var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
         var Table = require('table-builder');
         db.find({}, function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
@@ -37,7 +52,13 @@ var self = module.exports = {
                 $('#jobs').DataTable({
                     "language": {
                         "url": "resources/dataTables.german.lang"
-                    }
+                    },
+                    drawCallback: function () {
+                        var api = this.api();
+                        $('#tableFooterLeft').html(
+                          'Summe Dauer: '+api.column( 4 ).data().sum() + ' h'
+                        );
+                      }
                 });
             });
         });
