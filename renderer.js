@@ -427,6 +427,9 @@ function pauseTimer(){
 }
 
 function startTimer(){
+  if(jobtimer.isRunning()){
+    pauseTimer()
+  }
   $(this).closest('li').addClass('currentEntry');
   currentEntry = $(this).closest('li')[0]
   currentEntryId = currentEntry.id;
