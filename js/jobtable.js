@@ -56,7 +56,7 @@ var self = module.exports = {
                     drawCallback: function () {
                         var api = this.api();
                         $('#tableFooterLeft').html(
-                          'Summe Dauer: '+api.column( 4,  {"filter": "applied"} ).data().sum() + ' h'
+                          'Summe Dauer: '+api.column( 4,  {"filter": "applied"} ).data().sum().toFixed(2) + ' h'
                         );
                       }
                 });
