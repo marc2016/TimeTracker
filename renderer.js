@@ -123,7 +123,7 @@ function openProjectsSettings(){
 
 function initChart(document){
   var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-  db.find({}).sort({ date: 1 }).exec(function (err, docs) {
+  db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
 
     var lastDayOfMonth = currentDate.clone().endOf('month').format('D')
     var data = []
@@ -138,7 +138,7 @@ function initChart(document){
       data[i] = result[i+1]
     }
 
-    var daysArray = _.range(1,currentDate.clone().endOf('month').format('D'))
+    var daysArray = _.range(1,parseInt(currentDate.clone().endOf('month').format('D'))+1)
     var ctx = document.getElementById("chart").getContext('2d');
     if(monthChart != undefined){
       monthChart.destroy()
