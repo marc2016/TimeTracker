@@ -34,6 +34,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 680,
     height: 820,
+    minWidth: 480,
+    minHeight: 450,
     icon: path.join(__dirname, 'icons/stopwatch.ico')
   })
 
@@ -47,7 +49,7 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
