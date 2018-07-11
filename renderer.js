@@ -22,6 +22,8 @@ var monthChart = undefined;
 
 onload = function() {
 
+  
+
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   var tray = remote.getGlobal('tray');
@@ -87,6 +89,7 @@ onload = function() {
     createList(docs)
     refreshTimeSum()
   });
+  
 };
 
 function openJobTable(){
@@ -263,19 +266,22 @@ function nextDay(){
   currentDateChanged()
 }
 
-function createList(docs){
-  for (var i = 0; i < docs.length; i++) {
-    var dbEntry = docs[i];
-    createListEntry(dbEntry)
-    if(currentEntryId != undefined && dbEntry._id == currentEntryId){
-      var current = $('#'+currentEntryId)[0]
-      var tmpMethod = startTimer.bind(current)
-      tmpMethod()
+function createList(entries){
+  db.find({}).exec(function (err, docs) {
+    var mappedDocs = _.map(docs,'description')
+    for (var i = 0; i < entries.length; i++) {
+      var dbEntry = entries[i];
+      createListEntry(dbEntry, mappedDocs)
+      if(currentEntryId != undefined && dbEntry._id == currentEntryId){
+        var current = $('#'+currentEntryId)[0]
+        var tmpMethod = startTimer.bind(current)
+        tmpMethod()
+      }
     }
-  }
+  })
 }
 
-function createListEntry(dbEntry){
+function createListEntry(dbEntry, autocompleteList){
   var item = document.getElementById("first-element");
   var clone = item.cloneNode(true);
   clone.style = ""
@@ -299,6 +305,25 @@ function createListEntry(dbEntry){
   document.getElementById("list").appendChild(clone);
   $(clone).find('#timerCell')[0].addEventListener("click", showTooltip)
   $(clone).find('#timerCell').tooltip();
+
+  
+    var options = {
+      data: autocompleteList,
+  
+      list: {
+          match: {
+              enabled: true
+          }
+      },
+  
+      theme: "bootstrap"
+    };
+  
+    var textInputNewId = 'text-input-job-'+dbEntry._id
+    $(clone).find('#text-input-job').attr('id',textInputNewId)
+    $(clone).find('#'+textInputNewId).easyAutocomplete(options)
+    $(clone).find('.easy-autocomplete.eac-bootstrap').removeAttr( 'style' )
+    $(clone).find('#'+textInputNewId).css("height",'31px')
 
   db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
     var htmlString = ''
@@ -358,7 +383,10 @@ function transferEntry(){
   currentDateChanged()
   var newEntry = {projectId: projectId, elapsedSeconds:0, description:description, date:currentDate.format('YYYY-MM-DD')}
   db.insert(newEntry, function (err, dbEntry) {
-    createListEntry(dbEntry)
+    db.find({}).exec(function (err, docs) {
+      var mappedDocs = _.map(docs,'description')
+      createListEntry(dbEntry, mappedDocs)
+    })
   });
 }
 
@@ -390,7 +418,11 @@ function addNewItem(){
   clone.style = ""
   var newEntry = {elapsedSeconds:0, description:"", date:currentDate.format('YYYY-MM-DD')}
   db.insert(newEntry, function (err, dbEntry) {
-    createListEntry(dbEntry)
+    db.find({}).exec(function (err, docs) {
+      var mappedDocs = _.map(docs,'description')
+      createListEntry(dbEntry, mappedDocs)
+    })
+    
   });
 }
 

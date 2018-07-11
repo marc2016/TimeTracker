@@ -9,6 +9,8 @@
     <!-- <link rel="stylesheet" href="node_modules/datatables.net-dt/css/jquery.dataTables.css"> -->
     <link rel="stylesheet" href="./Styles/main.css">
     <link rel="stylesheet" href="node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="node_modules/easy-autocomplete/dist/easy-autocomplete.min.css">
+    <link rel="stylesheet" href="node_modules/easy-autocomplete/dist/easy-autocomplete.themes.min.css">
   </head>
   <body style="padding-top: 101px;">
     <script>
@@ -23,8 +25,8 @@
     <script src="./libs/timingfield.min.js"></script>
     <script src="node_modules/chart.js/dist/Chart.min.js"></script>
     <script src="node_modules/lodash/lodash.min.js"></script>
-    <!-- <script src="node_modules/datatables.net/js/jquery.dataTables.js"></script> -->
     <script src="node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js"></script>
+    <script src="node_modules/easy-autocomplete/dist/jquery.easy-autocomplete.min.js"></script> 
     <script>require('./renderer.js')</script>
     
     <nav class="navbar navbar-expand-sm fixed-top navbar-dark">
@@ -92,7 +94,7 @@
               
               <div class="form-row">
                   <div class="col input-group-sm">
-                    <input class="form-control" type="text" placeholder="Tätigkeit" id="text-input-job">
+                    <input class="form-control text-input-job" type="text" placeholder="Tätigkeit" id="text-input-job">
                     <div class="row">
                       <div class="col-md-auto" id="timerCell" data-toggle="tooltip" href="#" data-trigger="manual" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'>
                         <div class="row no-gutters" style="cursor: pointer;">
