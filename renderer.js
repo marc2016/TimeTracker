@@ -385,7 +385,7 @@ function getTimeString(seconds){
 
 function transferEntry(){
   var entry = $(this).closest('li').addClass('currentEntry');
-  var description = $(entry).find('#text-input-job')[0].value
+  var description = $(entry).find('#text-input-job-'+entry[0].id)[0].value
   var attribute = $(entry).find('.projectSelect')[0].selectedOptions[0].attributes.projectid;
   if(attribute != undefined){
     var projectId = attribute.nodeValue
@@ -416,7 +416,7 @@ function saveAll(){
       if(attribute != undefined){
         var projectId = attribute.nodeValue
       }
-      var description = $(this).find('#text-input-job')[0]
+      var description = $(this).find('#text-input-job-'+this.id)[0]
       var savedTime = this.savedTime
       db.update({ _id:this.id }, { $set: { projectId: projectId, description: description.value, elapsedSeconds:savedTime } },{ multi: false }, function (err, numReplaced) {} )
     }
@@ -515,7 +515,7 @@ function timerStep(updateValue){
   saveAll()
   refreshTimeSum()
   refreshTray(updateValue.duration)
-  var description = $(currentEntry).find('#text-input-job')[0].value
+  var description = $(currentEntry).find('#text-input-job-'+entry.id)[0].value
   refreshStatusBarEntry(description, updateValue.duration)
 }
 
