@@ -79,6 +79,9 @@ onload = function() {
   var btnJobTable = document.getElementById('btnJobTable')
   btnJobTable.addEventListener("click", openJobTable )
 
+  var btnJobTimer = document.getElementById('btnJobTimer')
+  btnJobTimer.addEventListener("click", openJobTimer )
+
   $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
   $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
   $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
@@ -91,6 +94,15 @@ onload = function() {
   });
   
 };
+
+function openJobTimer(){
+  
+    $('#list').show()
+    $('#mainContent').hide()
+    $('#navJobTable').removeClass("selected");
+    currentDateChanged()
+  
+}
 
 function openJobTable(){
   if($('#mainContent').is(":visible")) {

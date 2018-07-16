@@ -13,7 +13,7 @@
     height: 100%;
     top: 0px;
     left: 0px;
-    z-index: 1031;
+    z-index: 1029;
     margin-top: $navbar-height;
     margin-bottom: $footerHeight;
 }
@@ -115,4 +115,8 @@
     background-color: #a4244a;
     color: #FFFFFF !important; // padding: 0;
     height: $navbar-height;
+}
+
+.dropdown-menu {
+    z-index: 1100 !important;
 }

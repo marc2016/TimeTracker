@@ -8669,7 +8669,7 @@ h3 {
   height: 100%;
   top: 0px;
   left: 0px;
-  z-index: 1031;
+  z-index: 1029;
   margin-top: 40px;
   margin-bottom: 30px;
 }
@@ -8771,6 +8771,10 @@ h3 {
   background-color: #a4244a;
   color: #FFFFFF !important;
   height: 40px;
+}
+
+.dropdown-menu {
+  z-index: 1100 !important;
 }
 
 /*# sourceMappingURL=Styles/main.css.map */
