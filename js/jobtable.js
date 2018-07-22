@@ -2,10 +2,29 @@ var remote = require('electron').remote;
 var dt = require( 'datatables.net-bs4' )( $ );
 
 var _ = require('lodash');
+var toastr = require('toastr');
 var moment = require('moment');
 var momentDurationFormatSetup = require("moment-duration-format");
 
 var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
+
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
 
 jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
     return this.flatten().reduce( function ( a, b ) {
@@ -27,6 +46,7 @@ var self = module.exports = {
         var db = new Datastore({ filename: 'db', autoload: true });
         var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
         var Table = require('table-builder');
+        
         db.find({}, function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
             db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
@@ -49,7 +69,7 @@ var self = module.exports = {
                 .setData(jobDocs)
                 .render()
                 $('#table').html(htmlTable)
-                $('#jobs').DataTable({
+                var jobTable = $('#jobs').DataTable({
                     "language": {
                         "url": "resources/dataTables.german.lang"
                     },
@@ -60,6 +80,23 @@ var self = module.exports = {
                         );
                       }
                 });
+                $('#table').on( 'click', 'tr', function () {
+                    var rowData = jobTable.row( this ).data()
+                    var dataObj = {
+                        "date":rowData[0],
+                        "description":rowData[1],
+                        "project":rowData[2],
+                        "duration":rowData[4]
+                    }
+                    navigator.clipboard.writeText(JSON.stringify(dataObj))
+                    .then(() => {
+                        toastr.info('In Zwischenablage kopiert...')
+                    })
+                    .catch(err => {
+                        // This can happen if the user denies clipboard permissions:
+                        console.error('Could not copy text: ', err);
+                    });
+                } );
             });
         });
     }
