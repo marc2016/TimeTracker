@@ -284,11 +284,7 @@ function createList(entries){
     for (var i = 0; i < entries.length; i++) {
       var dbEntry = entries[i];
       createListEntry(dbEntry, mappedDocs)
-      if(currentEntryId != undefined && dbEntry._id == currentEntryId){
-        var current = $('#'+currentEntryId)[0]
-        var tmpMethod = startTimer.bind(current)
-        tmpMethod()
-      }
+      refreshTimeSum()
     }
   })
 }
@@ -492,8 +488,9 @@ function refreshStatusBarEntry(description, duration){
     $.find('#currentTaskTime')[0].textContent = "-"
     leftFooter.removeEventListener('click', goToToday)
   } else {
-    
-    $.find('#currentTaskDescription')[0].textContent = description
+    if(description) {
+      $.find('#currentTaskDescription')[0].textContent = description
+    }
     $.find('#currentTaskTime')[0].textContent = getTimeString(duration)
     leftFooter.addEventListener('click', goToToday)
   }
@@ -510,12 +507,13 @@ function timerStep(updateValue){
   if(entry){
     entry.savedTime = updateValue.duration
     $(entry).find('#textTimer')[0].textContent = getTimeString(updateValue.duration)  
+    var description = $(currentEntry).find('#text-input-job-'+entry.id)[0].value
   }
   
   saveAll()
   refreshTimeSum()
   refreshTray(updateValue.duration)
-  var description = $(currentEntry).find('#text-input-job-'+entry.id)[0].value
+  
   refreshStatusBarEntry(description, updateValue.duration)
 }
 
