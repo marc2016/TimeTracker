@@ -29,6 +29,9 @@
     <script src="node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js"></script>
     <script src="node_modules/easy-autocomplete/dist/jquery.easy-autocomplete.min.js"></script> 
     <script src="node_modules/toastr/build/toastr.min.js"></script> 
+    <script src="node_modules/knockout/build/output/knockout-latest.js"></script> 
+    <script src="js/footer.js"></script> 
+
     <script>require('./renderer.js')</script>
     
     <nav class="navbar navbar-expand-sm fixed-top navbar-dark">
@@ -152,10 +155,10 @@
 
       <div id="footer">
         <div id="footerLeftContent">
-          <i class="fa fa-check-square" aria-hidden="true"></i> <span id="currentTaskDescription">-</span> <i class="fa fa-clock-o" aria-hidden="true"></i> <span id="currentTaskTime">-</span>
+          <i class="fa fa-check-square" aria-hidden="true"></i> <span id="currentTaskDescription" data-bind="text:leftJobDescription">-</span> <i class="fa fa-clock-o" aria-hidden="true"></i> <span id="currentTaskTime" data-bind="text:leftJobDuration">-</span>
         </div>
         <div id="footerRightContent">
-          Ʃ <span id="textTimeSum">00:00:00</span>
+          Ʃ <span id="textTimeSum" data-bind="text:rightTimeSum">00:00:00</span>
         </div>
       </div>
     </div>

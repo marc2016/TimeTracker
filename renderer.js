@@ -3,10 +3,9 @@
 // All of the Node.js APIs are available in this process.
 //require('jquery')
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
-var jobtimer = require('./js/jobtimer.js')
 
+var ko = require('knockout');
 var moment = require('moment');
-
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
@@ -14,15 +13,17 @@ var remote = require('electron').remote;
 var projectssettings = require('./js/projectssettings.js')
 var jobtable = require('./js/jobtable.js')
 
-// var db = remote.getGlobal('db');
+var jobtimer = require('./js/jobtimer.js')
+var footer = require('./js/footer.js')
+
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'db', autoload: true });
 var db_projects = remote.getGlobal('db_projects');
+
 var monthChart = undefined;
 
 onload = function() {
-
-  
+  ko.applyBindings(footer)
 
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
@@ -220,38 +221,22 @@ function initChart(document){
 
 }
 
-
-
 function sortByTime(){
-  var lastEntryId = currentEntryId
-  pauseTimer()
   clearList()
 
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: timeSortDirection, description: -1 }).exec(function (err, docs) {
     createList(docs)
     refreshTimeSum()
-    if(lastEntryId){
-      var lastEntry = $('#'+lastEntryId)[0]
-      var tmpMethod = startTimer.bind(lastEntry)
-      tmpMethod()
-    }
   });
   timeSortDirection *= -1
 }
 
 function sortByTitle(){
-  var lastEntryId = currentEntryId
-  pauseTimer()
   clearList()
 
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
     createList(docs)
     refreshTimeSum()
-    if(lastEntryId){
-      var lastEntry = $('#'+lastEntryId)[0]
-      var tmpMethod = startTimer.bind(lastEntry)
-      tmpMethod()
-    }
   });
   titleSortDirection *= -1
 }
