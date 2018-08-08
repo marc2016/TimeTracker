@@ -83,9 +83,7 @@ onload = function() {
   var btnJobTimer = document.getElementById('btnJobTimer')
   btnJobTimer.addEventListener("click", openJobTimer )
 
-  $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
-  $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
-  $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');$('#buttonSymbol').toggleClass('down');initChart(document)})
+  footer.onLoad(currentDate)
 
   jobtimer.timeSignal.subscribe(timerStep)
 
@@ -137,89 +135,7 @@ function openProjectsSettings(){
   }
 }
 
-function initChart(document){
-  var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-  db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
 
-    var lastDayOfMonth = currentDate.clone().endOf('month').format('D')
-    var data = []
-    var groups = _.groupBy(docs,'date')
-    var result = _.transform(groups, function(result, value, key) {
-      var seconds = _.sumBy(value,'elapsedSeconds')
-      var sum = moment.duration(seconds, "seconds").format("h", 2)
-      result[moment(key,'YYYY-MM-DD').format('D')] = sum;
-      return true;
-    }, []);
-    for (var i = 0; i <= lastDayOfMonth; i++) {
-      data[i] = result[i+1]
-    }
-
-    var daysArray = _.range(1,parseInt(currentDate.clone().endOf('month').format('D'))+1)
-    var ctx = document.getElementById("chart").getContext('2d');
-    if(monthChart != undefined){
-      monthChart.destroy()
-    }
-    monthChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: daysArray,
-          datasets: [{
-              data: data,
-              backgroundColor: 'rgb(164, 36, 74)'
-          }]
-      },
-      options: {
-        legend : {
-          display: false
-        },
-        tooltips:{
-          mode: 'nearest',
-          callbacks: {
-            title: function(tooltipItem, data) {
-              var day = tooltipItem.xLabel
-              var momentObj = currentDate.clone()
-              momentObj.date(day)
-              momentObj.locale('de')
-              return momentObj.format("dddd, DD.MM.YYYY");
-            },
-            label: function(tooltipItem, data) {
-              return tooltipItem.yLabel + ' Stunden'
-            }
-        }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            yAxes: [{
-
-                  ticks: {
-                      suggestedMax: 12,
-                      min: 0
-                  }
-
-            }]
-        },
-        annotation: {
-
-      		drawTime: 'afterDatasetsDraw',
-
-      		annotations: [{
-      			drawTime: 'afterDraw', // overrides annotation.drawTime if set
-      			id: 'a-line-1', // optional
-      			type: 'line',
-      			mode: 'horizontal',
-      			scaleID: 'y-axis-0',
-      			value: '8',
-      			borderColor: 'rgb(29, 173, 75)',
-      			borderWidth: 1,
-            borderDash: [2, 2]
-      		}]
-      	}
-      }
-    });
-  });
-
-}
 
 function sortByTime(){
   clearList()
@@ -253,7 +169,7 @@ function currentDateChanged(){
   db.find({date: currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
     createList(docs)
     refreshTimeSum()
-    initChart(document)
+    footer.initChart(currentDate)
   });
 }
 
