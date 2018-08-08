@@ -2,6 +2,7 @@ var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var ko = require('knockout');
+
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'db', autoload: true });
 
@@ -10,13 +11,31 @@ var self = module.exports = {
     leftJobDuration: ko.observable('-'),
     rightTimeSum: ko.observable('00:00:00/0.00'),
     monthChart: undefined,
+    utils: undefined,
+    leftFooterAction: undefined,
 
     onLoad: function(currentDate){
+        utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
         $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
         $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');
         $('#buttonSymbol').toggleClass('down');
         self.initChart(currentDate)})
+    },
+
+    refreshStatusBarEntry: function (description, duration){
+        var leftFooter = document.getElementById('footerLeftContent')
+        if(duration == undefined){
+            $.find('#currentTaskDescription')[0].textContent = "-"
+            $.find('#currentTaskTime')[0].textContent = "-"
+            leftFooter.removeEventListener('click', self.leftFooterAction)
+        } else {
+            if(description) {
+            $.find('#currentTaskDescription')[0].textContent = description
+            }
+            $.find('#currentTaskTime')[0].textContent = utils.getTimeString(duration)
+            leftFooter.addEventListener('click', self.leftFooterAction)
+        }
     },
 
     initChart: function(currentDate){

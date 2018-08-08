@@ -84,6 +84,7 @@ onload = function() {
   btnJobTimer.addEventListener("click", openJobTimer )
 
   footer.onLoad(currentDate)
+  footer.leftFooterAction = goToToday
 
   jobtimer.timeSignal.subscribe(timerStep)
 
@@ -364,7 +365,7 @@ function pauseTimer(){
 
   lastEntryId = currentEntryId
   currentEntryId = undefined
-  refreshStatusBarEntry()
+  self.refreshStatusBarEntry()
 }
 
 function startTimer(){
@@ -382,20 +383,7 @@ function startTimer(){
   jobtimer.start(currentEntryId, offsetSeconds)
 }
 
-function refreshStatusBarEntry(description, duration){
-  var leftFooter = document.getElementById('footerLeftContent')
-  if(duration == undefined){
-    $.find('#currentTaskDescription')[0].textContent = "-"
-    $.find('#currentTaskTime')[0].textContent = "-"
-    leftFooter.removeEventListener('click', goToToday)
-  } else {
-    if(description) {
-      $.find('#currentTaskDescription')[0].textContent = description
-    }
-    $.find('#currentTaskTime')[0].textContent = getTimeString(duration)
-    leftFooter.addEventListener('click', goToToday)
-  }
-}
+
 
 function goToToday(){
   currentDate = new moment()
@@ -415,7 +403,7 @@ function timerStep(updateValue){
   refreshTimeSum()
   refreshTray(updateValue.duration)
   
-  refreshStatusBarEntry(description, updateValue.duration)
+  footer.refreshStatusBarEntry(description, updateValue.duration)
 }
 
 function refreshTimeSum(){
