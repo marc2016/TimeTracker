@@ -8683,10 +8683,7 @@ h3 {
   text-align: center;
   vertical-align: middle;
   background-color: #FFFFFF;
-  position: fixed;
   width: 100%;
-  z-index: 1029;
-  top: 42px;
 }
 
 .currentDate {

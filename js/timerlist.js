@@ -1,6 +1,7 @@
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 
 var ko = require('knockout');
+ko.mapping = require('knockout-mapping')
 var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
@@ -13,8 +14,11 @@ var Datastore = require('nedb')
 var db = new Datastore({ filename: 'db', autoload: true });
 var db_projects = remote.getGlobal('db_projects');
 
+
 var self = module.exports = {
 
+  jobTimerList: ko.observableArray(),
+  projectList: ko.observableArray(),
   startTime: undefined,
   offsetSeconds: undefined,
   currentDate: new moment(),
@@ -24,6 +28,7 @@ var self = module.exports = {
   titleSortDirection: -1,
 
   onLoad: function(){
+    ko.applyBindings(self, document.getElementById('timerlistMainContent'))
     var tray = remote.getGlobal('tray');
     tray.setContextMenu(self.trayContextMenu)
 
@@ -65,50 +70,60 @@ var self = module.exports = {
     jobtimer.timeSignal.subscribe(self.timerStep)
   
     db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
-      self.createList(docs)
+      self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
+
+    self.refreshProjectList()
+
   
   },
 
+  refreshProjectList: function(){
+    db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+      ko.utils.arrayPushAll(self.projectList, docs)
+    })
+  },
+
+  refreshJobTimerList: function(docs){
+    docs.forEach(function(item, index){
+      if(!item.projectId){
+        item.projectId = ""
+      }
+    })
+    self.jobTimerList.removeAll()
+    var observableDocs = ko.mapping.fromJS(docs,self.jobTimerList);
+
+    ko.utils.arrayPushAll(self.jobTimerList, observableDocs())
+  },
+
   sortByTime: function(){
-    self.clearList()
-  
     db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: self.timeSortDirection, description: -1 }).exec(function (err, docs) {
-      self.createList(docs)
+      self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
     self.timeSortDirection *= -1
   },
   
   sortByTitle: function(){
-    self.clearList()
-  
     db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: self.titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
-      self.createList(docs)
+      self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
     self.titleSortDirection *= -1
-  },
-
-  clearList: function(){
-    var ul = document.getElementById("list");
-    ul.innerHTML = "";
   },
   
   currentDateChanged: function(){
     var lastEntryId = self.currentEntryId
     $.find('#textCurrentDate')[0].value = self.currentDate.format('DD.MM.YYYY')
-    self.clearList()
     db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
-      self.createList(docs)
+      self.refreshJobTimerList(docs)
       self.refreshTimeSum()
       footer.initChart(self.currentDate)
     });
   },
   
   nextDay: function(){
-  
     self.currentDate.add(1,'days');
     self.currentDateChanged()
   },
@@ -233,57 +248,40 @@ var self = module.exports = {
   },
   
   previousDay: function(){
-  
     self.currentDate.subtract(1,'days');
     self.currentDateChanged()
   },
   
   saveAll: function(){
-    $('#list').children('li').each(function(){
-      if(this.id != 'first-element')
-      {
-        var attribute = $(this).find('.projectSelect')[0].selectedOptions[0].attributes.projectid;
-        if(attribute != undefined){
-          var projectId = attribute.nodeValue
-        }
-        var description = $(this).find('#text-input-job-'+this.id)[0]
-        var savedTime = this.savedTime
-        db.update({ _id:this.id }, { $set: { projectId: projectId, description: description.value, elapsedSeconds:savedTime } },{ multi: false }, function (err, numReplaced) {} )
-      }
+    ko.utils.arrayForEach(self.jobTimerList(), function (element) {
+      db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId() } },{ multi: false }, function (err, numReplaced) {} )
     })
+    
     db.persistence.compactDatafile()
   },
   
   addNewItem: function(){
-    var item = document.getElementById("first-element");
-    var clone = item.cloneNode(true);
-    clone.style = ""
     var newEntry = {elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
     db.insert(newEntry, function (err, dbEntry) {
-      db.find({}).exec(function (err, docs) {
-        var mappedDocs = _.map(docs,'description')
-        self.createListEntry(dbEntry, mappedDocs)
-      })
-      
+      self.jobTimerList.push(dbEntry)
     });
   },
   
   removeItem: function(){
-    var entry = $(this).closest('li')[0]
-    db.remove({ _id: entry.id }, {}, function (err, numRemoved) {
-    // numRemoved = 1
-    });
-    $(this).closest('li').remove()
+    var that = this
+    db.remove({ _id: this._id() }, {}, function (err, numRemoved) {});
+    self.jobTimerList.remove(function (item) { return item._id() == that._id(); })
   },
+
   pauseTimer: function(){
-  
-    $(self.currentEntry).removeClass('currentEntry');
-    $(self.currentEntry).find('#btnPause').addClass('disabled');
-    $(self.currentEntry).find('#btnStart').removeClass('disabled')
+    var elementId = jobtimer.currentJobId
+    $('#'+elementId).removeClass('currentEntry');
+    $('#'+elementId).find('#btnPause').addClass('disabled');
+    $('#'+elementId).find('#btnStart').removeClass('disabled')
   
     jobtimer.stop()
   
-    self.lastEntryId = self.currentEntryId
+    self.lastEntryId = elementId
     self.currentEntryId = undefined
     footer.refreshStatusBarEntry()
   },
@@ -292,15 +290,15 @@ var self = module.exports = {
     if(jobtimer.isRunning()){
       self.pauseTimer()
     }
-    $(this).closest('li').addClass('currentEntry');
-    self.currentEntry = $(this).closest('li')[0]
-    self.currentEntryId = self.currentEntry.id;
-    $(self.currentEntry).find('#btnStart').addClass('disabled');
-    $(self.currentEntry).find('#btnPause').removeClass('disabled')
+    var elementId = this._id()
+    $('#'+elementId).closest('li').addClass('currentEntry');
+    self.currentEntryId = elementId;
+    $('#'+elementId).find('#btnStart').addClass('disabled');
+    $('#'+elementId).find('#btnPause').removeClass('disabled')
     
-    self.offsetSeconds = self.currentEntry.savedTime
+    // self.offsetSeconds = self.currentEntry.savedTime
   
-    jobtimer.start(self.currentEntryId, self.offsetSeconds)
+    jobtimer.start(elementId, this.elapsedSeconds())
   },
   
   goToToday: function(){
@@ -309,19 +307,20 @@ var self = module.exports = {
   },
   
   timerStep: function(updateValue){
-    var entry = document.getElementById(updateValue.jobId)
     
-    if(entry){
-      entry.savedTime = updateValue.duration
-      $(entry).find('#textTimer')[0].textContent = self.getTimeString(updateValue.duration)  
-      var description = $(self.currentEntry).find('#text-input-job-'+entry.id)[0].value
+    var match = ko.utils.arrayFirst(self.jobTimerList(), function(item) {
+      return updateValue.jobId === item._id();
+    });
+    
+    if(match){
+      match.elapsedSeconds(updateValue.duration)  
     }
-    
+
     self.saveAll()
     self.refreshTimeSum()
     self.refreshTray(updateValue.duration)
     
-    footer.refreshStatusBarEntry(description, updateValue.duration)
+    footer.refreshStatusBarEntry(match ? match.description(): undefined, updateValue.duration)
   },
   
   refreshTimeSum: function(){

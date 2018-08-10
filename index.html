@@ -30,6 +30,7 @@
     <script src="node_modules/easy-autocomplete/dist/jquery.easy-autocomplete.min.js"></script> 
     <script src="node_modules/toastr/build/toastr.min.js"></script> 
     <script src="node_modules/knockout/build/output/knockout-latest.js"></script> 
+    <script src="node_modules/knockout-mapping/dist/knockout.mapping.min.js"></script> 
     <script src="js/footer.js"></script> 
 
     <script>require('./renderer.js')</script>
@@ -86,61 +87,11 @@
       </div>
     </nav>
 
-    <div class="dateSelector">
-      <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
-        <i class="fa fa-angle-double-left" title="Zurück"></i>
-      </a>
-      <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly/>
-      <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
-        <i class="fa fa-angle-double-right" title="Weiter"></i>
-      </a>
-      <hr class="hLine">
-    </div>
+    
 
-    <div>
-      <ul class="list-group"  id="list"></ul>
-    </div>
+    
 
-    <li class="list-group-item" style="display:none;" id="first-element">
-            <div class="container-fluid" >
-              
-              <div class="form-row">
-                  <div class="col input-group-sm">
-                    <input class="form-control text-input-job" type="text" placeholder="Tätigkeit" id="text-input-job">
-                    <div class="row">
-                      <div class="col-md-auto" id="timerCell" data-toggle="tooltip" href="#" data-trigger="manual" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'>
-                        <div class="row no-gutters" style="cursor: pointer;">
-                          <div class="col-sm-auto" style="margin-right: 3px">Dauer: </div>
-                          <div class="col-sm-auto" id="textTimer"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3 collapsedBySize">
-                    <select class="selectpicker form-control-sm projectSelect" style="width: 100%">
-                      <option>Projekt auswählen...</option>
-                    </select>
-                  </div>
-                  <div class="col-auto">
-                    <div class="btn-group btn-group-sm" role="group" >
-                      <a class="btn btn-default" id="btnStart">
-                        <i class="fa fa-play" title="Start"></i>
-                      </a>
-                      <a class="btn btn-default disabled" id="btnPause">
-                        <i class="fa fa-pause" title="Pause"></i>
-                      </a>
-                      <a class="btn btn-default collapsedBySize" id="btnTransfer">
-                        <i class="fa fa-external-link" title="Übertragen"></i>
-                      </a>
-                      <a class="btn btn-default collapsedBySize" id="btnRemoveEntry">
-                        <i class="fa fa-trash" title="Löschen"></i>
-                      </a>
-                    </div>
-                    
-                  </div>
-                </div>              
-            </div>
-    </li>
+    
 
     <div id="mainContent"></div>
 

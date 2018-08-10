@@ -12,6 +12,7 @@ var remote = require('electron').remote;
 
 var projectssettings = require('./js/projectssettings.js')
 var jobtable = require('./js/jobtable.js')
+var timerlist = require('./js/timerlist.js')
 
 var jobtimer = require('./js/jobtimer.js')
 var footer = require('./js/footer.js')
@@ -19,13 +20,13 @@ var footer = require('./js/footer.js')
 var timerlist = require('./js/timerlist.js')
 
 var Datastore = require('nedb')
-var db = new Datastore({ filename: 'db', autoload: true });
-var db_projects = remote.getGlobal('db_projects');
+// var db = new Datastore({ filename: 'db', autoload: true });
+// var db_projects = remote.getGlobal('db_projects');
 
 var monthChart = undefined;
 
 onload = function() {
-  ko.applyBindings(footer)
+  ko.applyBindings(footer, document.getElementById('footerContainer'))
 
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
@@ -55,15 +56,18 @@ onload = function() {
   
   
 
-  timerlist.onLoad()
+  openJobTimer()
 };
 
 function openJobTimer(){
   
-    $('#list').show()
-    $('#mainContent').hide()
-    $('#navJobTable').removeClass("selected");
-    currentDateChanged()
+  
+    $('#mainContent').show()
+    $('#mainContent').load('pages/timerlist.html', function(){
+      timerlist.onLoad()
+    })
+    $('#navJobTimer').addClass("selected");
+  
   
 }
 
