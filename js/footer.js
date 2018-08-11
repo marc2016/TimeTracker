@@ -4,7 +4,6 @@ var momentDurationFormatSetup = require("moment-duration-format");
 var ko = require('knockout');
 
 var Datastore = require('nedb')
-var db = new Datastore({ filename: 'db', autoload: true });
 
 var self = module.exports = {
     leftJobDescription: ko.observable('-'),
@@ -13,8 +12,10 @@ var self = module.exports = {
     monthChart: undefined,
     utils: undefined,
     leftFooterAction: undefined,
+    db: undefined,
 
     onLoad: function(currentDate){
+        db = new Datastore({ filename: 'db' });
         utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
         $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})

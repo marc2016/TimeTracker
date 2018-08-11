@@ -102,12 +102,10 @@ app.on('ready', () => {
 })
 
 var Datastore = require('nedb')
-var db = undefined;
 var db_projects = undefined;
-db = new Datastore({ filename: 'db', autoload: true });
+
 db_projects = new Datastore({ filename: 'db_projects', autoload: true });
 
-global.db = db;
 global.db_projects = db_projects;
 
 // In this file you can include the rest of your app's specific main process

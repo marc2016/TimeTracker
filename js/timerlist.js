@@ -127,17 +127,7 @@ var self = module.exports = {
     self.currentDate.add(1,'days');
     self.currentDateChanged()
   },
-  
-  createList: function(entries){
-    db.find({}).exec(function (err, docs) {
-      var mappedDocs = _.map(docs,'description')
-      for (var i = 0; i < entries.length; i++) {
-        var dbEntry = entries[i];
-        self.createListEntry(dbEntry, mappedDocs)
-        self.refreshTimeSum()
-      }
-    })
-  },
+
   
   createListEntry: function(dbEntry, autocompleteList){
     var item = document.getElementById("first-element");
@@ -229,22 +219,15 @@ var self = module.exports = {
   },
   
   transferEntry: function(){
-    var entry = $(this).closest('li').addClass('currentEntry');
-    var description = $(entry).find('#text-input-job-'+entry[0].id)[0].value
-    var attribute = $(entry).find('.projectSelect')[0].selectedOptions[0].attributes.projectid;
-    if(attribute != undefined){
-      var projectId = attribute.nodeValue
-    }
   
     self.currentDate = new moment();
-    self.currentDateChanged()
-    var newEntry = {projectId: projectId, elapsedSeconds:0, description:description, date:self.currentDate.format('YYYY-MM-DD')}
+    
+
+    var newEntry = {projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
     db.insert(newEntry, function (err, dbEntry) {
-      db.find({}).exec(function (err, docs) {
-        var mappedDocs = _.map(docs,'description')
-        self.createListEntry(dbEntry, mappedDocs)
-      })
+      self.currentDateChanged()  
     });
+    
   },
   
   previousDay: function(){
