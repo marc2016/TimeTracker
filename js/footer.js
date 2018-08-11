@@ -15,7 +15,7 @@ var self = module.exports = {
     db: undefined,
 
     onLoad: function(currentDate, database){
-        db = database
+        self.db = database
         utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
         $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})

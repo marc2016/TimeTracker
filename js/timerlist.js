@@ -27,6 +27,7 @@ var self = module.exports = {
   timeSortDirection: -1,
   titleSortDirection: -1,
   db: undefined,
+  autocompleteOptions: undefined,
 
   onLoad: function(database){
     self.jobTimerList = ko.observableArray()
@@ -68,7 +69,7 @@ var self = module.exports = {
     btnSortTitle.addEventListener("click", self.sortByTitle )
   
     self.db = database
-    footer.onLoad(self.currentDate)
+    footer.onLoad(self.currentDate, database)
     footer.leftFooterAction = self.goToToday
 
     jobtimer.timeSignal.subscribe(self.timerStep)
@@ -99,6 +100,7 @@ var self = module.exports = {
     var observableDocs = ko.mapping.fromJS(docs,self.jobTimerList);
 
     ko.utils.arrayPushAll(self.jobTimerList, observableDocs())
+    self.createAutoComplete()
   },
 
   sortByTime: function(){
@@ -245,8 +247,28 @@ var self = module.exports = {
     })
     
     self.db.persistence.compactDatafile()
+
+    self.createAutoComplete()
   },
   
+  createAutoComplete: function(){
+    self.db.find({}).exec(function (err, docs) {
+      var mappedDocs = _.map(docs,'description')
+      self.autocompleteOptions = {
+        data: mappedDocs,
+        list: {
+            match: {
+                enabled: true
+            }
+        },
+        theme: "bootstrap"
+      }
+      $('.text-input-job').easyAutocomplete(self.autocompleteOptions)
+      $('.easy-autocomplete.eac-bootstrap').removeAttr( 'style' )
+      $('.text-input-job').css("height",'31px')
+    })
+  },
+
   addNewItem: function(){
     var newEntry = {projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {

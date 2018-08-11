@@ -15,10 +15,9 @@
   <ul class="list-group"  id="list" data-bind="foreach: jobTimerList">
     <li class="list-group-item" data-bind="attr: { id: _id }">
       <div class="container-fluid" >
-        
         <div class="form-row">
             <div class="col input-group-sm">
-              <input data-bind="textInput: description" class="form-control text-input-job" type="text" placeholder="Tätigkeit" id="text-input-job">
+              <input data-bind="textInput: description, attr: { id: 'text-input-job_'+_id() }" class="form-control text-input-job" type="text" placeholder="Tätigkeit">
               <div class="row">
                 <div class="col-md-auto" id="timerCell" data-toggle="tooltip" href="#" data-trigger="manual" data-placement="bottom" data-html="true" data-title='<div class="input-group inputTimeGroup"><input type="text" class="form-control" id="inputTime"><div class="input-group-append"><button id="btnSaveTime" class="btn btn-success" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div></div>'>
                   <div class="row no-gutters" style="cursor: pointer;">
