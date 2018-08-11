@@ -20,7 +20,7 @@ var footer = require('./js/footer.js')
 var timerlist = require('./js/timerlist.js')
 
 var Datastore = require('nedb')
-
+var db = new Datastore({ filename: 'db', autoload: true });
 
 var monthChart = undefined;
 
@@ -51,48 +51,34 @@ onload = function() {
   btnJobTable.addEventListener("click", openJobTable )
   
   var btnJobTimer = document.getElementById('btnJobTimer')
-  btnJobTimer.addEventListener("click", openJobTimer )
+  btnJobTimer.addEventListener("click", openTimerList )
   
-  openJobTimer()
+  openTimerList()
 };
 
-function openJobTimer(){
+function openTimerList(){
     $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
-      timerlist.onLoad()
+      timerlist.onLoad(db)
     })
     $('#navJobTimer').addClass("selected");
 }
 
 function openJobTable(){
-  if($('#mainContent').is(":visible")) {
-    $('#list').show()
-    $('#mainContent').hide()
-    $('#navJobTable').removeClass("selected");
-    currentDateChanged()
-  } else {
-    $('#list').hide()
-    $('#mainContent').show()
-    $('#mainContent').load('pages/jobtable.html', function(){
-      jobtable.onLoad()
-    })
-    $('#navJobTable').addClass("selected");
-  }
+  $('#list').hide()
+  $('#mainContent').show()
+  $('#mainContent').load('pages/jobtable.html', function(){
+    jobtable.onLoad()
+  })
+  $('#navJobTable').addClass("selected")
 }
 
 function openProjectsSettings(){
-  if($('#mainContent').is(":visible")) {
-    $('#list').show()
-    $('#mainContent').hide()
-    $('#navProjectsSettings').removeClass("selected");
-    currentDateChanged()
-  } else {
-    $('#list').hide()
-    $('#mainContent').show()
-    $('#mainContent').load('pages/projectssettings.html', function(){
-      projectssettings.onLoad()
-    })
-    $('#navProjectsSettings').addClass("selected");
-  }
+  $('#list').hide()
+  $('#mainContent').show()
+  $('#mainContent').load('pages/projectssettings.html', function(){
+    projectssettings.onLoad()
+  })
+  $('#navProjectsSettings').addClass("selected");
 }
 

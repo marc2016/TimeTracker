@@ -14,8 +14,8 @@ var self = module.exports = {
     leftFooterAction: undefined,
     db: undefined,
 
-    onLoad: function(currentDate){
-        db = new Datastore({ filename: 'db' });
+    onLoad: function(currentDate, database){
+        db = database
         utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
         $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
@@ -41,7 +41,7 @@ var self = module.exports = {
 
     initChart: function(currentDate){
         var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-        db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
+        self.db.find({date: regex}).sort({ date: 1 }).exec(function (err, docs) {
       
           var lastDayOfMonth = currentDate.clone().endOf('month').format('D')
           var data = []

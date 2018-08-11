@@ -11,14 +11,14 @@ var jobtimer = require('./jobtimer.js')
 var footer = require('./footer.js')
 
 var Datastore = require('nedb')
-var db = new Datastore({ filename: 'db', autoload: true });
+// var self.db = new Datastore({ filename: 'db', autoload: true });
 var db_projects = remote.getGlobal('db_projects');
 
 
 var self = module.exports = {
 
-  jobTimerList: ko.observableArray(),
-  projectList: ko.observableArray(),
+  jobTimerList: undefined,
+  projectList: undefined,
   startTime: undefined,
   offsetSeconds: undefined,
   currentDate: new moment(),
@@ -26,8 +26,11 @@ var self = module.exports = {
   currentEntryId: undefined,
   timeSortDirection: -1,
   titleSortDirection: -1,
+  db: undefined,
 
-  onLoad: function(){
+  onLoad: function(database){
+    self.jobTimerList = ko.observableArray()
+    self.projectList = ko.observableArray()
     ko.applyBindings(self, document.getElementById('timerlistMainContent'))
     var tray = remote.getGlobal('tray');
     tray.setContextMenu(self.trayContextMenu)
@@ -64,12 +67,13 @@ var self = module.exports = {
     var btnSortTitle = document.getElementById('btnSortTitle')
     btnSortTitle.addEventListener("click", self.sortByTitle )
   
+    self.db = database
     footer.onLoad(self.currentDate)
     footer.leftFooterAction = self.goToToday
 
     jobtimer.timeSignal.subscribe(self.timerStep)
   
-    db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
+    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
       self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
@@ -98,7 +102,7 @@ var self = module.exports = {
   },
 
   sortByTime: function(){
-    db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: self.timeSortDirection, description: -1 }).exec(function (err, docs) {
+    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: self.timeSortDirection, description: -1 }).exec(function (err, docs) {
       self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
@@ -106,7 +110,7 @@ var self = module.exports = {
   },
   
   sortByTitle: function(){
-    db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: self.titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
+    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: self.titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
       self.refreshJobTimerList(docs)
       self.refreshTimeSum()
     });
@@ -116,7 +120,7 @@ var self = module.exports = {
   currentDateChanged: function(){
     var lastEntryId = self.currentEntryId
     $.find('#textCurrentDate')[0].value = self.currentDate.format('DD.MM.YYYY')
-    db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
+    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
       self.refreshJobTimerList(docs)
       self.refreshTimeSum()
       footer.initChart(self.currentDate)
@@ -224,7 +228,7 @@ var self = module.exports = {
     
 
     var newEntry = {projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
-    db.insert(newEntry, function (err, dbEntry) {
+    self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
     
@@ -237,22 +241,23 @@ var self = module.exports = {
   
   saveAll: function(){
     ko.utils.arrayForEach(self.jobTimerList(), function (element) {
-      db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId() } },{ multi: false }, function (err, numReplaced) {} )
+      self.db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId() } },{ multi: false }, function (err, numReplaced) {} )
     })
     
-    db.persistence.compactDatafile()
+    self.db.persistence.compactDatafile()
   },
   
   addNewItem: function(){
-    var newEntry = {elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
-    db.insert(newEntry, function (err, dbEntry) {
+    var newEntry = {projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
+    self.db.insert(newEntry, function (err, dbEntry) {
+      dbEntry = ko.mapping.fromJS(dbEntry)
       self.jobTimerList.push(dbEntry)
     });
   },
   
   removeItem: function(){
     var that = this
-    db.remove({ _id: this._id() }, {}, function (err, numRemoved) {});
+    self.db.remove({ _id: this._id() }, {}, function (err, numRemoved) {});
     self.jobTimerList.remove(function (item) { return item._id() == that._id(); })
   },
 
