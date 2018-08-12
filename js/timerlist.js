@@ -67,6 +67,9 @@ var self = module.exports = {
   
     var btnSortTitle = document.getElementById('btnSortTitle')
     btnSortTitle.addEventListener("click", self.sortByTitle )
+
+    var btnSaveDuration = document.getElementById('btnSaveDuration')
+    btnSaveDuration.addEventListener("click",self.saveJobDuration )
   
     self.db = database
     footer.onLoad(self.currentDate, database)
@@ -80,8 +83,32 @@ var self = module.exports = {
     });
 
     self.refreshProjectList()
+    self.handleModalChangeJobDuration()
+    
+  },
 
-  
+  saveJobDuration: function(){
+    var jobId = $(this).attr('jobId')
+    var match = ko.utils.arrayFirst(self.jobTimerList(), function(item) {
+      return item._id() == jobId;
+    });
+    var time = duration.parse($('#inputJobDuration')[0].value, "HH:mm:ss")
+    if(time){
+      match.elapsedSeconds(time/1000)
+    }
+    $('#modalChangeJobDuration').modal('toggle');
+  },
+
+  handleModalChangeJobDuration: function(){
+    $('#modalChangeJobDuration').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var duration = button.attr('duration')
+      var jobId = button.attr('jobId')
+      var modal = $(this)
+      modal.find('.modal-body input').val(duration)
+      $('#btnSaveDuration').attr('jobId', jobId)
+      document.getElementById("inputJobDuration").focus();
+    })
   },
 
   refreshProjectList: function(){
@@ -223,17 +250,30 @@ var self = module.exports = {
   
     return formated + "/" + decimal
   },
+
+  getDecimalDuration: function(seconds){
+    if(!seconds)
+      return "0.00"
+    var decimal = moment.duration(seconds, "seconds").format("h", 2)
+  
+    return decimal
+  },
+
+  getFormatedDuration: function(seconds){
+    if(!seconds)
+      return "00:00:00"
+  
+    var formated = moment.duration(seconds, "seconds").format("hh:mm:ss",{trim: false})
+  
+    return formated
+  },
   
   transferEntry: function(){
-  
     self.currentDate = new moment();
-    
-
     var newEntry = {projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
-    
   },
   
   previousDay: function(){
