@@ -55,7 +55,7 @@ var self = module.exports = {
                     var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
                     value.formattedTime = formatted
                     var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
-                    value.formattedTimeDeciaml = decimal
+                    value.formattedTimeDeciaml = decimal.replace('.',',')
 
                     value.projectName = "-"   
                     if(value.projectId != undefined) {
