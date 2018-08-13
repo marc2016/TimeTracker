@@ -92,11 +92,23 @@ var self = module.exports = {
     var match = ko.utils.arrayFirst(self.jobTimerList(), function(item) {
       return item._id() == jobId;
     });
-    var time = duration.parse($('#inputJobDuration')[0].value, "HH:mm:ss")
-    if(time){
-      match.elapsedSeconds(time/1000)
+    var newDuration = $('#inputJobDuration')[0].value
+    var time = duration.parse(newDuration, "HH:mm:ss")/1000
+    if(!time){
+      time = duration.parse(newDuration, "HH:mm")/1000
     }
-    $('#modalChangeJobDuration').modal('toggle');
+    if(!time){
+      time = duration.parse(newDuration, "H:mm")/1000
+    }
+    if(!time && newDuration.match(/,/).length == 1 && parseFloat(newDuration)){
+      time = parseFloat(newDuration.replace(',', '.'))*60*60
+    }
+
+    if(time){
+      match.elapsedSeconds(time)
+      $('#modalChangeJobDuration').modal('toggle');
+    }
+    
   },
 
   handleModalChangeJobDuration: function(){
