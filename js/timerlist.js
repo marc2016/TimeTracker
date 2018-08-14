@@ -108,7 +108,7 @@ var self = module.exports = {
       match.elapsedSeconds(time)
       $('#modalChangeJobDuration').modal('toggle');
     }
-    
+    self.refreshTimeSum()
   },
 
   handleModalChangeJobDuration: function(){
@@ -392,15 +392,7 @@ var self = module.exports = {
   },
   
   getTimeSum: function(){
-    var timeSum = 0
-    $('#list').children('li').each(function(){
-      if(this.id != 'first-element' && this.savedTime)
-      {
-        timeSum += this.savedTime
-      }
-    })
-  
-    return timeSum
+    return _.sumBy(self.jobTimerList(), function(o) { return o.elapsedSeconds(); });
   },
   
   refreshTray: function(elapsedTime){
