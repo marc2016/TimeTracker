@@ -7,3 +7,44 @@
 .text-input-job{
   box-shadow: none !important;
 }
+
+.hLine {
+  background-color: #a4244a;
+  width: 100%;
+  height: 1px;
+  display: block;
+  margin-top: 11px;
+  margin-bottom: 1px;
+}
+
+.btnDateChange {
+  margin: 3px;
+}
+
+.dateSelector {
+  height: auto;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #FFFFFF;
+  // position: fixed;
+  width: 100%;
+  // z-index: 1029;
+  // top: $navbar-height + 2px;
+}
+
+.currentDate {
+  margin: auto;
+  vertical-align: middle;
+  width: auto;
+  font-size: 20px;
+  border: 0px;
+  width: 100px;
+}
+
+.datepicker {
+  z-index: 9999999;
+}
+
+.datepicker--day-name {
+  color: #a4244a;
+}

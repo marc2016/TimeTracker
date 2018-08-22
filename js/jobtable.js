@@ -41,13 +41,14 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
 
 var self = module.exports = {
 
-    onLoad: function(){
+    db: undefined,
+    onLoad: function(database){
         var Datastore = require('nedb')
-        var db = new Datastore({ filename: 'db', autoload: true });
+        self.db = database;
         var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
         var Table = require('table-builder');
         
-        db.find({}, function (err, jobDocs) {
+        self.db.find({}, function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
             db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
                 
@@ -60,7 +61,9 @@ var self = module.exports = {
                     value.projectName = "-"   
                     if(value.projectId != undefined) {
                         var project = _.find(projectDocs, {'_id':value.projectId})
-                        value.projectName = project.name   
+                        if(project){
+                            value.projectName = project.name
+                        }
                     }
                 })
     

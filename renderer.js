@@ -68,7 +68,7 @@ function openJobTable(){
   $('#list').hide()
   $('#mainContent').show()
   $('#mainContent').load('pages/jobtable.html', function(){
-    jobtable.onLoad()
+    jobtable.onLoad(db)
   })
   $('#navJobTable').addClass("selected")
 }

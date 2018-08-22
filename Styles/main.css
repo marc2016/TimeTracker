@@ -8580,6 +8580,44 @@ h3 {
   box-shadow: none !important;
 }
 
+.hLine {
+  background-color: #a4244a;
+  width: 100%;
+  height: 1px;
+  display: block;
+  margin-top: 11px;
+  margin-bottom: 1px;
+}
+
+.btnDateChange {
+  margin: 3px;
+}
+
+.dateSelector {
+  height: auto;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #FFFFFF;
+  width: 100%;
+}
+
+.currentDate {
+  margin: auto;
+  vertical-align: middle;
+  width: auto;
+  font-size: 20px;
+  border: 0px;
+  width: 100px;
+}
+
+.datepicker {
+  z-index: 9999999;
+}
+
+.datepicker--day-name {
+  color: #a4244a;
+}
+
 #projectssettingsMainContent {
   background-color: white;
   width: 100%;
@@ -8664,43 +8702,18 @@ h3 {
 }
 
 #mainContent {
-  position: fixed;
+  margin-top: 40px;
+  margin-bottom: 30px;
   width: 100%;
   height: 100%;
   top: 0px;
   left: 0px;
   z-index: 1029;
-  margin-top: 40px;
-  margin-bottom: 30px;
+  overflow-y: hidden;
 }
 
 .logo {
   vertical-align: sub;
-}
-
-.dateSelector {
-  height: 38px;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #FFFFFF;
-  width: 100%;
-}
-
-.currentDate {
-  margin: auto;
-  vertical-align: middle;
-  width: auto;
-  font-size: 20px;
-  border: 0px;
-  width: 100px;
-}
-
-.datepicker {
-  z-index: 9999999;
-}
-
-.datepicker--day-name {
-  color: #a4244a;
 }
 
 .mainMenu {
@@ -8709,11 +8722,6 @@ h3 {
 
 .inputTimeGroup {
   margin: 3px;
-}
-
-.btnDateChange {
-  margin-left: 3px;
-  margin-right: 3px;
 }
 
 #inputTime {
@@ -8730,15 +8738,6 @@ h3 {
   margin: 5px;
   float: left;
   font-size: 15px;
-}
-
-.hLine {
-  background-color: #a4244a;
-  width: 100%;
-  height: 1px;
-  display: block;
-  margin-top: 8px;
-  margin-bottom: 1px;
 }
 
 .btn-default {

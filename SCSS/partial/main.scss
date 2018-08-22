@@ -1,53 +1,16 @@
-// .modal-backdrop {
-//     position: fixed;
-//     top: 0;
-//     right: 0;
-//     bottom: 0;
-//     left: 0;
-//     background-color: #000000;
-//   }
-
 #mainContent {
-    position: fixed;
+    margin-top: $navbar-height;
+    margin-bottom: $footerHeight;
     width: 100%;
     height: 100%;
     top: 0px;
     left: 0px;
     z-index: 1029;
-    margin-top: $navbar-height;
-    margin-bottom: $footerHeight;
+    overflow-y: hidden;
 }
 
 .logo {
     vertical-align: sub;
-}
-
-.dateSelector {
-    height: 38px;
-    text-align: center;
-    vertical-align: middle;
-    background-color: #FFFFFF;
-    // position: fixed;
-    width: 100%;
-    // z-index: 1029;
-    // top: $navbar-height + 2px;
-}
-
-.currentDate {
-    margin: auto;
-    vertical-align: middle;
-    width: auto;
-    font-size: 20px;
-    border: 0px;
-    width: 100px;
-}
-
-.datepicker {
-    z-index: 9999999;
-}
-
-.datepicker--day-name {
-    color: #a4244a;
 }
 
 .mainMenu {
@@ -56,11 +19,6 @@
 
 .inputTimeGroup {
     margin: 3px;
-}
-
-.btnDateChange {
-    margin-left: 3px;
-    margin-right: 3px;
 }
 
 #inputTime {
@@ -77,15 +35,6 @@
     margin: 5px;
     float: left;
     font-size: 15px;
-}
-
-.hLine {
-    background-color: #a4244a;
-    width: 100%;
-    height: 1px;
-    display: block;
-    margin-top: 8px;
-    margin-bottom: 1px;
 }
 
 .btn-default {
