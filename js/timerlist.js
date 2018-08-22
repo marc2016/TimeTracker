@@ -315,9 +315,9 @@ var self = module.exports = {
         },
         theme: "bootstrap"
       }
-      $('.text-input-job').easyAutocomplete(self.autocompleteOptions)
+      
+      $('.text-input-job').parent().not('.easy-autocomplete').children('.text-input-job').easyAutocomplete(self.autocompleteOptions).css("height",'31px')
       $('.easy-autocomplete.eac-bootstrap').removeAttr( 'style' )
-      $('.text-input-job').css("height",'31px')
     })
   },
 
