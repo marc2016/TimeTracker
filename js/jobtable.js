@@ -78,8 +78,11 @@ var self = module.exports = {
                     },
                     drawCallback: function () {
                         var api = this.api();
+                        var sum = _.sumBy(api.column( 4,  {"filter": "applied"} ).data(), function(element){
+                            return parseFloat(element.replace(",","."))
+                        })
                         $('#tableFooterLeft').html(
-                          'Summe Dauer: '+api.column( 4,  {"filter": "applied"} ).data().sum().toFixed(2) + ' h'
+                          'Summe Dauer: '+sum.toFixed(2).replay(".",",") + ' h'
                         );
                       }
                 });
