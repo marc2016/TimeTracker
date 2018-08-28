@@ -25,8 +25,6 @@ var self = module.exports = {
   currentDate: new moment(),
   currentEntry: undefined,
   currentEntryId: undefined,
-  timeSortDirection: -1,
-  titleSortDirection: -1,
   db: undefined,
   db_projects: undefined,
   autocompleteOptions: undefined,
@@ -149,19 +147,11 @@ var self = module.exports = {
   },
 
   sortByTime: function(){
-    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ elapsedSeconds: self.timeSortDirection, description: -1 }).exec(function (err, docs) {
-      self.refreshJobTimerList(docs)
-      self.refreshTimeSum()
-    });
-    self.timeSortDirection *= -1
+    self.jobTimerList.sort(function (left, right) { return left.elapsedSeconds == right.elapsedSeconds ? 0 : (left.elapsedSeconds < right.elapsedSeconds ? -1 : 1) })
   },
   
   sortByTitle: function(){
-    self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: self.titleSortDirection, elapsedSeconds: -1 }).exec(function (err, docs) {
-      self.refreshJobTimerList(docs)
-      self.refreshTimeSum()
-    });
-    self.titleSortDirection *= -1
+    self.jobTimerList.sort(function (left, right) { return left.description == right.description ? 0 : (left.description < right.description ? -1 : 1) })
   },
   
   currentDateChanged: function(){
