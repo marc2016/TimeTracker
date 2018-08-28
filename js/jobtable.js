@@ -86,7 +86,7 @@ var self = module.exports = {
                             return parseFloat(element.replace(",","."))
                         })
                         $('#tableFooterLeft').html(
-                          'Summe Dauer: '+sum.toFixed(2).replay(".",",") + ' h'
+                          'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
                         );
                       }
                 });
