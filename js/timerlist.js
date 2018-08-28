@@ -1,5 +1,6 @@
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 
+var base = require('./base.js')
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var moment = require('moment');
@@ -10,12 +11,12 @@ var remote = require('electron').remote;
 var jobtimer = require('./jobtimer.js')
 var footer = require('./footer.js')
 
-var Datastore = require('nedb')
-// var self.db = new Datastore({ filename: 'db', autoload: true });
-var db_projects = remote.getGlobal('db_projects');
-
-
 var self = module.exports = {
+
+  viewId:undefined,
+  isBound: function() {
+      return !!ko.dataFor(document.getElementById(self.viewId));
+  },
 
   jobTimerList: undefined,
   projectList: undefined,
@@ -27,12 +28,18 @@ var self = module.exports = {
   timeSortDirection: -1,
   titleSortDirection: -1,
   db: undefined,
+  db_projects: undefined,
   autocompleteOptions: undefined,
 
-  onLoad: function(database){
+  onLoad: function(databaseJobs, databaseProjects){
+    self.db = databaseJobs
+    self.db_projects = databaseProjects
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
-    ko.applyBindings(self, document.getElementById('timerlistMainContent'))
+    if(!self.isBound())
+      ko.applyBindings(self, document.getElementById('timerlistMainContent'))
+    
+      self.refreshProjectList()
     var tray = remote.getGlobal('tray');
     tray.setContextMenu(self.trayContextMenu)
 
@@ -71,8 +78,7 @@ var self = module.exports = {
     var btnSaveDuration = document.getElementById('btnSaveDuration')
     btnSaveDuration.addEventListener("click",self.saveJobDuration )
   
-    self.db = database
-    footer.onLoad(self.currentDate, database)
+    footer.onLoad(self.currentDate, databaseJobs)
     footer.leftFooterAction = self.goToToday
 
     jobtimer.timeSignal.subscribe(self.timerStep)
@@ -82,7 +88,7 @@ var self = module.exports = {
       self.refreshTimeSum()
     });
 
-    self.refreshProjectList()
+    
     self.handleModalChangeJobDuration()
     
   },
@@ -124,7 +130,7 @@ var self = module.exports = {
   },
 
   refreshProjectList: function(){
-    db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+    self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
       ko.utils.arrayPushAll(self.projectList, docs)
     })
   },
@@ -171,86 +177,6 @@ var self = module.exports = {
   nextDay: function(){
     self.currentDate.add(1,'days');
     self.currentDateChanged()
-  },
-
-  
-  createListEntry: function(dbEntry, autocompleteList){
-    var item = document.getElementById("first-element");
-    var clone = item.cloneNode(true);
-    clone.style = ""
-    clone.id = dbEntry._id
-    var btnRemove = $(clone).find('#btnRemoveEntry')[0]
-    btnRemove.addEventListener("click", self.removeItem)
-    var btnStart = $(clone).find('#btnStart')[0]
-    btnStart.addEventListener("click", self.startTimer)
-    var btnPause = $(clone).find('#btnPause')[0]
-    btnPause.addEventListener("click", self.pauseTimer)
-    var btnTransfer = $(clone).find('#btnTransfer')[0]
-    btnTransfer.addEventListener("click", self.transferEntry)
-    if((new moment()).isSame(self.currentDate, 'day')){
-      $(clone).find('#btnTransfer').addClass('disabled')
-    }
-  
-    $(clone).find('#text-input-job')[0].value = dbEntry.description;
-    clone.savedTime = dbEntry.elapsedSeconds
-    $(clone).find('#textTimer')[0].textContent = self.getTimeString(dbEntry.elapsedSeconds)
-  
-    document.getElementById("list").appendChild(clone);
-    $(clone).find('#timerCell')[0].addEventListener("click", self.showTooltip)
-    $(clone).find('#timerCell').tooltip();
-  
-    
-      var options = {
-        data: autocompleteList,
-    
-        list: {
-            match: {
-                enabled: true
-            }
-        },
-    
-        theme: "bootstrap"
-      };
-    
-      var textInputNewId = 'text-input-job-'+dbEntry._id
-      $(clone).find('#text-input-job').attr('id',textInputNewId)
-      $(clone).find('#'+textInputNewId).easyAutocomplete(options)
-      $(clone).find('.easy-autocomplete.eac-bootstrap').removeAttr( 'style' )
-      $(clone).find('#'+textInputNewId).css("height",'31px')
-  
-    db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
-      var htmlString = ''
-      for(var i = 0; i < docs.length;i++){
-        var doc = docs[i]
-        var selected = ''
-        if(doc._id == dbEntry.projectId) {
-          selected = 'selected disabled'
-        }
-  
-        if(doc._id == dbEntry.projectId || doc.active) {
-          htmlString += '<option '+selected+' projectid="'+doc._id+'">'+doc.name+'</option>'
-        }
-      }
-      $(clone).find(".projectSelect")
-         .append(htmlString);
-    });
-  
-  },
-  showTooltip: function(){
-    var that = this
-    $(".tooltip").remove();
-    $(this).tooltip("toggle");
-    var element = $(this).closest('li')[0]
-    var savedTime = element.savedTime
-    $('#inputTime').val(moment.duration(savedTime, "seconds").format("hh:mm:ss",{trim: false}))
-    $('#btnSaveTime').on('click', function(){
-      var time = duration.parse($('#inputTime')[0].value, "HH:mm:ss")
-      element.savedTime = time/1000
-      $(element).find('#textTimer')[0].textContent = self.getTimeString(time/1000)
-      self.saveAll()
-      self.refreshTimeSum()
-      $(that).tooltip('hide')
-    })
   },
   
   getTimeString: function(seconds){

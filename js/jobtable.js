@@ -41,6 +41,10 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
 
 var self = module.exports = {
 
+    viewId:undefined,
+    isBound: function() {
+        return !!ko.dataFor(document.getElementById(viewId));
+    },
     db: undefined,
     onLoad: function(database){
         var Datastore = require('nedb')

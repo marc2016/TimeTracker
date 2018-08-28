@@ -1,39 +1,35 @@
-var remote = require('electron').remote;
+var ko = require('knockout');
+ko.mapping = require('knockout-mapping')
 
 var self = module.exports = {
 
-    db_projects: remote.getGlobal('db_projects'),
+    viewId:undefined,
+    isBound: function() {
+        return !!ko.dataFor(document.getElementById(self.viewId));
+    },
+
+    db_projects: undefined,
+    selectedProject: undefined,
+    projectList: undefined,
     selectedProject: undefined,
 
-    onLoad: function(){
-        $('#projectForm *').prop('disabled', true);
-        this.clearProjectsList();
-        this.createProjectList();
-        var btnAddNewProject = document.getElementById('btnAddNewProject')
-        btnAddNewProject.addEventListener("click", self.addNewProject )
-
-        var btnSaveProject = document.getElementById('btnSaveProject')
-        btnSaveProject.addEventListener("click",self.saveProject )
+    onLoad: function(projectDatabase){
+        self.db_projects = projectDatabase
+        self.projectList = ko.observableArray()
+        self.selectedProject = ko.observable()
         
-    },
-
-    saveProject: function() {
-        if(self.selectedProject == undefined){
-            return
-        }
-        var inputProjectName = document.getElementById('inputProjectName')
-        var checkboxProjectActive = document.getElementById('checkboxProjectActive')
-        self.db_projects.update({_id:self.selectedProject}, {name:inputProjectName.value, active:checkboxProjectActive.checked}, {}, function (err, numReplaced) {
-            self.selectedProject = undefined
-            self.clearProjectsList();
-            self.createProjectList();
-            self.clearForm();
-        })
-    },
-
-    clearForm: function(){
-        $('#inputProjectName').prop('value', "")
+        if(!self.isBound())
+            ko.applyBindings(self, document.getElementById('projectssettingsMainContent'))
         $('#projectForm *').prop('disabled', true);
+        
+        self.refreshProjectList()
+    },
+
+    saveProjects: function() {
+        ko.utils.arrayForEach(self.projectList(), function (element) {
+            self.db_projects.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
+        })
+        self.db_projects.persistence.compactDatafile()
     },
 
     addNewProject: function(){
@@ -48,47 +44,21 @@ var self = module.exports = {
         });
     },
 
-    createProjectList: function(){
+    refreshProjectList: function(){
         var that = this
-        this.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
-            var htmlString = ''
-            for(var i = 0; i < docs.length;i++){
-              var doc = docs[i]
-              htmlString += '<a href="#" projectid='+doc._id+' class="list-group-item list-group-item-action">'+doc.name+'</a>'
-            }
-            $('#projectsList').append(htmlString);
-            
-            $('.list-group-item').on('click', function() {
-                
-
-                $('.active').removeClass('active');
-                $(this).toggleClass('active')
-            
-                that.projectSelected(this.getAttribute('projectid'))
+        self.projectList.removeAll()
+        self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+            var observableDocs = ko.mapping.fromJS(docs,self.projectList)
+            _.forEach(observableDocs(), function(element){
+                if(!element.externalId){
+                    element.externalId = ko.observable()
+                }
             })
-        });
-    },
-
-    createEntry: function(){
-        var element = '<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>'
-        document.getElementById("projectsList").appendChild(element);
-        
-    },
-
-    clearProjectsList: function(){
-        var ul = document.getElementById("projectsList");
-        ul.innerHTML = "";
-    },
-
-    projectSelected: function(projectId){
-        $('#projectForm *').prop('disabled', false);
-        this.selectedProject = projectId
-        this.db_projects.findOne({_id:projectId}).exec( function (err, doc) {
-            var inputProjectName = document.getElementById('inputProjectName')
-            inputProjectName.value = doc.name
-            var checkboxProjectActive = document.getElementById('checkboxProjectActive')
-            checkboxProjectActive.checked = doc.active
+            ko.utils.arrayPushAll(self.projectList, observableDocs())
         })
-        
+    },
+
+    clickSelectProject: function(){
+        self.selectedProject(this)
     }
 }

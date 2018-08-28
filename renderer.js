@@ -21,12 +21,11 @@ var timerlist = require('./js/timerlist.js')
 
 var Datastore = require('nedb')
 var db = new Datastore({ filename: 'db', autoload: true });
+var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
 
 var monthChart = undefined;
 
 onload = function() {
-  ko.applyBindings(footer, document.getElementById('footerContainer'))
-
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   // var tray = remote.getGlobal('tray');
@@ -59,25 +58,26 @@ onload = function() {
 function openTimerList(){
     $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
-      timerlist.onLoad(db)
+      timerlist.viewId = 'timerlistMainContent'
+      timerlist.onLoad(db,db_projects)
     })
     $('#navJobTimer').addClass("selected");
 }
 
 function openJobTable(){
-  $('#list').hide()
   $('#mainContent').show()
   $('#mainContent').load('pages/jobtable.html', function(){
+    jobtable.viewId = 'jobtableMainContent'
     jobtable.onLoad(db)
   })
   $('#navJobTable').addClass("selected")
 }
 
 function openProjectsSettings(){
-  $('#list').hide()
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
-    projectssettings.onLoad()
+    projectssettings.viewId = 'projectssettingsMainContent'
+    projectssettings.onLoad(db_projects)
   })
   $('#navProjectsSettings').addClass("selected");
 }

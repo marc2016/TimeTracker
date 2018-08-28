@@ -14,7 +14,13 @@ var self = module.exports = {
     leftFooterAction: undefined,
     db: undefined,
 
+    isBound: function() {
+        return !!ko.dataFor(document.getElementById('footerContainer'));
+    },
+
     onLoad: function(currentDate, database){
+        if(!self.isBound())
+            ko.applyBindings(self, document.getElementById('footerContainer'))
         self.db = database
         utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
