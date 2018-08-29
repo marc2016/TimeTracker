@@ -222,8 +222,9 @@ var self = module.exports = {
   createAutoComplete: function(){
     self.db.find({}).exec(function (err, docs) {
       var mappedDocs = _.map(docs,'description')
+      var uniqDocs = _.uniq(mappedDocs)
       self.autocompleteOptions = {
-        data: mappedDocs,
+        data: uniqDocs,
         list: {
             match: {
                 enabled: true
