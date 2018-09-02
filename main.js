@@ -1,11 +1,11 @@
 const electron = require('electron')
+const app = electron.app
+
 const {
   Menu,
   Tray
 } = require('electron')
 
-// Module to control application life.
-const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -49,7 +49,7 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -100,13 +100,3 @@ app.on('ready', () => {
 
   global.menu = Menu
 })
-
-var Datastore = require('nedb')
-var db_projects = undefined;
-
-db_projects = new Datastore({ filename: 'db_projects', autoload: true });
-
-global.db_projects = db_projects;
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

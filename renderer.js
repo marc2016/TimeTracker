@@ -1,14 +1,12 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-//require('jquery')
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 
 var ko = require('knockout');
 var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
-var remote = require('electron').remote;
+const remote = require('electron').remote;
+const app = remote.app;
+var userDataPath = app.getPath('userData')+'/userdata/'
 
 var projectssettings = require('./js/projectssettings.js')
 var jobtable = require('./js/jobtable.js')
@@ -20,8 +18,9 @@ var footer = require('./js/footer.js')
 var timerlist = require('./js/timerlist.js')
 
 var Datastore = require('nedb')
-var db = new Datastore({ filename: 'db', autoload: true });
-var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
+var dbJobs = new Datastore({ filename: userDataPath+'/jobs.db', autoload: true });
+var dbJobtypes = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
+var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
 
 var monthChart = undefined;
 
@@ -59,7 +58,7 @@ function openTimerList(){
     $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(db,db_projects)
+      timerlist.onLoad(dbJobs,dbJobtypes)
     })
     $('#navJobTimer').addClass("selected");
 }
@@ -68,7 +67,7 @@ function openJobTable(){
   $('#mainContent').show()
   $('#mainContent').load('pages/jobtable.html', function(){
     jobtable.viewId = 'jobtableMainContent'
-    jobtable.onLoad(db)
+    jobtable.onLoad(dbJobs)
   })
   $('#navJobTable').addClass("selected")
 }
@@ -77,7 +76,7 @@ function openProjectsSettings(){
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
     projectssettings.viewId = 'projectssettingsMainContent'
-    projectssettings.onLoad(db_projects)
+    projectssettings.onLoad(dbJobtypes)
   })
   $('#navProjectsSettings').addClass("selected");
 }

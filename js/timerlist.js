@@ -20,6 +20,7 @@ var self = module.exports = {
 
   jobTimerList: undefined,
   projectList: undefined,
+  jobtypeList: undefined,
   startTime: undefined,
   offsetSeconds: undefined,
   currentDate: new moment(),
@@ -34,6 +35,7 @@ var self = module.exports = {
     self.db_projects = databaseProjects
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
+    self.jobtypeList = ko.observableArray()
     if(!self.isBound())
       ko.applyBindings(self, document.getElementById('timerlistMainContent'))
     
@@ -138,6 +140,9 @@ var self = module.exports = {
       if(!item.projectId){
         item.projectId = ""
       }
+      if(!item.jobtypeId){
+        item.jobtypeId = ""
+      }
     })
     self.jobTimerList.removeAll()
     var observableDocs = ko.mapping.fromJS(docs,self.jobTimerList);
@@ -198,7 +203,7 @@ var self = module.exports = {
   
   transferEntry: function(){
     self.currentDate = new moment();
-    var newEntry = {projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobtypeId: this.jobtypeId, projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
@@ -211,7 +216,7 @@ var self = module.exports = {
   
   saveAll: function(){
     ko.utils.arrayForEach(self.jobTimerList(), function (element) {
-      self.db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId() } },{ multi: false }, function (err, numReplaced) {} )
+      self.db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
     })
     
     self.db.persistence.compactDatafile()
@@ -239,7 +244,7 @@ var self = module.exports = {
   },
 
   addNewItem: function(){
-    var newEntry = {projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       self.jobTimerList.push(dbEntry)

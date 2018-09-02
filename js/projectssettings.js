@@ -19,7 +19,10 @@ var self = module.exports = {
         self.selectedProject = ko.observable()
         
         if(!self.isBound())
+        {
             ko.applyBindings(self, document.getElementById('projectssettingsMainContent'))
+            ko.applyBindings(self, document.getElementById('modalAddNewProject'))
+        }
         $('#projectForm *').prop('disabled', true);
         
         self.refreshProjectList()
@@ -38,8 +41,7 @@ var self = module.exports = {
         var newProject = {name:newProjectName.value, active:true}
         
         self.db_projects.insert(newProject, function (err, dbEntry) {
-            self.clearProjectsList()
-            self.createProjectList()
+            self.refreshProjectList()
             $('#modalAddNewProject').modal('toggle');
         });
     },
