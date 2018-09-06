@@ -8,7 +8,7 @@ const remote = require('electron').remote;
 const app = remote.app;
 var userDataPath = app.getPath('userData')+'/userdata/'
 
-var projectssettings = require('./js/projectssettings.js')
+var ListSettings = require('./js/projectssettings.js')
 var jobtable = require('./js/jobtable.js')
 var timerlist = require('./js/timerlist.js')
 
@@ -19,10 +19,10 @@ var timerlist = require('./js/timerlist.js')
 
 var Datastore = require('nedb')
 var dbJobs = new Datastore({ filename: userDataPath+'/jobs.db', autoload: true });
-var dbJobtypes = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
+var dbProjects = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
 var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
 
-var monthChart = undefined;
+var projectsSettingViewModel = undefined
 
 onload = function() {
   $('#modals').load("pages/modals.html")
@@ -51,6 +51,8 @@ onload = function() {
   var btnJobTimer = document.getElementById('btnJobTimer')
   btnJobTimer.addEventListener("click", openTimerList )
   
+  projectsSettingViewModel = new ListSettings(dbProjects,'projectssettingsMainContent')
+
   openTimerList()
 };
 
@@ -58,7 +60,7 @@ function openTimerList(){
     $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(dbJobs,dbJobtypes)
+      timerlist.onLoad(dbJobs,dbProjects)
     })
     $('#navJobTimer').addClass("selected");
 }
@@ -75,8 +77,7 @@ function openJobTable(){
 function openProjectsSettings(){
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
-    projectssettings.viewId = 'projectssettingsMainContent'
-    projectssettings.onLoad(dbJobtypes)
+    projectsSettingViewModel.onLoad()
   })
   $('#navProjectsSettings').addClass("selected");
 }

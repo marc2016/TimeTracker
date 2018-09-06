@@ -1,66 +1,65 @@
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 
-var self = module.exports = {
+class ListSettings  {
 
-    viewId:undefined,
-    isBound: function() {
-        return !!ko.dataFor(document.getElementById(self.viewId));
-    },
+    
+    isBound() {
+        return !!ko.dataFor(document.getElementById(this.viewId));
+    }
 
-    db_projects: undefined,
-    selectedProject: undefined,
-    projectList: undefined,
-    selectedProject: undefined,
-
-    onLoad: function(projectDatabase){
-        self.db_projects = projectDatabase
-        self.projectList = ko.observableArray()
-        self.selectedProject = ko.observable()
-        
-        if(!self.isBound())
+    onLoad() {
+        if(!this.isBound())
         {
-            ko.applyBindings(self, document.getElementById('projectssettingsMainContent'))
-            ko.applyBindings(self, document.getElementById('modalAddNewProject'))
+            ko.applyBindings(this, document.getElementById('projectssettingsMainContent'))
+            ko.applyBindings(this, document.getElementById('modalAddNewProject'))
         }
-        $('#projectForm *').prop('disabled', true);
-        
-        self.refreshProjectList()
-    },
+        this.refreshProjectList()
+    }
 
-    saveProjects: function() {
-        ko.utils.arrayForEach(self.projectList(), function (element) {
-            self.db_projects.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
+    constructor(projectDatabase, viewId){
+        this.viewId = viewId
+        this.db_projects = projectDatabase
+        this.projectList = ko.observableArray()
+        this.selectedProject = ko.observable()
+        this.self = this
+    }
+
+    saveProjects() {
+        ko.utils.arrayForEach(this.projectList(), function (element) {
+            this.db_projects.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
         })
-        self.db_projects.persistence.compactDatafile()
-    },
+        this.db_projects.persistence.compactDatafile()
+    }
 
-    addNewProject: function(){
+    addNewProject(){
         var newProjectName = document.getElementById('inputNewProjectName')
         
         var newProject = {name:newProjectName.value, active:true}
-        
-        self.db_projects.insert(newProject, function (err, dbEntry) {
-            self.refreshProjectList()
+        var that = this
+        this.db_projects.insert(newProject, function (err, dbEntry) {
+            that.refreshProjectList()
             $('#modalAddNewProject').modal('toggle');
         });
-    },
+    }
 
-    refreshProjectList: function(){
+    refreshProjectList(){
         var that = this
-        self.projectList.removeAll()
-        self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
-            var observableDocs = ko.mapping.fromJS(docs,self.projectList)
+        this.projectList.removeAll()
+        this.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+            var observableDocs = ko.mapping.fromJS(docs,that.projectList)
             _.forEach(observableDocs(), function(element){
                 if(!element.externalId){
                     element.externalId = ko.observable()
                 }
             })
-            ko.utils.arrayPushAll(self.projectList, observableDocs())
+            ko.utils.arrayPushAll(that.projectList, observableDocs())
         })
-    },
+    }
 
-    clickSelectProject: function(){
-        self.selectedProject(this)
+    clickSelectProject(){
+        that.selectedProject(this)
     }
 }
+
+module.exports = ListSettings;
