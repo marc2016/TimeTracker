@@ -1,24 +1,22 @@
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
+var BaseViewModel = require('./base.js')
 
-class ListSettings  {
-
-    
-    isBound() {
-        return !!ko.dataFor(document.getElementById(this.viewId));
-    }
+class ListSettings extends BaseViewModel {
 
     onLoad() {
         if(!this.isBound())
         {
-            ko.applyBindings(this, document.getElementById(this.viewId))
-            // ko.applyBindings(this, document.getElementById('modalAddNewProject'))
+            _.forEach(this.views, (value) => {
+                ko.applyBindings(this, document.getElementById(value))
+            })
+            
         }
         this.refreshProjectList()
     }
 
-    constructor(projectDatabase, viewId){
-        this.viewId = viewId
+    constructor(views, projectDatabase){
+        super(views)
         this.db_projects = projectDatabase
         this.projectList = ko.observableArray()
         this.selectedProject = ko.observable()

@@ -54,8 +54,8 @@ onload = function() {
   var btnJobTimer = document.getElementById('btnJobTimer')
   btnJobTimer.addEventListener("click", openTimerList )
   
-  projectsSettingViewModel = new ListSettings(dbProjects,'projectssettingsMainContent')
-  jobtypeSettingsViewModel = new ListSettings(dbJobtypes,'jobtypeSettingsMainContent')
+  projectsSettingViewModel = new ListSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
+  jobtypeSettingsViewModel = new ListSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
 
   openTimerList()
 };
