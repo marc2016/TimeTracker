@@ -45,6 +45,9 @@ onload = function() {
   var btnProjectsSettings = document.getElementById('btnProjectsSettings')
   btnProjectsSettings.addEventListener("click", openProjectsSettings )
 
+  var btnJobtypeSettings = document.getElementById('btnJobtypeSettings')
+  btnJobtypeSettings.addEventListener("click", openJobtypeSettings )
+
   var btnJobTable = document.getElementById('btnJobTable')
   btnJobTable.addEventListener("click", openJobTable )
   
@@ -52,6 +55,7 @@ onload = function() {
   btnJobTimer.addEventListener("click", openTimerList )
   
   projectsSettingViewModel = new ListSettings(dbProjects,'projectssettingsMainContent')
+  jobtypeSettingsViewModel = new ListSettings(dbJobtypes,'jobtypeSettingsMainContent')
 
   openTimerList()
 };
@@ -78,6 +82,14 @@ function openProjectsSettings(){
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
     projectsSettingViewModel.onLoad()
+  })
+  $('#navProjectsSettings').addClass("selected");
+}
+
+function openJobtypeSettings(){
+  $('#mainContent').show()
+  $('#mainContent').load('pages/jobtypesettings.html', function(){
+    jobtypeSettingsViewModel.onLoad()
   })
   $('#navProjectsSettings').addClass("selected");
 }

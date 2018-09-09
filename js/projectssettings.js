@@ -11,8 +11,8 @@ class ListSettings  {
     onLoad() {
         if(!this.isBound())
         {
-            ko.applyBindings(this, document.getElementById('projectssettingsMainContent'))
-            ko.applyBindings(this, document.getElementById('modalAddNewProject'))
+            ko.applyBindings(this, document.getElementById(this.viewId))
+            // ko.applyBindings(this, document.getElementById('modalAddNewProject'))
         }
         this.refreshProjectList()
     }
