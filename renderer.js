@@ -8,7 +8,8 @@ const remote = require('electron').remote;
 const app = remote.app;
 var userDataPath = app.getPath('userData')+'/userdata/'
 
-var ListSettings = require('./js/projectssettings.js')
+var ProjectsSettings = require('./js/projectssettings.js')
+var JobtypeSettings = require('./js/jobtypesettings.js')
 var jobtable = require('./js/jobtable.js')
 var timerlist = require('./js/timerlist.js')
 
@@ -54,8 +55,8 @@ onload = function() {
   var btnJobTimer = document.getElementById('btnJobTimer')
   btnJobTimer.addEventListener("click", openTimerList )
   
-  projectsSettingViewModel = new ListSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
-  jobtypeSettingsViewModel = new ListSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
+  projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
+  jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
 
   openTimerList()
 };

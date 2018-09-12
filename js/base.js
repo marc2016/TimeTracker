@@ -2,8 +2,19 @@ var ko = require('knockout');
 
 class BaseViewModel {
 
-    constructor(views){
+    constructor(views, database){
         this.views = views
+        this.database = database
+    }
+
+    onLoad(){
+        if(!this.isBound())
+        {
+            _.forEach(this.views, (value) => {
+                ko.applyBindings(this, document.getElementById(value))
+            })
+            
+        }
     }
 
     isBound() {

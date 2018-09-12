@@ -2,32 +2,26 @@ var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
 
-class ListSettings extends BaseViewModel {
+class ProjectsSettings extends BaseViewModel {
 
     onLoad() {
-        if(!this.isBound())
-        {
-            _.forEach(this.views, (value) => {
-                ko.applyBindings(this, document.getElementById(value))
-            })
-            
-        }
+        super.onLoad()
         this.refreshProjectList()
     }
 
     constructor(views, projectDatabase){
-        super(views)
-        this.db_projects = projectDatabase
+        super(views,projectDatabase)
         this.projectList = ko.observableArray()
         this.selectedProject = ko.observable()
         this.self = this
     }
 
     saveProjects() {
+        var that = this
         ko.utils.arrayForEach(this.projectList(), function (element) {
-            this.db_projects.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
+            that.database.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
         })
-        this.db_projects.persistence.compactDatafile()
+        this.database.persistence.compactDatafile()
     }
 
     addNewProject(){
@@ -35,7 +29,7 @@ class ListSettings extends BaseViewModel {
         
         var newProject = {name:newProjectName.value, active:true}
         var that = this
-        this.db_projects.insert(newProject, function (err, dbEntry) {
+        this.database.insert(newProject, function (err, dbEntry) {
             that.refreshProjectList()
             $('#modalAddNewProject').modal('toggle');
         });
@@ -44,7 +38,7 @@ class ListSettings extends BaseViewModel {
     refreshProjectList(){
         var that = this
         this.projectList.removeAll()
-        this.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+        this.database.find({}).sort({ name: 1 }).exec( function (err, docs) {
             var observableDocs = ko.mapping.fromJS(docs,that.projectList)
             _.forEach(observableDocs(), function(element){
                 if(!element.externalId){
@@ -55,9 +49,9 @@ class ListSettings extends BaseViewModel {
         })
     }
 
-    clickSelectProject(){
-        that.selectedProject(this)
+    clickSelectProject(that, data){
+        that.selectedProject(data)
     }
 }
 
-module.exports = ListSettings;
+module.exports = ProjectsSettings;
