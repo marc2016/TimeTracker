@@ -43,19 +43,17 @@
             </div>
             <div class="col-auto">
               <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-default" id="btnStart" data-bind="click: $parent.startTimer">
-                  <i class="fa fa-play" title="Start"></i>
+                <a class="btn btn-default timer-btn" id="btnStart" data-toggle="button" data-bind="click: $parent.startTimer">
+                    <i class="fa fa-play timer-play-btn" title="Start"></i>
+                    <i class="fa fa-pause timer-pause-btn" title="Pause"></i>
                 </a>
-                <a class="btn btn-default disabled" id="btnPause" data-bind="click: $parent.pauseTimer">
-                  <i class="fa fa-pause" title="Pause"></i>
-                </a>
-                <a class="btn btn-default" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
+                <a class="btn btn-default timer-btn" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
                   <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize" id="btnTransfer" data-bind="click: $parent.transferEntry">
+                <a class="btn btn-default collapsedBySize timer-btn" id="btnTransfer" data-bind="click: $parent.transferEntry">
                   <i class="fa fa-external-link" title="Übertragen"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize" id="btnRemoveEntry" data-bind="click: $parent.removeItem">
+                <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItem">
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
               </div>

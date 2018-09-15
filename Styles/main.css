@@ -8620,6 +8620,26 @@ h3 {
     display: none;
   }
 }
+.timer-btn {
+  width: 30px;
+}
+
+.timer-btn .timer-play-btn {
+  display: inline-block;
+}
+
+.timer-btn.active .timer-play-btn {
+  display: none;
+}
+
+.timer-btn .timer-pause-btn {
+  display: none;
+}
+
+.timer-btn.active .timer-pause-btn {
+  display: inline-block;
+}
+
 .text-input-job {
   box-shadow: none !important;
 }

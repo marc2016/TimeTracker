@@ -273,8 +273,6 @@ var self = module.exports = {
   pauseTimer: function(){
     var elementId = jobtimer.currentJobId
     $('#'+elementId).removeClass('currentEntry');
-    $('#'+elementId).find('#btnPause').addClass('disabled');
-    $('#'+elementId).find('#btnStart').removeClass('disabled')
   
     jobtimer.stop()
   
@@ -284,16 +282,16 @@ var self = module.exports = {
   },
   
   startTimer: function(){
+    if(jobtimer.isRunning() && jobtimer.currentJobId == this._id()){
+      self.pauseTimer()
+      return;
+    }
     if(jobtimer.isRunning()){
       self.pauseTimer()
     }
     var elementId = this._id()
     $('#'+elementId).closest('li').addClass('currentEntry');
     self.currentEntryId = elementId;
-    $('#'+elementId).find('#btnStart').addClass('disabled');
-    $('#'+elementId).find('#btnPause').removeClass('disabled')
-    
-    // self.offsetSeconds = self.currentEntry.savedTime
   
     jobtimer.start(elementId, this.elapsedSeconds())
   },
