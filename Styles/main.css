@@ -8618,6 +8618,11 @@ h3 {
   color: #a4244a;
 }
 
+.noteTextArea {
+  height: 150px;
+  resize: none;
+}
+
 #projectssettingsMainContent {
   background-color: white;
   width: 100%;

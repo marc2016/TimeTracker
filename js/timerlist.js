@@ -24,8 +24,8 @@ var self = module.exports = {
   startTime: undefined,
   offsetSeconds: undefined,
   currentDate: new moment(),
-  currentEntry: undefined,
   currentEntryId: undefined,
+  currentJob: ko.observable(),
   db: undefined,
   db_projects: undefined,
   autocompleteOptions: undefined,
@@ -36,10 +36,16 @@ var self = module.exports = {
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
     self.jobtypeList = ko.observableArray()
-    if(!self.isBound())
+    // self.currentJob = ko.observable()
+    if(!self.isBound()){
       ko.applyBindings(self, document.getElementById('timerlistMainContent'))
+    }
+    if(!ko.dataFor(document.getElementById('modalAddNote'))){
+      ko.applyBindings(self, document.getElementById('modalAddNote'))
+    }
+
     
-      self.refreshProjectList()
+    self.refreshProjectList()
     var tray = remote.getGlobal('tray');
     tray.setContextMenu(self.trayContextMenu)
 
@@ -131,6 +137,12 @@ var self = module.exports = {
 
   refreshProjectList: function(){
     self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+      _.forEach(docs, (value) => {
+        if(!value.note){
+          value.note = ""
+        }
+      })
+
       ko.utils.arrayPushAll(self.projectList, docs)
     })
   },
@@ -200,6 +212,10 @@ var self = module.exports = {
   
     return formated
   },
+
+  addNote: function(){
+
+  },
   
   transferEntry: function(){
     self.currentDate = new moment();
@@ -244,7 +260,7 @@ var self = module.exports = {
   },
 
   addNewItem: function(){
-    var newEntry = {jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       self.jobTimerList.push(dbEntry)
@@ -315,6 +331,10 @@ var self = module.exports = {
   
   getTimeSum: function(){
     return _.sumBy(self.jobTimerList(), function(o) { return o.elapsedSeconds(); });
+  },
+
+  changeNoteClick: function(that,data){
+    that.currentJob(data)
   },
   
   refreshTray: function(elapsedTime){

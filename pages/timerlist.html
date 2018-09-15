@@ -1,29 +1,30 @@
-
 <div id="timerlistMainContent">
-<div class="dateSelector">
-  <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
-    <i class="fa fa-angle-double-left" title="Zurück"></i>
-  </a>
-  <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly/>
-  <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
-    <i class="fa fa-angle-double-right" title="Weiter"></i>
-  </a>
-  <hr class="hLine">
-</div>
+  <div class="dateSelector">
+    <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
+      <i class="fa fa-angle-double-left" title="Zurück"></i>
+    </a>
+    <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly />
+    <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
+      <i class="fa fa-angle-double-right" title="Weiter"></i>
+    </a>
+    <hr class="hLine">
+  </div>
 
-<div>
-  <ul class="list-group"  id="list" data-bind="foreach: jobTimerList">
-    <li class="list-group-item" data-bind="attr: { id: _id }">
-      <div class="container-fluid" >
-        <div class="form-row">
+  <div>
+    <ul class="list-group" id="list" data-bind="foreach: jobTimerList">
+      <li class="list-group-item" data-bind="attr: { id: _id }">
+        <div class="container-fluid">
+          <div class="form-row">
             <div class="col input-group-sm">
-              <input data-bind="textInput: description, attr: { id: 'text-input-job_'+_id() }" class="form-control text-input-job" type="text" placeholder="Tätigkeit">
+              <input data-bind="textInput: description, attr: { id: 'text-input-job_'+_id() }" class="form-control text-input-job"
+                type="text" placeholder="Tätigkeit">
               <div class="row">
-                <div class="col-md-auto" id="timerCell" data-toggle="modal" data-target="#modalChangeJobDuration" data-bind="attr: { jobId: _id(), duration: $parent.getFormatedDuration(elapsedSeconds()) }">
+                <div class="col-md-auto" id="timerCell" data-toggle="modal" data-target="#modalChangeJobDuration"
+                  data-bind="attr: { jobId: _id(), duration: $parent.getFormatedDuration(elapsedSeconds()) }">
                   <div class="row no-gutters" style="cursor: pointer;">
                     <div class="col-sm-auto" style="margin-right: 3px">Dauer: </div>
                     <div class="col-sm-auto">
-                      <span data-bind="text: $parent.getTimeString(elapsedSeconds())"  id="textTimer"></span>
+                      <span data-bind="text: $parent.getTimeString(elapsedSeconds())" id="textTimer"></span>
 
                     </div>
                   </div>
@@ -31,26 +32,25 @@
               </div>
             </div>
             <div class="col-2 collapsedBySize">
-              <select class="selectpicker form-control-sm projectSelect"
-                      style="width: 100%"
-                      data-bind="options: $parent.projectList, optionsCaption: 'Projekt auswählen...', optionsText: function(item) {
+              <select class="selectpicker form-control-sm projectSelect" style="width: 100%" data-bind="options: $parent.projectList, optionsCaption: 'Projekt auswählen...', optionsText: function(item) {
                         return item.name}, optionsValue: '_id', value: projectId">
               </select>
             </div>
             <div class="col-2 collapsedBySize">
-              <select class="selectpicker form-control-sm jobtypeSelect"
-                      style="width: 100%"
-                      data-bind="options: $parent.jobtypeList, optionsCaption: 'Art der Aufgabe auswählen...', optionsText: function(item) {
+              <select class="selectpicker form-control-sm jobtypeSelect" style="width: 100%" data-bind="options: $parent.jobtypeList, optionsCaption: 'Art der Aufgabe auswählen...', optionsText: function(item) {
                         return item.name}, optionsValue: '_id', value: jobtypeId">
               </select>
             </div>
             <div class="col-auto">
-              <div class="btn-group btn-group-sm" role="group" >
+              <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-default" id="btnStart" data-bind="click: $parent.startTimer">
                   <i class="fa fa-play" title="Start"></i>
                 </a>
                 <a class="btn btn-default disabled" id="btnPause" data-bind="click: $parent.pauseTimer">
                   <i class="fa fa-pause" title="Pause"></i>
+                </a>
+                <a class="btn btn-default" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
+                  <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
                 <a class="btn btn-default collapsedBySize" id="btnTransfer" data-bind="click: $parent.transferEntry">
                   <i class="fa fa-external-link" title="Übertragen"></i>
@@ -59,12 +59,35 @@
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
               </div>
-              
-            </div>
-          </div>              
-      </div>
-</li>
 
-  </ul>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
+
+<div class="modal fade" id="modalAddNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Notiz hinzufügen...</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3" data-bind="with: currentJob">
+          <textarea type="text" class="form-control noteTextArea" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            data-bind="text: jobNote"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
+        <button type="button" class="btn btn-primary" data-bind="click: addNote">Hinzufügen</button>
+      </div>
+    </div>
+  </div>
 </div>
