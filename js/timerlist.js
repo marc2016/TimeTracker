@@ -137,12 +137,6 @@ var self = module.exports = {
 
   refreshProjectList: function(){
     self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
-      _.forEach(docs, (value) => {
-        if(!value.note){
-          value.note = ""
-        }
-      })
-
       ko.utils.arrayPushAll(self.projectList, docs)
     })
   },
@@ -154,6 +148,9 @@ var self = module.exports = {
       }
       if(!item.jobtypeId){
         item.jobtypeId = ""
+      }
+      if(!item.jobNote){
+        item.jobNote = ""
       }
     })
     self.jobTimerList.removeAll()
@@ -232,7 +229,7 @@ var self = module.exports = {
   
   saveAll: function(){
     ko.utils.arrayForEach(self.jobTimerList(), function (element) {
-      self.db.update({ _id:element._id() }, { $set: { description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
+      self.db.update({ _id:element._id() }, { $set: { jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
     })
     
     self.db.persistence.compactDatafile()
