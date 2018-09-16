@@ -1,7 +1,14 @@
 @media (max-width: 550px){
     .collapsedBySize {
       display: none;
-  }
+    }
+    .visibleBySize {
+      display: inline-block !important;
+    }
+}
+
+.visibleBySize {
+  display: none;
 }
 
 .timer-btn{

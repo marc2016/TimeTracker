@@ -8619,7 +8619,15 @@ h3 {
   .collapsedBySize {
     display: none;
   }
+
+  .visibleBySize {
+    display: inline-block !important;
+  }
 }
+.visibleBySize {
+  display: none;
+}
+
 .timer-btn {
   width: 30px;
 }

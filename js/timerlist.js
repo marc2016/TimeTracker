@@ -265,6 +265,8 @@ var self = module.exports = {
     var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
     self.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
+      dbEntry.isRunning = ko.observable()
+      dbEntry.isRunning(false)
       self.jobTimerList.push(dbEntry)
     });
   },
@@ -277,9 +279,6 @@ var self = module.exports = {
 
   pauseTimer: function(){
     var elementId = jobtimer.currentJobId
-    $('#'+elementId).removeClass('currentEntry');
-  
-    
     self.currentJob().isRunning(false)
     jobtimer.stop()
   
