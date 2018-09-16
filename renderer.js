@@ -27,6 +27,7 @@ var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload
 var projectsSettingViewModel = undefined
 
 onload = function() {
+  log.info("Test")
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   // var tray = remote.getGlobal('tray');
