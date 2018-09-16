@@ -152,6 +152,11 @@ var self = module.exports = {
       if(!item.jobNote){
         item.jobNote = ""
       }
+      item.isRunning = false
+      if(self.currentJob && self.currentJob() && self.currentJob()._id && self.currentJob()._id() == item._id){
+        item.isRunning = true
+      }
+      
     })
     self.jobTimerList.removeAll()
     var observableDocs = ko.mapping.fromJS(docs,self.jobTimerList);
@@ -274,11 +279,14 @@ var self = module.exports = {
     var elementId = jobtimer.currentJobId
     $('#'+elementId).removeClass('currentEntry');
   
+    
+    self.currentJob().isRunning(false)
     jobtimer.stop()
   
     self.lastEntryId = elementId
     self.currentEntryId = undefined
     footer.refreshStatusBarEntry()
+    self.currentJob(undefined)
   },
   
   startTimer: function(){
@@ -289,9 +297,10 @@ var self = module.exports = {
     if(jobtimer.isRunning()){
       self.pauseTimer()
     }
+    self.currentJob(this)
     var elementId = this._id()
-    $('#'+elementId).closest('li').addClass('currentEntry');
     self.currentEntryId = elementId;
+    this.isRunning(true)
   
     jobtimer.start(elementId, this.elapsedSeconds())
   },
@@ -306,7 +315,7 @@ var self = module.exports = {
     var match = ko.utils.arrayFirst(self.jobTimerList(), function(item) {
       return updateValue.jobId === item._id();
     });
-    
+
     if(match){
       match.elapsedSeconds(updateValue.duration)  
     }

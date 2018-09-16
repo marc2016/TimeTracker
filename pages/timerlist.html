@@ -12,7 +12,7 @@
 
   <div>
     <ul class="list-group" id="list" data-bind="foreach: jobTimerList">
-      <li class="list-group-item" data-bind="attr: { id: _id }">
+      <li class="list-group-item" data-bind="attr: { id: _id }, css: { 'currentEntry': isRunning }">
         <div class="container-fluid">
           <div class="form-row">
             <div class="col input-group-sm">
@@ -43,7 +43,7 @@
             </div>
             <div class="col-auto">
               <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-default timer-btn" id="btnStart" data-toggle="button" data-bind="click: $parent.startTimer">
+                <a class="btn btn-default timer-btn timer-btn-start" id="btnStart" data-bind="click: $parent.startTimer, css: { 'active': isRunning }">
                     <i class="fa fa-play timer-play-btn" title="Start"></i>
                     <i class="fa fa-pause timer-pause-btn" title="Pause"></i>
                 </a>
