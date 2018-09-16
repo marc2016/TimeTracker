@@ -1,6 +1,13 @@
 const electron = require('electron')
 const app = electron.app
 
+const log = require('electron-log');
+const {autoUpdater} = require("electron-updater");
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
+
 const {
   Menu,
   Tray
@@ -79,11 +86,13 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow()
+    
   }
 })
 
 let tray = null
 app.on('ready', () => {
+  
   tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
   tray.on('click', () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()

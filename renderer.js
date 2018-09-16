@@ -1,11 +1,12 @@
+const remote = require('electron').remote;
+const app = remote.app;
+var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 
 var ko = require('knockout');
 var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
-const remote = require('electron').remote;
-const app = remote.app;
 var userDataPath = app.getPath('userData')+'/userdata/'
 
 var ProjectsSettings = require('./js/projectssettings.js')
