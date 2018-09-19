@@ -2,7 +2,9 @@ const remote = require('electron').remote;
 const app = remote.app;
 var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
+const { auditTime } = require('rxjs/operators');
 
+var utils = require('./js/utils.js')
 var ko = require('knockout');
 var moment = require('moment');
 var _ = require('lodash');
@@ -26,8 +28,17 @@ var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload
 
 var projectsSettingViewModel = undefined
 
+const WindowsToaster = require('node-notifier').WindowsToaster;
+var windowsToaster = new WindowsToaster({
+  withFallback: false,
+  customPath: void 0 
+});
+
 onload = function() {
-  log.info("Test")
+  log.info("App started...")
+
+  jobtimer.timeSignal.pipe(auditTime(900000)).subscribe(timerUpdateNotifier)
+  
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
   // var tray = remote.getGlobal('tray');
@@ -63,11 +74,23 @@ onload = function() {
   openTimerList()
 };
 
+function timerUpdateNotifier(updateValue){
+  windowsToaster.notify({
+      title: "Aufgabe läuft...",
+      message: "Dauer: "+utils.getTimeString(updateValue.duration),
+      icon: "./icons/logo.png",
+      sound: true, // true | false. 
+      wait: false, // Wait for User Action against Notification 
+  }, function(error, response) {
+      console.log(response);
+  });
+}
+
 function openTimerList(){
     $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(dbJobs,dbProjects)
+      timerlist.onLoad(dbJobs,dbProjects,jobtimer)
     })
     $('#navJobTimer').addClass("selected");
 }

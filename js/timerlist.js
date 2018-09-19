@@ -1,4 +1,5 @@
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
+const { auditTime } = require('rxjs/operators');
 
 var base = require('./base.js')
 var ko = require('knockout');
@@ -8,7 +9,6 @@ var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
 
-var jobtimer = require('./jobtimer.js')
 var footer = require('./footer.js')
 
 var self = module.exports = {
@@ -30,7 +30,8 @@ var self = module.exports = {
   db_projects: undefined,
   autocompleteOptions: undefined,
 
-  onLoad: function(databaseJobs, databaseProjects){
+  onLoad: function(databaseJobs, databaseProjects, jobtimer){
+    self.jobtimer = jobtimer
     self.db = databaseJobs
     self.db_projects = databaseProjects
     self.jobTimerList = ko.observableArray()
@@ -87,7 +88,7 @@ var self = module.exports = {
     footer.onLoad(self.currentDate, databaseJobs)
     footer.leftFooterAction = self.goToToday
 
-    jobtimer.timeSignal.subscribe(self.timerStep)
+    self.jobtimer.timeSignal.subscribe(self.timerStep)
   
     self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec(function (err, docs) {
       self.refreshJobTimerList(docs)
@@ -278,9 +279,9 @@ var self = module.exports = {
   },
 
   pauseTimer: function(){
-    var elementId = jobtimer.currentJobId
+    var elementId = self.jobtimer.currentJobId
     self.currentJob().isRunning(false)
-    jobtimer.stop()
+    self.jobtimer.stop()
   
     self.lastEntryId = elementId
     self.currentEntryId = undefined
@@ -289,11 +290,11 @@ var self = module.exports = {
   },
   
   startTimer: function(){
-    if(jobtimer.isRunning() && jobtimer.currentJobId == this._id()){
+    if(self.jobtimer.isRunning() && self.jobtimer.currentJobId == this._id()){
       self.pauseTimer()
       return;
     }
-    if(jobtimer.isRunning()){
+    if(self.jobtimer.isRunning()){
       self.pauseTimer()
     }
     self.currentJob(this)
@@ -301,7 +302,7 @@ var self = module.exports = {
     self.currentEntryId = elementId;
     this.isRunning(true)
   
-    jobtimer.start(elementId, this.elapsedSeconds())
+    self.jobtimer.start(elementId, this.elapsedSeconds())
   },
   
   goToToday: function(){
