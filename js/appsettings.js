@@ -43,7 +43,16 @@ class AppSettings extends BaseViewModel {
                     this.store.set('timerNotificationsInterval', value)
                 },
                 owner: this
-            });    
+            });
+            this.syncLoginUrl = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncLoginUrl');
+                },
+                write: function (value) {
+                    this.store.set('syncLoginUrl', value)
+                },
+                owner: this
+            });
         }.bind(this))
         
     }
