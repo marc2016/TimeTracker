@@ -4,6 +4,9 @@ var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
+const Store = require('electron-store');
+const store = new Store();
+
 var utils = require('./js/utils.js')
 var ko = require('knockout');
 var moment = require('moment');
@@ -13,6 +16,7 @@ var userDataPath = app.getPath('userData')+'/userdata/'
 
 var ProjectsSettings = require('./js/projectssettings.js')
 var JobtypeSettings = require('./js/jobtypesettings.js')
+var AppSettings = require('./js/appsettings.js')
 var jobtable = require('./js/jobtable.js')
 var timerlist = require('./js/timerlist.js')
 
@@ -27,6 +31,8 @@ var dbProjects = new Datastore({ filename: userDataPath+'/projects.db', autoload
 var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
 
 var projectsSettingViewModel = undefined
+var appSettingsViewModel = undefined
+var jobtypeSettingsViewModel = undefined
 
 const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
@@ -37,7 +43,7 @@ var windowsToaster = new WindowsToaster({
 onload = function() {
   log.info("App started...")
 
-  jobtimer.timeSignal.pipe(auditTime(900000)).subscribe(timerUpdateNotifier)
+  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
   $('#mainContent').hide()
@@ -67,9 +73,13 @@ onload = function() {
   
   var btnJobTimer = document.getElementById('btnJobTimer')
   btnJobTimer.addEventListener("click", openTimerList )
+
+  var btnAppSettings = document.getElementById('btnAppSettings')
+  btnAppSettings.addEventListener("click", openAppSettings )
   
   projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
   jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
+  appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
 
   openTimerList()
 };
@@ -87,7 +97,6 @@ function timerUpdateNotifier(updateValue){
 }
 
 function openTimerList(){
-    $('#mainContent').show()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
       timerlist.onLoad(dbJobs,dbProjects,jobtimer)
@@ -102,6 +111,13 @@ function openJobTable(){
     jobtable.onLoad(dbJobs)
   })
   $('#navJobTable').addClass("selected")
+}
+
+function openAppSettings(){
+  $('#mainContent').show()
+  $('#mainContent').load('pages/appsettings.html', function(){
+    appSettingsViewModel.onLoad()
+  })
 }
 
 function openProjectsSettings(){
