@@ -8788,6 +8788,16 @@ h3 {
   z-index: 1029;
 }
 
+.mainContent {
+  margin-top: 40px;
+  margin-bottom: 30px;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 1029;
+}
+
 .logo {
   vertical-align: sub;
 }
@@ -8848,5 +8858,3 @@ h3 {
 .dropdown-menu {
   z-index: 1100 !important;
 }
-
-/*# sourceMappingURL=main.css.map */

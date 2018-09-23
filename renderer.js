@@ -46,10 +46,7 @@ onload = function() {
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
-  $('#mainContent').hide()
-  // var tray = remote.getGlobal('tray');
-  // tray.setContextMenu(trayContextMenu)
-
+  
   Number.prototype.toHHMMSS = function () {
       var sec_num = parseInt(this, 10); // don't forget the second param
       var hours   = Math.floor(sec_num / 3600);
@@ -97,6 +94,8 @@ function timerUpdateNotifier(updateValue){
 }
 
 function openTimerList(){
+  $('#mainContent').show()
+  appSettingsViewModel.hide()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
       timerlist.onLoad(dbJobs,dbProjects,jobtimer)
@@ -106,6 +105,7 @@ function openTimerList(){
 
 function openJobTable(){
   $('#mainContent').show()
+  appSettingsViewModel.hide()
   $('#mainContent').load('pages/jobtable.html', function(){
     jobtable.viewId = 'jobtableMainContent'
     jobtable.onLoad(dbJobs)
@@ -114,13 +114,13 @@ function openJobTable(){
 }
 
 function openAppSettings(){
-  $('#mainContent').show()
-  $('#mainContent').load('pages/appsettings.html', function(){
+    $('#mainContent').hide()
+    appSettingsViewModel.show()
     appSettingsViewModel.onLoad()
-  })
 }
 
 function openProjectsSettings(){
+  appSettingsViewModel.hide()
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
     projectsSettingViewModel.onLoad()
@@ -129,6 +129,7 @@ function openProjectsSettings(){
 }
 
 function openJobtypeSettings(){
+  appSettingsViewModel.hide()
   $('#mainContent').show()
   $('#mainContent').load('pages/jobtypesettings.html', function(){
     jobtypeSettingsViewModel.onLoad()
@@ -136,3 +137,8 @@ function openJobtypeSettings(){
   $('#navProjectsSettings').addClass("selected");
 }
 
+function changeView(newViewModel){
+  currentViewModel.hide()
+  newViewModel.show()
+  currentViewModel = newViewModel
+}
