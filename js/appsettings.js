@@ -53,6 +53,35 @@ class AppSettings extends BaseViewModel {
                 },
                 owner: this
             });
+
+            this.syncUsername = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncUsername');
+                },
+                write: function (value) {
+                    this.store.set('syncUsername', value)
+                },
+                owner: this
+            });
+
+            this.syncPassword = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncPassword');
+                },
+                write: function (value) {
+                    this.store.set('syncPassword', value)
+                },
+                owner: this
+            });
+            this.userEmail = ko.pureComputed({
+                read: function () {
+                    return this.store.get('userEmail');
+                },
+                write: function (value) {
+                    this.store.set('userEmail', value)
+                },
+                owner: this
+            });
         }.bind(this))
         
     }

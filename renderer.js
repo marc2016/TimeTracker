@@ -4,8 +4,12 @@ var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
+var Client = require('node-rest-client').Client;
+
 const Store = require('electron-store');
 const store = new Store();
+
+var gravatar = require('gravatar');
 
 var utils = require('./js/utils.js')
 var ko = require('knockout');
@@ -43,6 +47,13 @@ var windowsToaster = new WindowsToaster({
 onload = function() {
   log.info("App started...")
 
+  this.avatar =  ko.computed(function() {
+    return gravatar.url(store.get('userEmail'), {protocol: 'http', s: '30', d: 'retro'});
+  }, this);
+  this.login = login
+
+  ko.applyBindings(this, document.getElementById('mainNavbar'))
+
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
@@ -73,7 +84,7 @@ onload = function() {
 
   var btnAppSettings = document.getElementById('btnAppSettings')
   btnAppSettings.addEventListener("click", openAppSettings )
-  
+
   projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
   jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
   appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
@@ -141,4 +152,17 @@ function changeView(newViewModel){
   currentViewModel.hide()
   newViewModel.show()
   currentViewModel = newViewModel
+}
+
+function login(){
+  var client = new Client();
+  var logiunUrl = store.get('syncLoginUrl')
+  var syncUsername = store.get('syncUsername')
+  var syncPassword = store.get('syncPassword')
+
+  client.get(logiunUrl+"?accountName="+syncUsername+"&passwort="+syncPassword, function (data, response) {
+      console.log(data);
+      console.log(response);
+  });
+
 }
