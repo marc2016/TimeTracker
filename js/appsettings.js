@@ -82,6 +82,16 @@ class AppSettings extends BaseViewModel {
                 },
                 owner: this
             });
+            this.syncProjectUrl = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncProjectUrl');
+                },
+                write: function (value) {
+                    this.store.set('syncProjectUrl', value)
+                },
+                owner: this
+            });
+            
         }.bind(this))
         
     }

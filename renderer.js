@@ -164,5 +164,19 @@ function login(){
       console.log(data);
       console.log(response);
   });
+}
 
+function syncProjects(){
+  var client = new Client();
+  var syncProjectUrl = store.get('syncProjectUrl')
+
+  client.get(syncProjectUrl, function (data, response) {
+      console.log(data);
+      _.forEach(data, function(element) {
+        dbProjectsdb.update({ externalId: element.value }, { externalId: element.value, name:element.representation }, { upsert: true }, function (err, numReplaced, upsert) {
+          
+        });
+      })
+      
+  });
 }
