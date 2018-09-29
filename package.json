@@ -13,7 +13,7 @@
   "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
-    "sass": "sass SCSS/combined.scss Styles/main.css",
+    "sass": "node-sass SCSS/combined.scss Styles/main.css",
     "start": "npm run sass && electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -60,6 +60,7 @@
     "npm": "^5.10.0",
     "popper.js": "^1.14.4",
     "rxjs": "^6.3.2",
+    "string-template": "^1.0.0",
     "table-builder": "^2.1.1",
     "timer-machine": "^1.1.0",
     "toastr": "^2.1.4"

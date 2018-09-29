@@ -80,7 +80,7 @@
           
         </ul>
         <ul class="nav navbar-nav ml-auto">
-          <li class="nav-item dropdown">
+          <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
               <i class="fa fa-sort-amount-desc"></i> <span class="collapsedText">Sortieren</span> <span class="caret"></span>
             </a>
@@ -88,12 +88,13 @@
               <a class="dropdown-item" href="#" id="btnSortTitle"><i class="fa fa-font"></i> Titel</a>
               <a class="dropdown-item" href="#" id="btnSortTime"><i class="fa fa-clock-o"></i> Zeit</a>
             </div>
-          </li>
+          </li> -->
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
                   <img class="loginImg" alt="Avatar" data-bind="attr:{src: avatar}">
               </a>
-              <div class="dropdown-menu" style="z-index: 999999;">
+              <div class="dropdown-menu dropdown-menu-right" style="z-index: 999999;">
+                  <a class="dropdown-item" href="#" ><span data-bind="text: accountName"></span></a>
                   <a class="dropdown-item" href="#" data-bind="click: login"><i class="fas fa-sign-in-alt"></i> Login</a>
                   <a class="dropdown-item" href="#" data-bind="click: syncProjects"><i class="fas fa-sync-alt"></i> Projekte synchronisieren</a>
               </div>

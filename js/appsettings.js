@@ -53,6 +53,15 @@ class AppSettings extends BaseViewModel {
                 },
                 owner: this
             });
+            this.syncLoginParameter = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncLoginParameter');
+                },
+                write: function (value) {
+                    this.store.set('syncLoginParameter', value)
+                },
+                owner: this
+            });
 
             this.syncUsername = ko.pureComputed({
                 read: function () {
@@ -88,6 +97,15 @@ class AppSettings extends BaseViewModel {
                 },
                 write: function (value) {
                     this.store.set('syncProjectUrl', value)
+                },
+                owner: this
+            });
+            this.syncProjectParameter = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncProjectParameter');
+                },
+                write: function (value) {
+                    this.store.set('syncProjectParameter', value)
                 },
                 owner: this
             });

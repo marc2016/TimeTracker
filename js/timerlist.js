@@ -76,11 +76,11 @@ var self = module.exports = {
     var btnSave = document.getElementById('btnSave')
     btnSave.addEventListener("click", self.saveAll )
   
-    var btnSortTime = document.getElementById('btnSortTime')
-    btnSortTime.addEventListener("click", self.sortByTime )
+    // var btnSortTime = document.getElementById('btnSortTime')
+    // btnSortTime.addEventListener("click", self.sortByTime )
   
-    var btnSortTitle = document.getElementById('btnSortTitle')
-    btnSortTitle.addEventListener("click", self.sortByTitle )
+    // var btnSortTitle = document.getElementById('btnSortTitle')
+    // btnSortTitle.addEventListener("click", self.sortByTitle )
 
     var btnSaveDuration = document.getElementById('btnSaveDuration')
     btnSaveDuration.addEventListener("click",self.saveJobDuration )
