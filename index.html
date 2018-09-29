@@ -126,5 +126,47 @@
     </div>
 
     <div id="modals"></div>
+    <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Login...</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="form-group mb-3">
+                    <label for="inputLoginUsername">Benutzername</label>
+                    <input id="inputLoginUsername" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="inputLoginPassword">Passwort</label>
+                    <input id="inputLoginPassword" type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  </div>
+                  <div class="container">
+                    <div class="row">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Default checkbox
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Default checkbox
+                        </label>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
+                  <button id="btnLogin"type="button" class="btn btn-primary" data-bind="click: addNewProject">Anmelden</button>
+              </div>
+          </div>
+      </div>
+  </div>
   </body>
 </html>
