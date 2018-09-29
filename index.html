@@ -93,9 +93,9 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
                   <img class="loginImg" alt="Avatar" data-bind="attr:{src: avatar}">
               </a>
-              <div class="dropdown-menu dropdown-menu-right" style="z-index: 999999;">
+              <div class="dropdown-menu dropdown-menu-right" style="">
                   <a class="dropdown-item" href="#" ><span data-bind="text: accountName"></span></a>
-                  <a class="dropdown-item" href="#" data-bind="click: login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fas fa-sign-in-alt"></i> Login</a>
                   <a class="dropdown-item" href="#" data-bind="click: syncProjects"><i class="fas fa-sync-alt"></i> Projekte synchronisieren</a>
               </div>
           </li>
@@ -130,7 +130,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title">Login...</h5>
+                  <h5 class="modal-title">Login</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                   </button>
@@ -138,24 +138,24 @@
               <div class="modal-body">
                   <div class="form-group mb-3">
                     <label for="inputLoginUsername">Benutzername</label>
-                    <input id="inputLoginUsername" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    <input id="inputLoginUsername" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="value: syncUsername">
                   </div>
                   <div class="form-group mb-3">
                     <label for="inputLoginPassword">Passwort</label>
-                    <input id="inputLoginPassword" type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    <input id="inputLoginPassword" type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="value: syncPassword">
                   </div>
                   <div class="container">
                     <div class="row">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
-                          Default checkbox
+                      <div class="form-check col-sm">
+                        <input class="form-check-input" type="checkbox" id="checkSaveLogin" data-bind="checked: syncSaveLogin">
+                        <label class="form-check-label" for="checkSaveLogin">
+                          Anmeldedaten speichern
                         </label>
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
-                          Default checkbox
+                      <div class="form-check col-sm">
+                        <input class="form-check-input" type="checkbox" value="" id="checkAutoLogin" data-bind="checked: syncAutoLogin">
+                        <label class="form-check-label" for="checkAutoLogin">
+                          Automatisch anmelden
                         </label>
                       </div>
                     </div>
@@ -163,7 +163,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
-                  <button id="btnLogin"type="button" class="btn btn-primary" data-bind="click: addNewProject">Anmelden</button>
+                  <button id="btnLogin"type="button" class="btn btn-primary" data-bind="click: login" data-dismiss="modal">Anmelden</button>
               </div>
           </div>
       </div>
