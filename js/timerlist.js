@@ -8,6 +8,30 @@ var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
 var remote = require('electron').remote;
+var vars = remote.getGlobal('vars');
+var Client = require('node-rest-client').Client;
+const Store = require('electron-store');
+const store = new Store();
+var format = require("string-template")
+
+var toastr = require('toastr');
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
 
 var footer = require('./footer.js')
 
@@ -30,10 +54,12 @@ var self = module.exports = {
   db_projects: undefined,
   autocompleteOptions: undefined,
 
-  onLoad: function(databaseJobs, databaseProjects, jobtimer){
+  onLoad: function(databaseJobs, databaseProjects, databaseJobtypes, jobtimer){
+
     self.jobtimer = jobtimer
     self.db = databaseJobs
     self.db_projects = databaseProjects
+    self.db_jobtypes = databaseJobtypes
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
     self.jobtypeList = ko.observableArray()
@@ -47,6 +73,7 @@ var self = module.exports = {
 
     
     self.refreshProjectList()
+    self.refreshJobtypeList()
     var tray = remote.getGlobal('tray');
     tray.setContextMenu(self.trayContextMenu)
 
@@ -100,6 +127,52 @@ var self = module.exports = {
     
   },
 
+  syncEntry: function(){
+    if(!vars.authCookie){
+      toastr.error('Sie sind nicht am externen System angemeldet.')
+      return
+    }
+
+    var client = new Client();
+    var syncJobUrl = store.get('syncJobUrl')
+    var syncJobParameter = store.get('syncJobParameter')
+
+    var date = moment(this.date(), "YYYY-MM-DD").format('D.M.YYYY');
+
+    var that = this
+    var projectMatch = ko.utils.arrayFirst(self.projectList(), function(item) {
+      return item._id == that.projectId();
+    });
+    var projectExternalId = projectMatch.externalId
+    var jobtypeMatch = ko.utils.arrayFirst(self.jobtypeList(), function(item) {
+      return item._id == that.jobtypeId();
+    });
+    var jobTypeId = jobtypeMatch.externalId
+    var duration =  moment.duration(this.elapsedSeconds(), "seconds").format("h", 2).replace('.',',')
+    var description = this.description()
+    var note = this.jobNote()
+
+    syncJobParameter = format(syncJobParameter, [date,duration,description,projectExternalId,jobTypeId,note])
+
+    var args = {
+      data: syncJobParameter,
+      headers: {
+        "Cookie": vars.authCookie,
+        "content-type": "application/json"
+      }
+    }
+    
+    client.post(syncJobUrl, args, function (data, response) {
+        if(data.status == 500){
+          toastr.error('Synchronisation der Aufgabe ist fehlgeschlagen.')  
+          return
+        }
+        
+        toastr.success('Aufgabe wurde erfolgreich synchronisiert.')
+    });
+
+  },
+
   saveJobDuration: function(){
     var jobId = $(this).attr('jobId')
     var match = ko.utils.arrayFirst(self.jobTimerList(), function(item) {
@@ -139,6 +212,12 @@ var self = module.exports = {
   refreshProjectList: function(){
     self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
       ko.utils.arrayPushAll(self.projectList, docs)
+    })
+  },
+
+  refreshJobtypeList: function(){
+    self.db_jobtypes.find({}).sort({ name: 1 }).exec( function (err, docs) {
+      ko.utils.arrayPushAll(self.jobtypeList, docs)
     })
   },
 

@@ -113,4 +113,6 @@ app.on('ready', () => {
   global.tray = tray
 
   global.menu = Menu
+
+  global.vars = {}
 })

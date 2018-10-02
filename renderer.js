@@ -1,5 +1,6 @@
 const remote = require('electron').remote;
 const app = remote.app;
+var vars = remote.getGlobal('vars');
 var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
@@ -172,7 +173,7 @@ function openTimerList(){
   appSettingsViewModel.hide()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(dbJobs,dbProjects,jobtimer)
+      timerlist.onLoad(dbJobs,dbProjects,dbJobtypes,jobtimer)
     })
     $('#navJobTimer').addClass("selected");
 }
@@ -182,7 +183,7 @@ function openJobTable(){
   appSettingsViewModel.hide()
   $('#mainContent').load('pages/jobtable.html', function(){
     jobtable.viewId = 'jobtableMainContent'
-    jobtable.onLoad(dbJobs)
+    jobtable.onLoad(dbJobs,dbProjects)
   })
   $('#navJobTable').addClass("selected")
 }
@@ -242,6 +243,7 @@ function login(){
       this.accountName(data.vorname+" "+data.name)
       this.userEmail(data.email)
       this.cookie = response.headers['set-cookie'][0].split(';')[0]
+      vars.authCookie = this.cookie
       toastr.success('Anmeldung erfolgreich als '+this.accountName()+'.')
   });
 }

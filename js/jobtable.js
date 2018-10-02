@@ -46,15 +46,15 @@ var self = module.exports = {
         return !!ko.dataFor(document.getElementById(viewId));
     },
     db: undefined,
-    onLoad: function(database){
+    onLoad: function(database,databaseProjects){
         var Datastore = require('nedb')
         self.db = database;
-        var db_projects = new Datastore({ filename: 'db_projects', autoload: true });
+        self.db_projects = databaseProjects
         var Table = require('table-builder');
         
         self.db.find({}, function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
-            db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
+            self.db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
                 
                 _.forEach(jobDocs, function(value){
                     var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})

@@ -17,9 +17,9 @@ class JobtypeSettings extends BaseViewModel {
     }
 
     saveJobtypes() {
-        
+        var that = this
         ko.utils.arrayForEach(this.jobtypeList(), function (element) {
-            this.database.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
+            that.database.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
         })
         this.database.persistence.compactDatafile()
     }

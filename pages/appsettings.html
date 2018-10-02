@@ -29,14 +29,6 @@
                 </div>
                 <input type="text" class="form-control" placeholder="Paramter String" data-bind="value: syncLoginParameter">
             </div>
-            <!-- <div class="form-group">
-                <label for="syncUsername">Benutzername</label>
-                <input type="text" class="form-control" id="syncUsername" placeholder="Benutzername für den externen Dienst..." data-bind="value: syncUsername">
-            </div>
-            <div class="form-group">
-                <label for="syncPassword">Passwort</label>
-                <input type="password" class="form-control" id="syncPassword" placeholder="Passwort für den externen Dienst..." data-bind="value: syncPassword">
-            </div> -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Projekt URL</span>
@@ -48,6 +40,18 @@
                     <span class="input-group-text">Projekt Parameter String</span>
                 </div>
                 <input type="text" class="form-control" placeholder="Parameter String" data-bind="value: syncProjectParameter">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Aufgaben URL</span>
+                </div>
+                <input type="text" class="form-control" placeholder="REST URL, über die eine Aufgabe bei dem externen Dienst angelegt wird..." data-bind="value: syncJobUrl">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Aufgaben Parameter String</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Parameter String" data-bind="value: syncJobParameter">
             </div>
     </div>
     
