@@ -7,6 +7,8 @@ const {autoUpdater} = require("electron-updater");
 const splashScreen = require('@trodi/electron-splashscreen')
 const electronLocalshortcut = require('electron-localshortcut');
 
+var userDataPath = app.getPath('userData')+'/userdata/'
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
@@ -134,5 +136,14 @@ app.on('ready', () => {
 
   global.menu = Menu
 
-  global.vars = {}
+  var Datastore = require('nedb')
+  var dbJobs = new Datastore({ filename: userDataPath+'/jobs.db', autoload: true });
+  var dbProjects = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
+  var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
+
+  global.vars = {
+    dbJobs: dbJobs,
+    dbProjects: dbProjects,
+    dbJobtypes: dbJobtypes
+  }
 })

@@ -50,10 +50,7 @@ var footer = require('./js/footer.js')
 
 var timerlist = require('./js/timerlist.js')
 
-var Datastore = require('nedb')
-var dbJobs = new Datastore({ filename: userDataPath+'/jobs.db', autoload: true });
-var dbProjects = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
-var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
+
 
 var projectsSettingViewModel = undefined
 var appSettingsViewModel = undefined
@@ -111,8 +108,8 @@ onload = function() {
   var btnAppSettings = document.getElementById('btnAppSettings')
   btnAppSettings.addEventListener("click", openAppSettings )
 
-  projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'],dbProjects)
-  jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'], dbJobtypes)
+  projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'])
+  jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
   appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
 
   openTimerList()
@@ -173,7 +170,7 @@ function openTimerList(){
   appSettingsViewModel.hide()
     $('#mainContent').load('pages/timerlist.html', function(){
       timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(dbJobs,dbProjects,dbJobtypes,jobtimer)
+      timerlist.onLoad(jobtimer)
     })
     $('#navJobTimer').addClass("selected");
 }

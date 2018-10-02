@@ -54,12 +54,12 @@ var self = module.exports = {
   db_projects: undefined,
   autocompleteOptions: undefined,
 
-  onLoad: function(databaseJobs, databaseProjects, databaseJobtypes, jobtimer){
+  onLoad: function(jobtimer){
 
     self.jobtimer = jobtimer
-    self.db = databaseJobs
-    self.db_projects = databaseProjects
-    self.db_jobtypes = databaseJobtypes
+    self.db = vars.dbJobs
+    self.db_projects = vars.dbProjects
+    self.db_jobtypes = vars.dbJobtypes
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
     self.jobtypeList = ko.observableArray()
