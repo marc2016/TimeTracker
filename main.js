@@ -5,6 +5,7 @@ const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
 const splashScreen = require('@trodi/electron-splashscreen')
+const electronLocalshortcut = require('electron-localshortcut');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
@@ -42,7 +43,8 @@ const splashscreenConfig = {
   splashScreenOpts: {
       width: 500,
       height: 500,
-      transparent: true
+      transparent: true,
+      icon: path.join(__dirname, 'icons/stopwatch.ico')
   }
 };
 
@@ -79,7 +81,7 @@ app.on('ready', function(){
   //createWindow()
   mainWindow = splashScreen.initSplashScreen(splashscreenConfig);
   mainWindow.setMenu(null);
-  mainWindow.webContents.openDevTools()
+  
   mainWindow.on('closed', function () {
     mainWindow = null
   })
@@ -89,6 +91,8 @@ app.on('ready', function(){
     slashes: true
   }))
   autoUpdater.checkForUpdatesAndNotify();
+
+  electronLocalshortcut.register(mainWindow, 'F12', () => {mainWindow.webContents.toggleDevTools()});  
 })
 
 
