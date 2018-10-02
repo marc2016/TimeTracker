@@ -4,6 +4,8 @@ const app = electron.app
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
+const splashScreen = require('@trodi/electron-splashscreen')
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
@@ -22,6 +24,27 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+
+const mainOpts = {
+  width: 680,
+  height: 820,
+  minWidth: 480,
+  minHeight: 450,
+  icon: path.join(__dirname, 'icons/stopwatch.ico'),
+  show: false
+}
+
+// configure the splashscreen
+const splashscreenConfig = {
+  windowOpts: mainOpts,
+  templateUrl: path.join(__dirname,"pages/splashscreen.html"),
+  minVisible: 5000,
+  splashScreenOpts: {
+      width: 500,
+      height: 500,
+      transparent: true
+  }
+};
 
 var shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
@@ -46,32 +69,25 @@ function createWindow() {
     icon: path.join(__dirname, 'icons/stopwatch.ico')
   })
 
-  mainWindow.setMenu(null);
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+  
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  createWindow()
+  //createWindow()
+  mainWindow = splashScreen.initSplashScreen(splashscreenConfig);
+  mainWindow.setMenu(null);
+  mainWindow.webContents.openDevTools()
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   autoUpdater.checkForUpdatesAndNotify();
 })
 
