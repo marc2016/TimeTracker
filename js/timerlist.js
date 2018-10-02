@@ -210,13 +210,13 @@ var self = module.exports = {
   },
 
   refreshProjectList: function(){
-    self.db_projects.find({}).sort({ name: 1 }).exec( function (err, docs) {
+    self.db_projects.find({active:true}).sort({ name: 1 }).exec( function (err, docs) {
       ko.utils.arrayPushAll(self.projectList, docs)
     })
   },
 
   refreshJobtypeList: function(){
-    self.db_jobtypes.find({}).sort({ name: 1 }).exec( function (err, docs) {
+    self.db_jobtypes.find({active:true}).sort({ name: 1 }).exec( function (err, docs) {
       ko.utils.arrayPushAll(self.jobtypeList, docs)
     })
   },
