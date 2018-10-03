@@ -161,13 +161,14 @@ var self = module.exports = {
         "content-type": "application/json"
       }
     }
-    
+    var that = this
     client.post(syncJobUrl, args, function (data, response) {
         if(data.status == 500){
           toastr.error('Synchronisation der Aufgabe ist fehlgeschlagen.')  
           return
         }
         
+        this.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
         toastr.success('Aufgabe wurde erfolgreich synchronisiert.')
     });
 
@@ -231,6 +232,9 @@ var self = module.exports = {
       }
       if(!item.jobNote){
         item.jobNote = ""
+      }
+      if(!item.lastSync){
+        item.lastSync = undefined
       }
       item.isRunning = false
       if(self.currentJob && self.currentJob() && self.currentJob()._id && self.currentJob()._id() == item._id){

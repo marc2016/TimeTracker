@@ -19,15 +19,22 @@
               <input data-bind="textInput: description, attr: { id: 'text-input-job_'+_id() }" class="form-control text-input-job"
                 type="text" placeholder="Tätigkeit">
               <div class="row">
-                <div class="col-md-auto" id="timerCell" data-toggle="modal" data-target="#modalChangeJobDuration"
+                <div class="col-md-auto job-duration" data-toggle="modal" data-target="#modalChangeJobDuration"
                   data-bind="attr: { jobId: _id(), duration: $parent.getFormatedDuration(elapsedSeconds()) }">
                   <div class="row no-gutters" style="cursor: pointer;">
                     <div class="col-sm-auto" style="margin-right: 3px">Dauer: </div>
                     <div class="col-sm-auto">
                       <span data-bind="text: $parent.getTimeString(elapsedSeconds())" id="textTimer"></span>
-
                     </div>
                   </div>
+                </div>
+                <div class="col-md-auto job-duration collapsedBySize" data-bind="visible: lastSync">
+                    <div class="row no-gutters">
+                      <div class="col-sm-auto" style="margin-right: 3px">Letzte Sync.: </div>
+                      <div class="col-sm-auto">
+                        <span data-bind="text: lastSync"></span>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>

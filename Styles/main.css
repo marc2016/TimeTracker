@@ -6322,6 +6322,9 @@ a.text-dark:hover, a.text-dark:focus {
   .visibleBySize {
     display: inline-block !important; } }
 
+.job-duration {
+  color: black; }
+
 .visibleBySize {
   display: none; }
 
