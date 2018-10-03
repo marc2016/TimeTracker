@@ -11,10 +11,6 @@
   display: none;
 }
 
-.timer-btn{
-  width: 30px;
-}
-
 .timer-btn .timer-play-btn{
   display: inline-block;
 }
@@ -35,28 +31,34 @@
   box-shadow: none !important;
 }
 
+.job-list-item{
+  margin: 3px;
+  border-radius: 0.5rem !important;
+  background-color: rgba(255,255,255,0.5) !important;
+}
+
 .hLine {
   background-color: #a4244a;
   width: 100%;
-  height: 1px;
+  height: 2px;
   display: block;
-  margin-top: 11px;
+  margin-top: 4px;
   margin-bottom: 1px;
 }
 
 .btnDateChange {
   margin: 3px;
+  width: 30px;
+  height: 30px;
+  padding: 2px;
 }
 
 .dateSelector {
   height: auto;
   text-align: center;
   vertical-align: middle;
-  background-color: #FFFFFF;
-  // position: fixed;
+  background-color: rgba(255,255,255,0.5);
   width: 100%;
-  // z-index: 1029;
-  // top: $navbar-height + 2px;
 }
 
 .currentDate {
@@ -66,6 +68,7 @@
   font-size: 20px;
   border: 0px;
   width: 100px;
+  background-color: rgba(255,255,255,0)
 }
 
 .datepicker {

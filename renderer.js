@@ -75,8 +75,6 @@ onload = function() {
   this.loginClick = loginClick
   this.syncProjects = syncProjects
 
-  
-
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
