@@ -112,7 +112,7 @@ var self = module.exports = {
     var btnSaveDuration = document.getElementById('btnSaveDuration')
     btnSaveDuration.addEventListener("click",self.saveJobDuration )
   
-    footer.onLoad(self.currentDate, databaseJobs)
+    footer.onLoad(self.currentDate, self.db)
     footer.leftFooterAction = self.goToToday
 
     self.jobtimer.timeSignal.subscribe(self.timerStep)
