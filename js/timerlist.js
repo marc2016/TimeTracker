@@ -1,6 +1,7 @@
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
+var dataAccess = require('./dataaccess.js')
 var base = require('./base.js')
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
@@ -56,10 +57,13 @@ var self = module.exports = {
 
   onLoad: function(jobtimer){
 
+
+    $('#background').css('background-image', 'url('+store.get('backgroundSrc')+')')
+
     self.jobtimer = jobtimer
-    self.db = vars.dbJobs
-    self.db_projects = vars.dbProjects
-    self.db_jobtypes = vars.dbJobtypes
+    self.db = dataAccess.getDb('jobs')
+    self.db_projects = dataAccess.getDb('projects')
+    self.db_jobtypes = dataAccess.getDb('jobtypes')
     self.jobTimerList = ko.observableArray()
     self.projectList = ko.observableArray()
     self.jobtypeList = ko.observableArray()
@@ -168,7 +172,7 @@ var self = module.exports = {
           return
         }
         
-        this.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
+        // this.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
         toastr.success('Aufgabe wurde erfolgreich synchronisiert.')
     });
 
@@ -305,7 +309,7 @@ var self = module.exports = {
   
   transferEntry: function(){
     self.currentDate = new moment();
-    var newEntry = {jobtypeId: this.jobtypeId, projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobNote:this.jobNote(), jobtypeId: this.jobtypeId(), projectId: this.projectId(),elapsedSeconds:0, description:this.description(), date:self.currentDate.format('YYYY-MM-DD'), lastSync: undefined}
     self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
@@ -346,12 +350,14 @@ var self = module.exports = {
   },
 
   addNewItem: function(){
-    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD'), lastSync: undefined}
     self.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       dbEntry.isRunning = ko.observable()
       dbEntry.isRunning(false)
       self.jobTimerList.push(dbEntry)
+      self.createAutoComplete()
+      $('#text-input-job_'+dbEntry._id).focus()
     });
   },
   
@@ -422,6 +428,7 @@ var self = module.exports = {
 
   changeNoteClick: function(that,data){
     that.currentJob(data)
+    $('#modalAddNote').modal('show')
   },
   
   refreshTray: function(elapsedTime){

@@ -1,12 +1,12 @@
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
+var _ = require('lodash');
 
 class AppSettings extends BaseViewModel {
 
     onLoad() {
         super.onLoad()
-        
     }
 
     show(){
@@ -17,6 +17,29 @@ class AppSettings extends BaseViewModel {
         $('#appSettings').addClass('invisible')
     }
 
+    backgroundChanged(that,data){
+        _.forEach(that.backgrounds(), function(value) {value.selected(false)})
+        data.selected(true)
+        that.store.set('backgroundSrc', data.src)
+        that.store.set('backgroundId', data.id)
+    }
+
+    loadBackgrounds(){
+        this.backgrounds = ko.observableArray()
+        this.backgrounds.push({ src: 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=', id:0, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/01.jpg', id:1, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/02.jpg', id:2, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/03.jpg', id:3, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/04.jpg', id:4, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/05.jpg', id:5, selected: ko.observable(false)})
+        this.backgrounds.push({ src: './backgrounds/wood.png', id:6, selected: ko.observable(false)})
+        if(this.store.get('backgroundId')){
+            var that = this
+            var element = ko.utils.arrayFirst(this.backgrounds(), function(item){ return item.id ==  that.store.get('backgroundId')})
+            element.selected(true)
+        }
+    }
+
     constructor(views, store){
         super(views)
         
@@ -24,6 +47,12 @@ class AppSettings extends BaseViewModel {
             this.hide()
             this.store = store
             this.self = this
+
+            $("#selectImage").imagepicker({
+                hide_select: true
+            });
+
+            this.loadBackgrounds()
 
             this.timerNotificationsEnabled = ko.pureComputed({
                 read: function () {

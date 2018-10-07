@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="node_modules/easy-autocomplete/dist/easy-autocomplete.min.css">
     <link rel="stylesheet" href="node_modules/easy-autocomplete/dist/easy-autocomplete.themes.min.css">
     <link rel="stylesheet" href="node_modules/toastr/build/toastr.min.css">
+    <link rel="stylesheet" href="libs/imagepicker/image-picker.css">
   </head>
   <body style="overflow-y: auto">
     <script>
@@ -24,6 +25,7 @@
     <script src="node_modules/air-datepicker/dist/js/datepicker.min.js"></script>
     <script src="node_modules/air-datepicker/dist/js/i18n/datepicker.de.js"></script>
     <script src="./libs/timingfield.min.js"></script>
+    <script src="./libs/imagepicker/image-picker.min.js"></script>
     <script src="node_modules/chart.js/dist/Chart.min.js"></script>
     <script src="node_modules/lodash/lodash.min.js"></script>
     <script src="node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js"></script>
@@ -93,7 +95,7 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
                   <img class="loginImg" alt="Avatar" data-bind="attr:{src: avatar}">
               </a>
-              <div class="dropdown-menu dropdown-menu-right" style="">
+              <div class="dropdown-menu dropdown-menu-right">
                   <a class="dropdown-item" href="#" ><span data-bind="text: accountName"></span></a>
                   <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fas fa-sign-in-alt"></i> Login</a>
                   <a class="dropdown-item" href="#" data-bind="click: syncProjects"><i class="fas fa-sync-alt"></i> Projekte synchronisieren</a>
@@ -103,6 +105,7 @@
       </div>
     </nav>
 
+    <div id="background"></div>
     <div id="mainContent"></div>
     <div id="appSettings" class="mainContent"></div>
 
