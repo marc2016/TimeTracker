@@ -5,6 +5,8 @@ var log = require('electron-log');
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
+var pjson = require('./package.json')
+
 var format = require("string-template")
 
 var Client = require('node-rest-client').Client;
@@ -70,6 +72,9 @@ onload = function() {
     return gravatar.url(this.userEmail(), {protocol: 'http', s: '30', d: 'retro'});
   }, this);
   this.accountName = ko.observable('nicht angemeldet')
+  this.appVersion = ko.computed(function() {
+    return pjson.version
+  }, this);
 
   this.login = login
   this.loginClick = loginClick
@@ -145,6 +150,7 @@ onload = function() {
 
   ko.applyBindings(this, document.getElementById('mainNavbar'))
   ko.applyBindings(this, document.getElementById('modalLogin'))
+  ko.applyBindings(this, document.getElementById('modalAbout'))
 
   if(store.get('syncAutoLogin')){
     login()
