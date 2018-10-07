@@ -57,6 +57,9 @@ var self = module.exports = {
 
   onLoad: function(jobtimer){
 
+
+    $('#background').css('background-image', 'url('+store.get('backgroundSrc')+')')
+
     self.jobtimer = jobtimer
     self.db = dataAccess.getDb('jobs')
     self.db_projects = dataAccess.getDb('projects')

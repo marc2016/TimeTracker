@@ -1,0 +1,22 @@
+$thumbnailPadding: 5px;
+$imgSize: 100px;
+
+.image_picker_image {
+    height: $imgSize - ($thumbnailPadding * 2);
+    
+    clip: rect(0px,$imgSize - ($thumbnailPadding * 2) - 2,$imgSize - ($thumbnailPadding * 2) - 2,0px);
+    position: absolute;
+}
+
+.thumbnail {
+    width: $imgSize;
+    height: $imgSize;
+    padding: $thumbnailPadding !important;
+    background-color: white;
+}
+
+.thumbnail.selected {
+    background-color: white !important;
+    border-color: cadetblue !important;
+    border-width: 2px !important;
+}
