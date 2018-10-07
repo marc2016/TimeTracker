@@ -309,7 +309,7 @@ var self = module.exports = {
   
   transferEntry: function(){
     self.currentDate = new moment();
-    var newEntry = {jobtypeId: this.jobtypeId, projectId: this.projectId, elapsedSeconds:0, description: this.description, date:self.currentDate.format('YYYY-MM-DD')}
+    var newEntry = {jobNote:this.jobNote(), jobtypeId: this.jobtypeId(), projectId: this.projectId(),elapsedSeconds:0, description:this.description(), date:self.currentDate.format('YYYY-MM-DD'), lastSync: undefined}
     self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
