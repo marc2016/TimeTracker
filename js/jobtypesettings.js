@@ -1,6 +1,7 @@
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
+var dataAccess = require('./dataaccess.js')
 
 class JobtypeSettings extends BaseViewModel {
 
@@ -9,8 +10,8 @@ class JobtypeSettings extends BaseViewModel {
         this.refreshJobtypeList()
     }
 
-    constructor(views, jobtypeDatabase){
-        super(views,jobtypeDatabase)
+    constructor(views){
+        super(views,dataAccess.getDb('jobtypes'))
         this.jobtypeList = ko.observableArray()
         this.selectedJobtype = ko.observable()
         this.self = this

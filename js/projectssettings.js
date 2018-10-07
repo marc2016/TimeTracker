@@ -1,6 +1,7 @@
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
+var dataAccess = require('./dataaccess.js')
 
 class ProjectsSettings extends BaseViewModel {
 
@@ -9,8 +10,8 @@ class ProjectsSettings extends BaseViewModel {
         this.refreshProjectList()
     }
 
-    constructor(views, projectDatabase){
-        super(views,projectDatabase)
+    constructor(views){
+        super(views,dataAccess.getDb('projects'))
         this.projectList = ko.observableArray()
         this.selectedProject = ko.observable()
         this.self = this
