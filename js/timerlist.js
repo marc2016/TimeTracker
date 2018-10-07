@@ -428,6 +428,7 @@ var self = module.exports = {
 
   changeNoteClick: function(that,data){
     that.currentJob(data)
+    $('#modalAddNote').modal('show')
   },
   
   refreshTray: function(elapsedTime){

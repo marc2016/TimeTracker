@@ -67,11 +67,12 @@
                 <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItem">
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
-                <div class="btn btn-default dropleft timer-btn" data-toggle="dropdown">
+                <div class="btn btn-default dropleft timer-btn visibleBySize" data-toggle="dropdown">
                   <i class="fa fa-angle-down" title="Mehr"></i>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" data-bind="click: $parent.changeNoteClick.bind($data,$parent)" data-toggle="modal" data-target="#modalAddNote"><i class="fa fa-sticky-note" title="Notiz"></i> Notiz</a>
-                    <a class="dropdown-item" data-bind="click: $parent.transferEntry"><i class="fa fa-external-link" title="Übertragen"></i> Übertragen</a>
+                    <a class="dropdown-item" data-bind="click: $parent.syncEntry"><i class="fas fa-sync-alt" title="Synchronisieren"></i> Synchronisieren</a>
+                    <a class="dropdown-item" data-bind="click: $parent.transferEntry"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
                     <a class="dropdown-item" data-bind="click: $parent.removeItem"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
                   </div>
                 </div>
@@ -97,7 +98,7 @@
       </div>
       <div class="modal-body">
         <div class="input-group mb-3" data-bind="with: currentJob">
-          <textarea type="text" class="form-control noteTextArea" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="value: jobNote"></textarea>
+          <textarea style="height: 300px;" type="text" class="form-control noteTextArea" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="value: jobNote"></textarea>
         </div>
       </div>
       <div class="modal-footer">

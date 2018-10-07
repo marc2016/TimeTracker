@@ -6316,7 +6316,7 @@ a.text-dark:hover, a.text-dark:focus {
   .collapsedText {
     display: none; } }
 
-@media (max-width: 550px) {
+@media (max-width: 720px) {
   .collapsedBySize {
     display: none; }
   .visibleBySize {
