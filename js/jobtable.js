@@ -6,6 +6,8 @@ var toastr = require('toastr');
 var moment = require('moment');
 var momentDurationFormatSetup = require("moment-duration-format");
 
+var dataAccess = require('./dataaccess.js')
+
 var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
 
 toastr.options = {
@@ -48,8 +50,8 @@ var self = module.exports = {
     db: undefined,
     onLoad: function(database,databaseProjects){
         var Datastore = require('nedb')
-        self.db = database;
-        self.db_projects = databaseProjects
+        self.db = dataAccess.getDb('jobs');
+        self.db_projects = dataAccess.getDb('projects')
         var Table = require('table-builder');
         
         self.db.find({}, function (err, jobDocs) {

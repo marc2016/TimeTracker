@@ -14,6 +14,7 @@ const store = new Store();
 
 var gravatar = require('gravatar');
 
+var dataAccess = require('./js/dataaccess.js')
 var utils = require('./js/utils.js')
 var ko = require('knockout');
 var moment = require('moment');
@@ -278,7 +279,7 @@ function syncProjects(){
     }
     var countOfUpdates = 0;
     _.forEach(data, function(element) {
-      dbProjects.update({ externalId: element.value }, { externalId: element.value, name:element.representation, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
+      dataAccess.getDb('projects').update({ externalId: element.value }, { externalId: element.value, name:element.representation, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
         countOfUpdates += numReplaced
       });
     })
