@@ -322,7 +322,7 @@ var self = module.exports = {
   
   saveAll: function(){
     ko.utils.arrayForEach(self.jobTimerList(), function (element) {
-      self.db.update({ _id:element._id() }, { $set: { jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
+      self.db.update({ _id:element._id() }, { $set: { lastSync: element.lastSync(), jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
     })
     
     self.db.persistence.compactDatafile()
