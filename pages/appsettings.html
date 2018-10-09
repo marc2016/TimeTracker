@@ -23,7 +23,12 @@
         </div>
         <div class="form-group">
             <label for="timerNotificationsInterval">Intervall der Benachrichtigungen des Timers</label>
-            <input type="number" class="form-control" id="timerNotificationsInterval" data-bind="value: timerNotificationsInterval">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Minuten</div>
+                </div>
+                <input type="number" class="form-control" id="timerNotificationsInterval" data-bind="value: timerNotificationsInterval">
+            </div>
           </div>
         <h3>Synchronisation</h3>
             <div class="form-group mb-3">
