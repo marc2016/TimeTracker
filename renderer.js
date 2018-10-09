@@ -296,6 +296,7 @@ function syncProjects(){
       dataAccess.getDb('projects').update({ externalId: element.value }, { externalId: element.value, name:element.representation, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
         countOfUpdates += numReplaced
       });
+      dataAccess.getDb('projects').persistence.compactDatafile()
     })
     
     toastr.success('Projekte wurden synchronisiert.')
