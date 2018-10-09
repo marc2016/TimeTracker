@@ -154,7 +154,7 @@ onload = function() {
   ko.applyBindings(this, document.getElementById('modalLogin'))
   ko.applyBindings(this, document.getElementById('modalAbout'))
 
-  if(store.get('syncAutoLogin')){
+  if(store.get('syncAutoLogin') && store.get('syncPassword')){
     login()
   }
 };
@@ -229,6 +229,8 @@ function changeView(newViewModel){
 function loginClick(){
   if(this.syncSaveLogin()){
     store.set('syncPassword', this.syncPassword())
+  } else {
+    store.delete('syncPassword')
   }
   login()
 }
