@@ -159,9 +159,14 @@ onload = function() {
 };
 
 function timerUpdateNotifier(updateValue){
+  var enabled = store.get('timerNotificationsEnabled', false)
+  if(!enabled){
+    return
+  }
+    
   windowsToaster.notify({
       title: "Aufgabe läuft...",
-      message: "Dauer: "+utils.getTimeString(updateValue.duration),
+      message: "Aufgabe: "+_.truncate(updateValue.jobDescription,{'length': 30})+"\nDauer: "+utils.getTimeString(updateValue.duration),
       icon: "./icons/logo.png",
       sound: true, // true | false. 
       wait: false, // Wait for User Action against Notification 
