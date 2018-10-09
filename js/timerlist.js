@@ -116,7 +116,7 @@ var self = module.exports = {
     var btnSaveDuration = document.getElementById('btnSaveDuration')
     btnSaveDuration.addEventListener("click",self.saveJobDuration )
   
-    footer.onLoad(self.currentDate, self.db)
+    footer.onLoad(self.currentDate, self.db, jobtimer)
     footer.leftFooterAction = self.goToToday
 
     self.jobtimer.timeSignal.subscribe(self.timerStep)
@@ -391,7 +391,7 @@ var self = module.exports = {
     self.currentEntryId = elementId;
     this.isRunning(true)
   
-    self.jobtimer.start(elementId, this.elapsedSeconds())
+    self.jobtimer.start(elementId, this.elapsedSeconds(), this.description())
   },
   
   goToToday: function(){
@@ -407,13 +407,12 @@ var self = module.exports = {
 
     if(match){
       match.elapsedSeconds(updateValue.duration)  
+      self.jobtimer.currentJobDescription = match.description()
     }
 
     self.saveAll()
     self.refreshTimeSum()
     self.refreshTray(updateValue.duration)
-    
-    footer.refreshStatusBarEntry(match ? match.description(): undefined, updateValue.duration)
   },
   
   refreshTimeSum: function(){

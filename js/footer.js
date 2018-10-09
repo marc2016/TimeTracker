@@ -6,43 +6,56 @@ var ko = require('knockout');
 var Datastore = require('nedb')
 
 var self = module.exports = {
-    leftJobDescription: ko.observable('-'),
-    leftJobDuration: ko.observable('-'),
+    leftJobDescription: ko.observable('keine laufende Aufgabe'),
+    leftJobDuration: ko.observable(''),
     rightTimeSum: ko.observable('00:00:00/0.00'),
     monthChart: undefined,
     utils: undefined,
     leftFooterAction: undefined,
     db: undefined,
+    jobtimer: undefined,
 
     isBound: function() {
         return !!ko.dataFor(document.getElementById('footerContainer'));
     },
 
-    onLoad: function(currentDate, database){
+    onLoad: function(currentDate, database, jobtimer){
         if(!self.isBound())
             ko.applyBindings(self, document.getElementById('footerContainer'))
         self.db = database
+        self.jobtimer = jobtimer
         utils = require('./utils.js');
         $('#footerContainer').mouseenter(function() {$('#sidebarButton').toggleClass('show')})
         $('#footerContainer').mouseleave(function() {$('#sidebarButton').toggleClass('show')})
         $('#sidebarButton').click(function() {$('#footerContainer').toggleClass('chart');
         $('#buttonSymbol').toggleClass('down');
         self.initChart(currentDate)})
+
+        self.jobtimer.timeSignal.subscribe(self.refreshStatusBarEntry)
+        self.jobtimer.stopSignal.subscribe(self.timerStop)
     },
 
-    refreshStatusBarEntry: function (description, duration){
+
+    timerStop: function (){
+        self.leftJobDescription('keine laufende Aufgabe')
+        self.leftJobDuration('')
         var leftFooter = document.getElementById('footerLeftContent')
-        if(duration == undefined){
-            $.find('#currentTaskDescription')[0].textContent = "-"
-            $.find('#currentTaskTime')[0].textContent = "-"
-            leftFooter.removeEventListener('click', self.leftFooterAction)
-        } else {
-            if(description) {
-            $.find('#currentTaskDescription')[0].textContent = description
-            }
-            $.find('#currentTaskTime')[0].textContent = utils.getTimeString(duration)
-            leftFooter.addEventListener('click', self.leftFooterAction)
+        leftFooter.removeEventListener('click', self.leftFooterAction)
+    },
+
+    refreshStatusBarEntry: function (updatevalue){
+        if(!updatevalue)
+            return;
+        var duration = updatevalue.duration
+        var description = updatevalue.jobDescription
+        var leftFooter = document.getElementById('footerLeftContent')
+        
+        if(!description) {
+            description = 'Unbenannte Aufgabe'
         }
+        self.leftJobDescription(description)
+        self.leftJobDuration(utils.getTimeString(duration))
+        leftFooter.addEventListener('click', self.leftFooterAction)
     },
 
     initChart: function(currentDate){
