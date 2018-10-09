@@ -62,7 +62,8 @@ var jobtypeSettingsViewModel = undefined
 const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
   withFallback: false,
-  customPath: void 0 
+  customPath: void 0 ,
+  appId: pjson.build.appId
 });
 
 onload = function() {
