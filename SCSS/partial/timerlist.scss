@@ -43,10 +43,11 @@
 
 .currentEntry {
   border-color: $maincolor;
+  border-width: 2px;
 }
 
 .hLine {
-  background-color: #a4244a;
+  background-color: $maincolor;
   width: 100%;
   height: 2px;
   display: block;
