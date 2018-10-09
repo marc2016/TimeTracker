@@ -6,6 +6,7 @@ var moment = require('moment');
 var self = module.exports = {   
 
     currentJobId: undefined,
+    currentJobDescription: undefined,
 
     timeSignal: undefined,
     _timeSignalSource: undefined,
@@ -17,10 +18,11 @@ var self = module.exports = {
     _startDate: undefined,
     _pauser: new Subject(),
 
-    start: function(jobId, seconds) {
+    start: function(jobId, seconds, jobDescription) {
         if(self.isRunning())
             return false
         self.currentJobId = jobId
+        self.currentJobDescription = jobDescription
         self._offsetSeconds = seconds
         self._startDate = moment()
         self._pauser.next(false)
@@ -31,7 +33,7 @@ var self = module.exports = {
     },
 
     _timeUpdate: function(x, idx, obs) {
-        return { "duration": self._calculateDiff(), "jobId": self.currentJobId }
+        return { "duration": self._calculateDiff(), "jobId": self.currentJobId, "jobDescription": self.currentJobDescription }
     },
 
     _calculateDiff: function() {
@@ -47,8 +49,12 @@ var self = module.exports = {
         self._pauser.next(true)
         var returnValue = self._calculateDiff()
         self.currentJobId = undefined
+        self.currentJobDescription = undefined
         self._offsetSeconds = undefined
         self._startDate = undefined
+
+        if(self._stopEmitter)
+            self._stopEmitter.next()
         
         return returnValue
     }
