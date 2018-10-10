@@ -250,6 +250,14 @@ var self = module.exports = {
     var observableDocs = ko.mapping.fromJS(docs,self.jobTimerList);
 
     ko.utils.arrayPushAll(self.jobTimerList, observableDocs())
+    if(self.currentJob && self.currentJob()){
+      var newCurrentJob = ko.utils.arrayFirst(self.jobTimerList(), function(value){
+        return value._id() == self.currentJob()._id();
+      })
+      if(newCurrentJob){
+        self.currentJob(newCurrentJob)
+      }
+    }
     self.createAutoComplete()
   },
 
