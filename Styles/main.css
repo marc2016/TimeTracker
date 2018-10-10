@@ -6563,3 +6563,17 @@ a.text-dark:hover, a.text-dark:focus {
 
 .invisible {
   display: none !important; }
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; }
+
+::-webkit-scrollbar-track {
+  border: 1px solid #a4244a; }
+
+::-webkit-scrollbar-thumb {
+  background: #a4244a; }
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a4244a; }
