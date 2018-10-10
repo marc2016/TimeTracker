@@ -92,7 +92,6 @@ app.on('ready', function(){
     protocol: 'file:',
     slashes: true
   }))
-  autoUpdater.checkForUpdatesAndNotify();
 
   electronLocalshortcut.register(mainWindow, 'F12', () => {mainWindow.webContents.toggleDevTools()});  
 })
@@ -136,14 +135,9 @@ app.on('ready', () => {
 
   global.menu = Menu
 
-  var Datastore = require('nedb')
-  var dbJobs = new Datastore({ filename: userDataPath+'/jobs.db', autoload: true });
-  var dbProjects = new Datastore({ filename: userDataPath+'/projects.db', autoload: true });
-  var dbJobtypes = new Datastore({ filename: userDataPath+'/jobtypes.db', autoload: true });
+  global.autoUpdater = autoUpdater
 
   global.vars = {
-    dbJobs: dbJobs,
-    dbProjects: dbProjects,
-    dbJobtypes: dbJobtypes
+    
   }
 })

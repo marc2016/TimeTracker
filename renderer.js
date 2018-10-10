@@ -14,6 +14,8 @@ var Client = require('node-rest-client').Client;
 const Store = require('electron-store');
 const store = new Store();
 
+var autoUpdater = remote.getGlobal("autoUpdater")
+
 var gravatar = require('gravatar');
 
 var dataAccess = require('./js/dataaccess.js')
@@ -75,12 +77,22 @@ onload = function() {
   }, this);
   this.accountName = ko.observable('nicht angemeldet')
   this.appVersion = ko.computed(function() {
-    return pjson.version
+    return ' '+pjson.version
   }, this);
+
+  this.updateAvailable = ko.observable(false)
+  autoUpdater.on('update-available', () => {
+    this.updateAvailable(true)
+    autoUpdater.downloadUpdate()
+  })
+  autoUpdater.on('update-not-available', () => {
+    this.updateAvailable(false)
+  })
 
   this.login = login
   this.loginClick = loginClick
   this.syncProjects = syncProjects
+  this.checkForUpdatesClick = checkForUpdatesClick
 
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000*60, 10*1000*60)).subscribe(timerUpdateNotifier)
   
@@ -148,7 +160,7 @@ onload = function() {
         store.set('syncAutoLogin', value)
     },
     owner: this
-});
+  });
 
   ko.applyBindings(this, document.getElementById('mainNavbar'))
   ko.applyBindings(this, document.getElementById('modalLogin'))
@@ -158,6 +170,11 @@ onload = function() {
     login()
   }
 };
+
+function checkForUpdatesClick(){
+  this.updateAvailable('checking')
+  autoUpdater.checkForUpdates();
+}
 
 function timerUpdateNotifier(updateValue){
   var enabled = store.get('timerNotificationsEnabled', false)
@@ -191,7 +208,7 @@ function openJobTable(){
   appSettingsViewModel.hide()
   $('#mainContent').load('pages/jobtable.html', function(){
     jobtable.viewId = 'jobtableMainContent'
-    jobtable.onLoad(dbJobs,dbProjects)
+    jobtable.onLoad()
   })
   $('#navJobTable').addClass("selected")
 }

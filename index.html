@@ -181,15 +181,39 @@
               </button>
           </div>
           <div class="modal-body">
-            <div class="container-fluid">
-              <div class="row">
-                <img src="./icons/logo.png" style="width: 50px; height: 50px;"><span>TimeTracker</span>
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-md-auto">
+                  <img src="./icons/logo.png" style="width: 50px; height: 50px;">
+                </div>
+                <div class="col-md-auto">
+                    <h3>TimeTracker</h3>
+                </div>
               </div>
               <div class="row">
-                  Version: <span data-bind="text: appVersion"></span>
+                  <div class="col">
+                    Version: <span data-bind="text: appVersion"></span>
+                  </div>
               </div>
               <div class="row">
-                  Autor: Marc Lammers
+                  <div class="col">
+                    Autor: Marc Lammers
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <hr class="hline">
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      <span class="update-message" data-bind="visible: updateAvailable() == false">Die App ist auf dem aktuellen Stand.</span>
+                      <span class="update-message" data-bind="visible: updateAvailable() == true"><i class="fas fa-download fa-pulse"></i> Neue Version wird runtergeladen...</span>
+                      <span class="update-message" data-bind="visible: updateAvailable() == 'checking'"><i class="fas fa-sync-alt fa-spin"></i> Es wird auf Updates geprüft...</span>
+                    </div>
+                <div class="col-md-auto"><button class="btn btn-info btn-sm" data-bind="click: checkForUpdatesClick">Auf Updates prüfen</button></div>
+                
+                
               </div>
             </div>
           </div>

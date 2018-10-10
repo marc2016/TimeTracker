@@ -6498,6 +6498,9 @@ a.text-dark:hover, a.text-dark:focus {
   z-index: 1029;
   background-color: white; }
 
+.update-message {
+  font-size: 14px; }
+
 .background {
   background-color: white;
   background-size: cover;
