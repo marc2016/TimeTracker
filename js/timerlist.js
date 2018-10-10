@@ -340,7 +340,7 @@ var self = module.exports = {
     self.createAutoComplete()
   },
   
-  createAutoComplete: function(){
+  createAutoComplete: function(entryId){
     self.db.find({}).exec(function (err, docs) {
       var mappedDocs = _.map(docs,'description')
       var uniqDocs = _.uniq(mappedDocs)
@@ -356,6 +356,8 @@ var self = module.exports = {
       
       $('.text-input-job').parent().not('.easy-autocomplete').children('.text-input-job').easyAutocomplete(self.autocompleteOptions).css("height",'31px')
       $('.easy-autocomplete.eac-bootstrap').removeAttr( 'style' )
+      if(entryId)
+        $('#text-input-job_'+entryId).focus()
     })
   },
 
@@ -366,8 +368,8 @@ var self = module.exports = {
       dbEntry.isRunning = ko.observable()
       dbEntry.isRunning(false)
       self.jobTimerList.push(dbEntry)
-      self.createAutoComplete()
-      $('#text-input-job_'+dbEntry._id).focus()
+      self.createAutoComplete(dbEntry._id())
+      
     });
   },
   
