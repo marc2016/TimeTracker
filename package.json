@@ -1,6 +1,8 @@
 {
   "build": {
     "appId": "de.timetracker.app",
+    "productName": "TimeTracker",
+    "copyright": "Copyright © 2018 Marc Lammers",
     "win": {
       "publish": [
         "github"
@@ -8,7 +10,7 @@
     }
   },
   "productName": "TimeTracker",
-  "name": "TimeTracker",
+  "name": "timetracker",
   "version": "0.7.9",
   "description": "Simple time tracking tool.",
   "main": "main.js",
@@ -26,7 +28,7 @@
   "keywords": [
     "TimeTracker"
   ],
-  "author": "GitHub",
+  "author": "Marc Lammers",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^3.0.0-beta.5",

@@ -14,6 +14,8 @@ var Client = require('node-rest-client').Client;
 const Store = require('electron-store');
 const store = new Store();
 
+const path = require('path')
+
 var autoUpdater = remote.getGlobal("autoUpdater")
 
 var gravatar = require('gravatar');
@@ -65,7 +67,7 @@ const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
   withFallback: false,
   customPath: void 0 ,
-  appId: "de.timetracker.app"
+  appID: "TimeTracker"
 });
 
 onload = function() {
@@ -94,7 +96,7 @@ onload = function() {
   this.syncProjects = syncProjects
   this.checkForUpdatesClick = checkForUpdatesClick
 
-  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000*60, 10*1000*60)).subscribe(timerUpdateNotifier)
+  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
   
@@ -181,13 +183,20 @@ function timerUpdateNotifier(updateValue){
   if(!enabled){
     return
   }
+
+  var iconPath = path.join(__dirname, "icons/logo.png")
+  var jobDescription = updateValue.jobDescription
+  if(!jobDescription){
+    jobDescription = "Unbenannte Aufgabe"
+  }
     
   windowsToaster.notify({
       title: "Aufgabe läuft...",
-      message: "Aufgabe: "+_.truncate(updateValue.jobDescription,{'length': 30})+"\nDauer: "+utils.getTimeString(updateValue.duration),
-      icon: "./icons/logo.png",
-      sound: true, // true | false. 
-      wait: false, // Wait for User Action against Notification 
+      message: "Aufgabe: "+_.truncate(jobDescription,{'length': 25})+"\nDauer: "+utils.getTimeString(updateValue.duration),
+      icon: iconPath,
+      sound: true, 
+      wait: false,
+      appID: "TimeTracker"
   }, function(error, response) {
       console.log(response);
   });

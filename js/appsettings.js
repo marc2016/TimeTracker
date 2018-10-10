@@ -69,7 +69,7 @@ class AppSettings extends BaseViewModel {
                     return this.store.get('timerNotificationsInterval', 600)/60;
                 },
                 write: function (value) {
-                    this.store.set('timerNotificationsInterval', value)*60
+                    this.store.set('timerNotificationsInterval', value*60)
                 },
                 owner: this
             });
