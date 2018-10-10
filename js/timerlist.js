@@ -15,6 +15,8 @@ const Store = require('electron-store');
 const store = new Store();
 var format = require("string-template")
 
+const path = require('path')
+
 var toastr = require('toastr');
 toastr.options = {
   "closeButton": false,
@@ -384,6 +386,7 @@ var self = module.exports = {
     self.currentEntryId = undefined
     footer.refreshStatusBarEntry()
     self.currentJob(undefined)
+    remote.getCurrentWindow().setOverlayIcon(null, "TimeTracker")
   },
   
   startTimer: function(){
@@ -400,6 +403,8 @@ var self = module.exports = {
     this.isRunning(true)
   
     self.jobtimer.start(elementId, this.elapsedSeconds(), this.description())
+    var overlayPath = path.join(__dirname,"../icons/overlay.png")
+    remote.getCurrentWindow().setOverlayIcon(overlayPath, 'Aufgabe läuft...')
   },
   
   goToToday: function(){
