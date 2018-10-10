@@ -65,7 +65,7 @@ const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
   withFallback: false,
   customPath: void 0 ,
-  appId: pjson.build.appId
+  appId: "de.timetracker.app"
 });
 
 onload = function() {
