@@ -14,6 +14,7 @@ var Client = require('node-rest-client').Client;
 const Store = require('electron-store');
 const store = new Store();
 var format = require("string-template")
+var utils = require('./utils.js')
 
 const path = require('path')
 
@@ -154,7 +155,8 @@ var self = module.exports = {
       return item._id == that.jobtypeId();
     });
     var jobTypeId = jobtypeMatch.externalId
-    var duration =  moment.duration(this.elapsedSeconds(), "seconds").format("h", 2).replace('.',',')
+    var duration =  moment.duration(this.elapsedSeconds(), "seconds").format("h", 2)
+    duration = utils.roundDuration(duration).replace('.',',')
     var description = this.description()
     var note = this.jobNote()
 
@@ -174,7 +176,7 @@ var self = module.exports = {
           return
         }
         
-        // this.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
+        that.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
         toastr.success('Aufgabe wurde erfolgreich synchronisiert.')
     });
 
@@ -240,7 +242,7 @@ var self = module.exports = {
         item.jobNote = ""
       }
       if(!item.lastSync){
-        item.lastSync = undefined
+        item.lastSync = ""
       }
       item.isRunning = false
       if(self.currentJob && self.currentJob() && self.currentJob()._id && self.currentJob()._id() == item._id){
@@ -319,7 +321,7 @@ var self = module.exports = {
   
   transferEntry: function(){
     self.currentDate = new moment();
-    var newEntry = {jobNote:this.jobNote(), jobtypeId: this.jobtypeId(), projectId: this.projectId(),elapsedSeconds:0, description:this.description(), date:self.currentDate.format('YYYY-MM-DD'), lastSync: undefined}
+    var newEntry = {jobNote:this.jobNote(), jobtypeId: this.jobtypeId(), projectId: this.projectId(),elapsedSeconds:0, description:this.description(), date:self.currentDate.format('YYYY-MM-DD'), lastSync: ""}
     self.db.insert(newEntry, function (err, dbEntry) {
       self.currentDateChanged()  
     });
@@ -362,7 +364,7 @@ var self = module.exports = {
   },
 
   addNewItem: function(){
-    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD'), lastSync: undefined}
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:self.currentDate.format('YYYY-MM-DD'), lastSync: ""}
     self.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       dbEntry.isRunning = ko.observable()

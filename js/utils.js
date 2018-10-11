@@ -9,5 +9,9 @@ var self = module.exports = {
         var decimal = moment.duration(seconds, "seconds").format("h", 2)
       
         return formated + "/" + decimal
+    },
+
+    roundDuration: function(value){
+        return (Math.round(value * 4) / 4).toFixed(2)
     }
 }
