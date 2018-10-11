@@ -3,6 +3,7 @@
     "appId": "de.timetracker.app",
     "productName": "TimeTracker",
     "copyright": "Copyright © 2018 Marc Lammers",
+    "extraResources": [ "icons/logonotification.png" ],
     "win": {
       "publish": [
         "github"
@@ -11,7 +12,7 @@
   },
   "productName": "TimeTracker",
   "name": "timetracker",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
