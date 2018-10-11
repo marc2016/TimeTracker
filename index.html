@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="node_modules/easy-autocomplete/dist/easy-autocomplete.themes.min.css">
     <link rel="stylesheet" href="node_modules/toastr/build/toastr.min.css">
     <link rel="stylesheet" href="libs/imagepicker/image-picker.css">
+    <link rel="stylesheet" href="node_modules/font-awesome-animation/dist/font-awesome-animation.min.css">
   </head>
   <body style="overflow-y: auto">
     <script>
@@ -208,7 +209,7 @@
               <div class="row">
                   <div class="col">
                       <span class="update-message" data-bind="visible: updateAvailable() == false">Die App ist auf dem aktuellen Stand.</span>
-                      <span class="update-message" data-bind="visible: updateAvailable() == true"><i class="fas fa-download fa-pulse"></i> Neue Version wird runtergeladen...</span>
+                      <span class="update-message" data-bind="visible: updateAvailable() == true"><i class="fas fa-download faa-flash animated faa-slow"></i> Neue Version wird runtergeladen...</span>
                       <span class="update-message" data-bind="visible: updateAvailable() == 'checking'"><i class="fas fa-sync-alt fa-spin"></i> Es wird auf Updates geprüft...</span>
                     </div>
                 <div class="col-md-auto"><button class="btn btn-info btn-sm" data-bind="click: checkForUpdatesClick">Auf Updates prüfen</button></div>

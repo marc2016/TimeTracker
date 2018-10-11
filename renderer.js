@@ -85,7 +85,6 @@ onload = function() {
   this.updateAvailable = ko.observable(false)
   autoUpdater.on('update-available', () => {
     this.updateAvailable(true)
-    autoUpdater.downloadUpdate()
   })
   autoUpdater.on('update-not-available', () => {
     this.updateAvailable(false)
