@@ -20,3 +20,12 @@ $imgSize: 100px;
     border-color: cadetblue !important;
     border-width: 2px !important;
 }
+
+.hLine-settings {
+    background-color: $maincolor;
+    width: 100%;
+    height: 1px;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }

@@ -279,13 +279,17 @@ function login(){
   this.cookie = undefined
   var client = new Client();
   var loginUrl = store.get('syncLoginUrl')
-  var loginParameter = store.get('syncLoginParameter')
+  var syncLoginParameterUser = store.get('syncLoginParameterUser', "accountName")
+  var syncLoginParameterPassword = store.get('syncLoginParameterPassword', "passwort")
+  
   var user = store.get('syncUsername')
   var password = this.syncPassword()
 
-  loginParameter = format(loginParameter, [user, password])
+  loginParameter = syncLoginParameterUser+"="+user+"&"+syncLoginParameterPassword+"="+password
 
-  client.get(loginUrl+"?"+loginParameter, function (data, response) {
+  var url = loginUrl+"?"+loginParameter
+
+  client.get(url, function (data, response) {
       if(data.status == 500){
         toastr.error('Anmeldung fehlgeschlagen. Bitte Daten prüfen.')  
         return
@@ -348,15 +352,19 @@ function syncProjects(){
 
   var client = new Client();
   var syncProjectUrl = store.get('syncProjectUrl')
-  var syncProjectParameter = store.get('syncProjectParameter')
+  var syncProjectParameterMonth = store.get('syncProjectParameterMonth', "month")
+  var syncProjectParameterYear = store.get('syncProjectParameterYear', "year")
 
-  syncProjectParameter = format(syncProjectParameter, [month, year])
+  var syncProjectParameter = syncProjectParameterMonth+"="+month+"&"+syncProjectParameterYear+"="+year
 
   var args = {
     headers: { "Cookie" : this.cookie }
   }
 
-  client.get(syncProjectUrl+"?"+syncProjectParameter,args, function (data, response) {
+  var url = syncProjectUrl+"?"+syncProjectParameter
+  log.info("Project sync URL: "+url)
+
+  client.get(url,args, function (data, response) {
     if(data.status == 500){
       toastr.error('Projekte wurden nicht synchronisiert.')
       return

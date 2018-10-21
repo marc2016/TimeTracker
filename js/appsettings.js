@@ -2,6 +2,7 @@ var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
 var _ = require('lodash');
+var dt = require( 'datatables.net' )();
 
 class AppSettings extends BaseViewModel {
 
@@ -82,6 +83,138 @@ class AppSettings extends BaseViewModel {
                 },
                 owner: this
             });
+
+            this.syncLoginParameterUser = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncLoginParameterUser');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncLoginParameterUser', value)
+                    } else {
+                        this.store.delete('syncLoginParameterUser')
+                    }
+                },
+                owner: this
+            });
+            this.syncLoginParameterPassword = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncLoginParameterPassword');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncLoginParameterPassword', value)
+                    } else {
+                        this.store.delete('syncLoginParameterPassword')
+                    }
+                },
+                owner: this
+            });
+            this.syncProjectParameterYear = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncProjectParameterYear');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncProjectParameterYear', value)
+                    } else {
+                        this.store.delete('syncProjectParameterYear')
+                    }
+                },
+                owner: this
+            });
+            this.syncProjectParameterMonth= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncProjectParameterMonth');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncProjectParameterMonth', value)
+                    } else {
+                        this.store.delete('syncProjectParameterMonth')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterDay= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterDay');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterDay', value)
+                    } else {
+                        this.store.delete('syncJobParameterDay')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterDuration= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterDuration');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterDuration', value)
+                    } else {
+                        this.store.delete('syncJobParameterDuration')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterDescription= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterDescription');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterDescription', value)
+                    } else {
+                        this.store.delete('syncJobParameterDescription')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterProject= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterProject');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterProject', value)
+                    } else {
+                        this.store.delete('syncJobParameterProject')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterJobtype= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterJobtype');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterJobtype', value)
+                    } else {
+                        this.store.delete('syncJobParameterJobtype')
+                    }
+                },
+                owner: this
+            });
+            this.syncJobParameterNote= ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobParameterNote');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('syncJobParameterNote', value)
+                    } else {
+                        this.store.delete('syncJobParameterNote')
+                    }
+                },
+                owner: this
+            });
+
             this.syncLoginParameter = ko.pureComputed({
                 read: function () {
                     return this.store.get('syncLoginParameter');

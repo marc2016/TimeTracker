@@ -148,7 +148,13 @@ var self = module.exports = {
 
     var client = new Client();
     var syncJobUrl = store.get('syncJobUrl')
-    var syncJobParameter = store.get('syncJobParameter')
+    
+    var syncJobParameterDay = store.get('syncJobParameterDay', "arbeitstag")
+    var syncJobParameterDuration = store.get('syncJobParameterDuration', "arbeitszeit")
+    var syncJobParameterDescription = store.get('syncJobParameterDescription', "beschreibung")
+    var syncJobParameterProject = store.get('syncJobParameterProject',"projekt_id")
+    var syncJobParameterJobtype = store.get('syncJobParameterJobtype', "taetigkeit_id")
+    var syncJobParameterNote = store.get('syncJobParameterNote', "projektzusatz")
 
     var date = moment(this.date(), "YYYY-MM-DD").format('D.M.YYYY');
 
@@ -172,15 +178,25 @@ var self = module.exports = {
     var description = this.description()
     var note = this.jobNote()
 
-    syncJobParameter = format(syncJobParameter, [date,duration,description,projectExternalId,jobTypeId,note])
+    var syncJobParameter = {}
+    _.set(syncJobParameter, syncJobParameterDay, date)
+    _.set(syncJobParameter, syncJobParameterDuration, duration)
+    _.set(syncJobParameter, syncJobParameterDescription, description)
+    _.set(syncJobParameter, syncJobParameterProject, projectExternalId)
+    _.set(syncJobParameter, syncJobParameterJobtype, jobTypeId)
+    _.set(syncJobParameter, syncJobParameterNote, note)
+
 
     var args = {
-      data: syncJobParameter,
+      data: JSON.stringify(syncJobParameter),
       headers: {
         "Cookie": vars.authCookie,
         "content-type": "application/json"
       }
     }
+
+    log.info("Job sync url: "+syncJobUrl)
+    log.info("Job syn body: "+this.syncEntry)
     var that = this
     client.post(syncJobUrl, args, function (data, response) {
         if(data.status == 500){
