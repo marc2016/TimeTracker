@@ -5,6 +5,7 @@ var dataAccess = require('./dataaccess.js')
 var base = require('./base.js')
 var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
+
 var moment = require('moment');
 var _ = require('lodash');
 var momentDurationFormatSetup = require("moment-duration-format");
@@ -15,6 +16,7 @@ const Store = require('electron-store');
 const store = new Store();
 var format = require("string-template")
 var utils = require('./utils.js')
+var log = require('electron-log');
 
 const path = require('path')
 
@@ -59,7 +61,7 @@ var self = module.exports = {
   autocompleteOptions: undefined,
 
   onLoad: function(jobtimer){
-
+    
 
     $('#background').css('background-image', 'url('+store.get('backgroundSrc')+')')
 
@@ -78,6 +80,13 @@ var self = module.exports = {
       ko.applyBindings(self, document.getElementById('modalAddNote'))
     }
 
+    if(self.koWatcher){
+      self.koWatcher.dispose()
+    }
+    self.koWatcher = ko.watch(self.jobTimerList, { depth: -1 }, function(parents, child, item) {
+      log.info("Job timer changed: "+child())
+      self.saveAll()
+    });
     
     self.refreshProjectList()
     self.refreshJobtypeList()
@@ -106,9 +115,6 @@ var self = module.exports = {
   
     var btnAddNew = document.getElementById('btnAddNew')
     btnAddNew.addEventListener("click", self.addNewItem )
-  
-    var btnSave = document.getElementById('btnSave')
-    btnSave.addEventListener("click", self.saveAll )
   
     // var btnSortTime = document.getElementById('btnSortTime')
     // btnSortTime.addEventListener("click", self.sortByTime )
@@ -262,6 +268,7 @@ var self = module.exports = {
         self.currentJob(newCurrentJob)
       }
     }
+
     self.createAutoComplete()
   },
 
@@ -274,6 +281,7 @@ var self = module.exports = {
   },
   
   currentDateChanged: function(){
+    self.saveAll()
     var lastEntryId = self.currentEntryId
     $.find('#textCurrentDate')[0].value = self.currentDate.format('DD.MM.YYYY')
     self.db.find({date: self.currentDate.format('YYYY-MM-DD')}).sort({ description: 1, elapsedSeconds: -1 }).exec( function (err, docs) {
@@ -333,6 +341,7 @@ var self = module.exports = {
   },
   
   saveAll: function(){
+    log.info("Save all method is called.")
     ko.utils.arrayForEach(self.jobTimerList(), function (element) {
       self.db.update({ _id:element._id() }, { $set: { lastSync: element.lastSync(), jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
     })
@@ -371,7 +380,7 @@ var self = module.exports = {
       dbEntry.isRunning(false)
       self.jobTimerList.push(dbEntry)
       self.createAutoComplete(dbEntry._id())
-      
+      self.saveAll()
     });
   },
   

@@ -71,7 +71,7 @@ var windowsToaster = new WindowsToaster({
 });
 
 onload = function() {
-  log.info("App started...")
+  log.info("App started.")
 
   this.userEmail = ko.observable()
   this.avatar =  ko.computed(function() {
