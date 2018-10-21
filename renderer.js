@@ -89,12 +89,20 @@ onload = function() {
   autoUpdater.on('update-not-available', () => {
     this.updateAvailable(false)
   })
+  autoUpdater.on('download-downloaded', (ev, progressObj) => {
+    this.updateAvailable('ready')
+  })
+  this.downloadProgress = ko.observable()
+  autoUpdater.on('download-progress', (ev, progressObj) => {
+    this.downloadProgress(progressObj.percent)
+  })
 
   this.login = login
   this.loginClick = loginClick
   this.syncProjects = syncProjects
   this.syncJobtypes = syncJobtypes
   this.checkForUpdatesClick = checkForUpdatesClick
+  this.closeApp = closeApp
 
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
   
@@ -173,8 +181,14 @@ onload = function() {
   }
 };
 
+function closeApp(){
+  log.info("App is closed for Update.")
+  autoUpdater.quitAndInstall()
+}
+
 function checkForUpdatesClick(){
   this.updateAvailable('checking')
+  this.downloadProgress(0)
   autoUpdater.checkForUpdates();
 }
 
