@@ -14,7 +14,7 @@
   },
   "productName": "TimeTracker",
   "name": "timetracker",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Simple time tracking tool.",
   "main": "main.js",
   "scripts": {
