@@ -75,7 +75,7 @@ onload = function() {
 
   this.userEmail = ko.observable()
   this.avatar =  ko.computed(function() {
-    return gravatar.url(this.userEmail(), {protocol: 'http', s: '30', d: 'retro'});
+    return gravatar.url(this.userEmail(), {protocol: 'http', s: '25', d: 'retro'});
   }, this);
   this.accountName = ko.observable('nicht angemeldet')
   this.appVersion = ko.computed(function() {
