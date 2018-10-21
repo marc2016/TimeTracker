@@ -93,6 +93,7 @@ onload = function() {
   this.login = login
   this.loginClick = loginClick
   this.syncProjects = syncProjects
+  this.syncJobtypes = syncJobtypes
   this.checkForUpdatesClick = checkForUpdatesClick
 
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
@@ -289,6 +290,36 @@ function checkLogin(){
     return false;
   }
   return true;
+}
+
+function syncJobtypes(){
+  if(!checkLogin()){
+    return
+  }
+  var client = new Client();
+  var syncJobtypeUrl = store.get('syncJobtypeUrl')
+
+  var args = {
+    headers: { "Cookie" : this.cookie }
+  }
+
+  client.get(syncJobtypeUrl,args, function (data, response) {
+    if(data.status == 500){
+      toastr.error('Aufgaben Arten wurden nicht synchronisiert.')
+      return
+    }
+    var countOfUpdates = 0;
+    _.forEach(data, function(element) {
+      dataAccess.getDb('jobtypes').update({ externalId: element.id }, { externalId: element.id, name:element.beschreibung, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
+        countOfUpdates += numReplaced
+      });
+      dataAccess.getDb('jobtypes').persistence.compactDatafile()
+    })
+    
+    toastr.success('Aufgaben Arten wurden synchronisiert.')
+      
+  });
+
 }
 
 function syncProjects(){

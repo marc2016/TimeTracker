@@ -138,6 +138,15 @@ class AppSettings extends BaseViewModel {
                 },
                 owner: this
             });
+            this.syncJobtypeUrl = ko.pureComputed({
+                read: function () {
+                    return this.store.get('syncJobtypeUrl');
+                },
+                write: function (value) {
+                    this.store.set('syncJobtypeUrl', value)
+                },
+                owner: this
+            });
             this.syncJobUrl = ko.pureComputed({
                 read: function () {
                     return this.store.get('syncJobUrl');
