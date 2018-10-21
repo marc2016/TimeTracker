@@ -58,7 +58,7 @@
                 <a class="btn btn-default collapsedBySize timer-btn" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
                   <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry">
+                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry, css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
                   <i class="fas fa-sync-alt" title="Synchronisieren"></i>
                 </a>
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry">

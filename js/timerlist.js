@@ -157,10 +157,16 @@ var self = module.exports = {
       return item._id == that.projectId();
     });
     var projectExternalId = projectMatch.externalId
+    if(!projectExternalId) {
+      toastr.warning("Externe ID des Projektes ist nicht gesetzt.")
+    }
     var jobtypeMatch = ko.utils.arrayFirst(self.jobtypeList(), function(item) {
       return item._id == that.jobtypeId();
     });
     var jobTypeId = jobtypeMatch.externalId
+    if(!jobTypeId) {
+      toastr.warning("Externe ID der Aufgaben Art ist nicht gesetzt.")
+    }
     var duration =  moment.duration(this.elapsedSeconds(), "seconds").format("h", 2)
     duration = utils.roundDuration(duration).replace('.',',')
     var description = this.description()
