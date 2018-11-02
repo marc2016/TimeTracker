@@ -103,20 +103,19 @@
     display: none !important;
 }
 
-/* Scrollbar styles */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-    border: 1px solid $maincolor;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-    background: $maincolor;  
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-    background: $maincolor;  
-    }
+}
+
+::-webkit-scrollbar-track {
+border: 1px solid $maincolor;
+}
+
+::-webkit-scrollbar-thumb {
+background: $maincolor;  
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: $maincolor;  
+}
