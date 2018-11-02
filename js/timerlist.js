@@ -53,6 +53,7 @@ class TimerList extends BaseViewModel {
 
       this.currentDate = new moment()
       this.currentJob = ko.observable()
+      this.itemToDelete = ko.observable()
       
       this.db = dataAccess.getDb('jobs')
       this.db_projects = dataAccess.getDb('projects')
@@ -401,9 +402,15 @@ class TimerList extends BaseViewModel {
     }.bind(this));
   }
   
+  removeItemModal(that,data){
+    $('#modalDelete').modal('show');
+    that.itemToDelete(data)
+  }
+
   removeItem(that,data){
     that.db.remove({ _id: data._id() }, {}, function (err, numRemoved) {});
     that.jobTimerList.remove(function (item) { return item._id() == data._id(); })
+    $('#modalDelete').modal('hide');
   }
 
   pauseTimer(){

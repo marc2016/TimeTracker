@@ -64,7 +64,7 @@
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry.bind($data,$parent)">
                     <i class="fas fa-external-link-alt" title="Übertragen"></i>
                   </a>
-                <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItem.bind($data,$parent)">
+                <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItemModal.bind($data,$parent)">
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
                 <div class="btn btn-default dropleft timer-btn visibleBySize" data-toggle="dropdown">
@@ -83,6 +83,23 @@
         </div>
       </li>
     </ul>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDelete" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Warnung</h5>
+      </div>
+      <div class="modal-body">
+        <p>Eintrag wirklick löschen?</p>
+      </div>
+      <div class="modal-footer" data-bind="with: itemToDelete">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
+        <button type="button" class="btn btn-primary" data-bind="click: $parent.removeItem.bind($data,$parent)">Ja</button>
+      </div>
+    </div>
   </div>
 </div>
 
