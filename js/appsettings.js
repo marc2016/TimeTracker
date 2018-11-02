@@ -11,6 +11,7 @@ class AppSettings extends BaseViewModel {
     }
 
     show(){
+        this.onLoad()
         $('#appSettings').removeClass('invisible')
     }
     

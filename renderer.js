@@ -50,18 +50,15 @@ var ProjectsSettings = require('./js/projectssettings.js')
 var JobtypeSettings = require('./js/jobtypesettings.js')
 var AppSettings = require('./js/appsettings.js')
 var jobtable = require('./js/jobtable.js')
-var timerlist = require('./js/timerlist.js')
+var TimerList = require('./js/timerlist.js')
 
 var jobtimer = require('./js/jobtimer.js')
 var footer = require('./js/footer.js')
 
-var timerlist = require('./js/timerlist.js')
-
-
-
-var projectsSettingViewModel = undefined
-var appSettingsViewModel = undefined
-var jobtypeSettingsViewModel = undefined
+this.projectsSettingViewModel = undefined
+this.appSettingsViewModel = undefined
+this.jobtypeSettingsViewModel = undefined
+this.timerlistViewModel = undefined
 
 const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
@@ -121,25 +118,27 @@ onload = function() {
   }
 
   var btnProjectsSettings = document.getElementById('btnProjectsSettings')
-  btnProjectsSettings.addEventListener("click", openProjectsSettings )
+  btnProjectsSettings.addEventListener("click", openProjectsSettings.bind(this) )
 
   var btnJobtypeSettings = document.getElementById('btnJobtypeSettings')
-  btnJobtypeSettings.addEventListener("click", openJobtypeSettings )
+  btnJobtypeSettings.addEventListener("click", openJobtypeSettings.bind(this))
 
   var btnJobTable = document.getElementById('btnJobTable')
-  btnJobTable.addEventListener("click", openJobTable )
+  btnJobTable.addEventListener("click", openJobTable.bind(this) )
   
   var btnJobTimer = document.getElementById('btnJobTimer')
-  btnJobTimer.addEventListener("click", openTimerList )
+  btnJobTimer.addEventListener("click", openTimerList.bind(this) )
 
   var btnAppSettings = document.getElementById('btnAppSettings')
-  btnAppSettings.addEventListener("click", openAppSettings )
+  btnAppSettings.addEventListener("click", openAppSettings.bind(this) )
 
-  projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'])
-  jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
-  appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
+  this.projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'])
+  this.jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
+  this.appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
+  this.timerlistViewModel = new TimerList(['timerlistMainContent','modalAddNote','modalChangeJobDuration'], jobtimer)
 
-  openTimerList()
+  this.pagemenu = ko.observableArray()
+  this.menuClick = menuClick
 
   this.syncUsername = ko.pureComputed({
       read: function () {
@@ -179,6 +178,8 @@ onload = function() {
   if(store.get('syncAutoLogin') && store.get('syncPassword')){
     login()
   }
+  this.currentViewModel = this.timerlistViewModel
+  openTimerList()
 };
 
 function closeApp(){
@@ -216,54 +217,57 @@ function timerUpdateNotifier(updateValue){
   });
 }
 
+function menuClick(that,data){
+  that.method()
+}
+
 function openTimerList(){
-  $('#mainContent').show()
-  appSettingsViewModel.hide()
-    $('#mainContent').load('pages/timerlist.html', function(){
-      timerlist.viewId = 'timerlistMainContent'
-      timerlist.onLoad(jobtimer)
-    })
-    $('#navJobTimer').addClass("selected");
+  changeView(this.timerlistViewModel)
 }
 
 function openJobTable(){
+  changeView(undefined)
   $('#mainContent').show()
-  appSettingsViewModel.hide()
   $('#mainContent').load('pages/jobtable.html', function(){
     jobtable.viewId = 'jobtableMainContent'
     jobtable.onLoad()
-  })
+  }.bind(this))
   $('#navJobTable').addClass("selected")
 }
 
 function openAppSettings(){
-    $('#mainContent').hide()
-    appSettingsViewModel.show()
-    appSettingsViewModel.onLoad()
+  changeView(this.appSettingsViewModel)
 }
 
 function openProjectsSettings(){
-  appSettingsViewModel.hide()
+  changeView(undefined)
   $('#mainContent').show()
   $('#mainContent').load('pages/projectssettings.html', function(){
-    projectsSettingViewModel.onLoad()
-  })
+    this.projectsSettingViewModel.onLoad()
+  }.bind(this))
   $('#navProjectsSettings').addClass("selected");
 }
 
 function openJobtypeSettings(){
-  appSettingsViewModel.hide()
+  changeView(undefined)
   $('#mainContent').show()
   $('#mainContent').load('pages/jobtypesettings.html', function(){
-    jobtypeSettingsViewModel.onLoad()
-  })
+    this.jobtypeSettingsViewModel.onLoad()
+  }.bind(this))
   $('#navProjectsSettings').addClass("selected");
 }
 
 function changeView(newViewModel){
-  currentViewModel.hide()
-  newViewModel.show()
-  currentViewModel = newViewModel
+  $('#mainContent').hide()
+  if(this.currentViewModel)
+    this.currentViewModel.hide()
+  pagemenu.removeAll()
+  if(newViewModel){
+    newViewModel.show()
+    if(newViewModel.getMenu)
+      ko.utils.arrayPushAll(pagemenu, newViewModel.getMenu())
+  }
+  this.currentViewModel = newViewModel
 }
 
 function loginClick(){

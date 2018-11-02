@@ -1,10 +1,10 @@
 <div id="timerlistMainContent">
   <div class="dateSelector">
-    <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;">
+    <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;" data-bind="click: previousDay.bind($root)">
       <i class="fa fa-angle-double-left" title="Zurück"></i>
     </a>
     <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly />
-    <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;">
+    <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root)">
       <i class="fa fa-angle-double-right" title="Weiter"></i>
     </a>
     <hr class="hLine">
@@ -50,7 +50,7 @@
             </div>
             <div class="col-auto">
               <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-default timer-btn timer-btn-start" id="btnStart" data-bind="click: $parent.startTimer, css: { 'active': isRunning }">
+                <a class="btn btn-default timer-btn timer-btn-start" id="btnStart" data-bind="click: $parent.startTimer.bind($data,$parent), css: { 'active': isRunning }">
                     <i class="fa fa-play timer-play-btn" title="Start"></i>
                     <i class="fa fa-pause timer-pause-btn" title="Pause"></i>
                 </a>
@@ -58,13 +58,13 @@
                 <a class="btn btn-default collapsedBySize timer-btn" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
                   <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry, css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
+                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry.bind($data,$parent), css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
                   <i class="fas fa-sync-alt" title="Synchronisieren"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry">
+                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry.bind($data,$parent)">
                     <i class="fas fa-external-link-alt" title="Übertragen"></i>
                   </a>
-                <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItem">
+                <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItem.bind($data,$parent)">
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
                 <div class="btn btn-default dropleft timer-btn visibleBySize" data-toggle="dropdown">
@@ -72,8 +72,8 @@
                   <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" data-bind="click: $parent.changeNoteClick.bind($data,$parent)" data-toggle="modal" data-target="#modalAddNote"><i class="fa fa-sticky-note" title="Notiz"></i> Notiz</a>
                     <a class="dropdown-item" data-bind="click: $parent.syncEntry"><i class="fas fa-sync-alt" title="Synchronisieren"></i> Synchronisieren</a>
-                    <a class="dropdown-item" data-bind="click: $parent.transferEntry"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
-                    <a class="dropdown-item" data-bind="click: $parent.removeItem"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
+                    <a class="dropdown-item" data-bind="click: $parent.transferEntry.bind($data,$parent)"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
+                    <a class="dropdown-item" data-bind="click: $parent.removeItem.bind($data,$parent)"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
                   </div>
                 </div>
               </div>
@@ -127,7 +127,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
-              <button id="btnSaveDuration" type="button" class="btn btn-primary">Speichern</button>
+              <button id="btnSaveDuration" type="button" class="btn btn-primary" data-bind="click: saveJobDuration.bind($data,$element)">Speichern</button>
           </div>
       </div>
   </div>

@@ -1,10 +1,12 @@
 var ko = require('knockout');
+const uuidv4 = require('uuid/v4');
 
 class BaseViewModel {
 
     constructor(views, database){
         this.views = views
         this.database = database
+        this.id = uuidv4()
     }
 
     onLoad(){
