@@ -49,7 +49,6 @@ class TimerList extends BaseViewModel {
   
     $('#timerList').load('pages/timerlist.html', function(){
       this.hide()
-      $('#background').css('background-image', 'url('+store.get('backgroundSrc')+')')
 
       this.currentDate = new moment()
       this.currentJob = ko.observable()
@@ -102,6 +101,7 @@ class TimerList extends BaseViewModel {
   onLoad() {
     super.onLoad()
 
+    $('#background').css('background-image', 'url('+store.get('backgroundSrc')+')')
     
     // jobTimerList: undefined,
     // projectList: undefined,
@@ -279,6 +279,9 @@ class TimerList extends BaseViewModel {
       if(!item.lastSync){
         item.lastSync = ""
       }
+      if(!item.billable){
+        item.billable = false
+      }
       item.isRunning = false
       if(this.currentJob && this.currentJob() && this.currentJob()._id && this.currentJob()._id() == item._id){
         item.isRunning = true
@@ -347,7 +350,7 @@ class TimerList extends BaseViewModel {
   
   transferEntry(that,data){
     that.currentDate = new moment();
-    var newEntry = {jobNote:data.jobNote(), jobtypeId: data.jobtypeId(), projectId: data.projectId(),elapsedSeconds:0, description:data.description(), date:that.currentDate.format('YYYY-MM-DD'), lastSync: ""}
+    var newEntry = {jobNote:data.jobNote(), jobtypeId: data.jobtypeId(), projectId: data.projectId(),elapsedSeconds:0, description:data.description(), date:that.currentDate.format('YYYY-MM-DD'), billable:that.billable(), lastSync: ""}
     that.db.insert(newEntry, function (err, dbEntry) {
       that.currentDateChanged()  
     });
@@ -361,7 +364,7 @@ class TimerList extends BaseViewModel {
   saveAll(){
     log.info("Save all method is called.")
     ko.utils.arrayForEach(this.jobTimerList(), function (element) {
-      this.db.update({ _id:element._id() }, { $set: { lastSync: element.lastSync(), jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
+      this.db.update({ _id:element._id() }, { $set: { billable: element.billable(), lastSync: element.lastSync(), jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false }, function (err, numReplaced) {} )
     }.bind(this))
     
     this.db.persistence.compactDatafile()
@@ -391,7 +394,7 @@ class TimerList extends BaseViewModel {
   }
 
   addNewItem(){
-    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:this.currentDate.format('YYYY-MM-DD'), lastSync: ""}
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:this.currentDate.format('YYYY-MM-DD'), lastSync: "", billable: false}
     this.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       dbEntry.isRunning = ko.observable()
