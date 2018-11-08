@@ -134,12 +134,17 @@ class ProcasSync {
     }
 
     getDataSyncJob(baseUrl, job){
-
         var date = moment(job.date, "YYYY-MM-DD").format('D.M.YYYY');
-    
-        
+
         var duration =  moment.duration(job.elapsedSeconds, "seconds").format("h", 2)
         duration = utils.roundDuration(duration).replace('.',',')
+
+        var billable = undefined
+        if(job.billable){
+            billable = 'T'
+        } else {
+            billable = 'F'
+        }
 
         var url = buildUrl(baseUrl, {
             path: 'timesheet/save',
@@ -152,7 +157,7 @@ class ProcasSync {
         _.set(syncJobParameter, "projekt_id", job.externalProjectId)
         _.set(syncJobParameter, "taetigkeit_id", job.externalJobtypeId)
         _.set(syncJobParameter, "projektzusatz", job.note)
-        _.set(syncJobParameter, "abrechenbar", job.billable)
+        _.set(syncJobParameter, "abrechenbar", billable)
         
         var args = {
             data: JSON.stringify(syncJobParameter),

@@ -51,8 +51,8 @@
               <div class="row">
                 <div class="col">
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="checkboxBillable" data-bind="checked: billable">
-                    <label class="custom-control-label" for="checkboxBillable">Eintrag abrechenbar</label>
+                    <input type="checkbox" class="custom-control-input" data-bind="checked: billable, attr: {id: 'checkboxBillable'+_id()}">
+                    <label class="custom-control-label" data-bind="attr: {for: 'checkboxBillable'+_id()}">Eintrag abrechenbar</label>
                   </div>
                 </div>
               </div>
