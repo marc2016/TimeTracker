@@ -1,7 +1,8 @@
 const remote = require('electron').remote;
 const app = remote.app;
-var vars = remote.getGlobal('vars');
-var log = require('electron-log');
+var vars = remote.getGlobal('vars')
+var log = require('electron-log')
+
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
@@ -9,10 +10,10 @@ var pjson = require('./package.json')
 
 var format = require("string-template")
 
-var Client = require('node-rest-client').Client;
-
 const Store = require('electron-store');
 const store = new Store();
+var sync = require('./js/sync.js')
+sync.baseUrl = store.get('syncRestBaseUrl')
 
 const path = require('path')
 
@@ -94,10 +95,9 @@ onload = function() {
     this.downloadProgress(progressObj.percent)
   })
 
-  this.login = login
   this.loginClick = loginClick
   this.syncProjects = syncProjects
-  this.syncJobtypes = syncJobtypes
+  this.syncJobtypes = syncJobTypes
   this.checkForUpdatesClick = checkForUpdatesClick
   this.closeApp = closeApp
 
@@ -176,7 +176,7 @@ onload = function() {
   ko.applyBindings(this, document.getElementById('modalAbout'))
 
   if(store.get('syncAutoLogin') && store.get('syncPassword')){
-    login()
+    loginClick()
   }
   this.currentViewModel = this.timerlistViewModel
   openTimerList()
@@ -276,112 +276,14 @@ function loginClick(){
   } else {
     store.delete('syncPassword')
   }
-  login()
-}
-
-function login(){
-  this.cookie = undefined
-  var client = new Client();
-  var loginUrl = store.get('syncLoginUrl')
-  var syncLoginParameterUser = store.get('syncLoginParameterUser', "accountName")
-  var syncLoginParameterPassword = store.get('syncLoginParameterPassword', "passwort")
-  
-  var user = store.get('syncUsername')
-  var password = this.syncPassword()
-
-  loginParameter = syncLoginParameterUser+"="+user+"&"+syncLoginParameterPassword+"="+password
-
-  var url = loginUrl+"?"+loginParameter
-
-  client.get(url, function (data, response) {
-      if(data.status == 500){
-        toastr.error('Anmeldung fehlgeschlagen. Bitte Daten prüfen.')  
-        return
-      }
-      this.accountName(data.vorname+" "+data.name)
-      this.userEmail(data.email)
-      this.cookie = response.headers['set-cookie'][0].split(';')[0]
-      vars.authCookie = this.cookie
-      toastr.success('Anmeldung erfolgreich als '+this.accountName()+'.')
-  });
-}
-
-function checkLogin(){
-  if(!this.cookie){
-    toastr.error('Sie sind nicht am externen System angemeldet.')
-    return false;
-  }
-  return true;
-}
-
-function syncJobtypes(){
-  if(!checkLogin()){
-    return
-  }
-  var client = new Client();
-  var syncJobtypeUrl = store.get('syncJobtypeUrl')
-
-  var args = {
-    headers: { "Cookie" : this.cookie }
-  }
-
-  client.get(syncJobtypeUrl,args, function (data, response) {
-    if(data.status == 500){
-      toastr.error('Aufgaben Arten wurden nicht synchronisiert.')
-      return
-    }
-    var countOfUpdates = 0;
-    _.forEach(data, function(element) {
-      dataAccess.getDb('jobtypes').update({ externalId: element.id }, { externalId: element.id, name:element.beschreibung, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
-        countOfUpdates += numReplaced
-      });
-      dataAccess.getDb('jobtypes').persistence.compactDatafile()
-    })
-    
-    toastr.success('Aufgaben Arten wurden synchronisiert.')
-      
-  });
-
+  sync.login(this.syncPassword(),this.accountName, this.userEmail)
 }
 
 function syncProjects(){
-
-  if(!checkLogin()){
-    return
-  }
-
-  var now = new moment();
-  var month = now.format('MM');
-  var year = now.format('YYYY');
-
-  var client = new Client();
-  var syncProjectUrl = store.get('syncProjectUrl')
-  var syncProjectParameterMonth = store.get('syncProjectParameterMonth', "month")
-  var syncProjectParameterYear = store.get('syncProjectParameterYear', "year")
-
-  var syncProjectParameter = syncProjectParameterMonth+"="+month+"&"+syncProjectParameterYear+"="+year
-
-  var args = {
-    headers: { "Cookie" : this.cookie }
-  }
-
-  var url = syncProjectUrl+"?"+syncProjectParameter
-  log.info("Project sync URL: "+url)
-
-  client.get(url,args, function (data, response) {
-    if(data.status == 500){
-      toastr.error('Projekte wurden nicht synchronisiert.')
-      return
-    }
-    var countOfUpdates = 0;
-    _.forEach(data, function(element) {
-      dataAccess.getDb('projects').update({ externalId: element.value }, { externalId: element.value, name:element.representation, active: true }, { upsert: true }, function (err, numReplaced, upsert) {
-        countOfUpdates += numReplaced
-      });
-      dataAccess.getDb('projects').persistence.compactDatafile()
-    })
-    
-    toastr.success('Projekte wurden synchronisiert.')
-      
-  });
+  sync.syncProjects()
 }
+
+function syncJobTypes(){
+  sync.syncJobtypes()
+}
+

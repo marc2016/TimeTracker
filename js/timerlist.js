@@ -17,6 +17,8 @@ const store = new Store();
 var format = require("string-template")
 var utils = require('./utils.js')
 var log = require('electron-log');
+var sync = require('./sync.js')
+sync.baseUrl = store.get('syncRestBaseUrl')
 
 const path = require('path')
 
@@ -151,72 +153,7 @@ class TimerList extends BaseViewModel {
   }
 
   syncEntry(that,data){
-    if(!vars.authCookie){
-      toastr.error('Sie sind nicht am externen System angemeldet.')
-      return
-    }
-
-    var client = new Client();
-    var syncJobUrl = store.get('syncJobUrl')
-    
-    var syncJobParameterDay = store.get('syncJobParameterDay', "arbeitstag")
-    var syncJobParameterDuration = store.get('syncJobParameterDuration', "arbeitszeit")
-    var syncJobParameterDescription = store.get('syncJobParameterDescription', "beschreibung")
-    var syncJobParameterProject = store.get('syncJobParameterProject',"projekt_id")
-    var syncJobParameterJobtype = store.get('syncJobParameterJobtype', "taetigkeit_id")
-    var syncJobParameterNote = store.get('syncJobParameterNote', "projektzusatz")
-
-    var date = moment(data.date(), "YYYY-MM-DD").format('D.M.YYYY');
-
-    var projectMatch = ko.utils.arrayFirst(that.projectList(), function(item) {
-      return item._id == data.projectId();
-    });
-    var projectExternalId = projectMatch.externalId
-    if(!projectExternalId) {
-      toastr.warning("Externe ID des Projektes ist nicht gesetzt.")
-    }
-    var jobtypeMatch = ko.utils.arrayFirst(that.jobtypeList(), function(item) {
-      return item._id == data.jobtypeId();
-    });
-    var jobTypeId = jobtypeMatch.externalId
-    if(!jobTypeId) {
-      toastr.warning("Externe ID der Aufgaben Art ist nicht gesetzt.")
-    }
-    var duration =  moment.duration(data.elapsedSeconds(), "seconds").format("h", 2)
-    duration = utils.roundDuration(duration).replace('.',',')
-    var description = data.description()
-    var note = data.jobNote()
-
-    var syncJobParameter = {}
-    _.set(syncJobParameter, syncJobParameterDay, date)
-    _.set(syncJobParameter, syncJobParameterDuration, duration)
-    _.set(syncJobParameter, syncJobParameterDescription, description)
-    _.set(syncJobParameter, syncJobParameterProject, projectExternalId)
-    _.set(syncJobParameter, syncJobParameterJobtype, jobTypeId)
-    _.set(syncJobParameter, syncJobParameterNote, note)
-
-
-    var args = {
-      data: JSON.stringify(syncJobParameter),
-      headers: {
-        "Cookie": vars.authCookie,
-        "content-type": "application/json"
-      }
-    }
-
-    log.info("Job sync url: "+syncJobUrl)
-    log.info("Job syn body: "+this.syncEntry)
-    
-    client.post(syncJobUrl, args, function (postData, response) {
-        if(postData.status == 500){
-          toastr.error('Synchronisation der Aufgabe ist fehlgeschlagen.')  
-          return
-        }
-        
-        data.lastSync(moment().format('DD.MM.YYYY, HH:mm:ss'))
-        toastr.success('Aufgabe wurde erfolgreich synchronisiert.')
-    });
-
+    sync.syncJob(data,that.projectList,that.jobtypeList)
   }
 
   saveJobDuration(data, that){

@@ -31,117 +31,13 @@
             </div>
           </div>
         <h3>Synchronisation</h3>
-            <h5>Login</h5>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">URL (ohne Parameter)</span>
-                </div>
-                <input type="text" class="form-control" id="syncLoginUrl" placeholder="REST URL, über die man sich an dem externen Dienst anmeldet..." data-bind="value: syncLoginUrl">
+        <h5>Login</h5>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Rest Basis URL</span>
             </div>
-            <!-- <div class="form-group mb-3">
-                <label for="syncLoginParameterString">Login Parameter String</label>
-                <input type="text" id="syncLoginParameterString" class="form-control" placeholder="Paramter String" data-bind="value: syncLoginParameter">
-            </div> -->
-            <div class="mb-3">
-                <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Interner Parameter</th>
-                                <th>Externer Parameter</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Benutzername</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncLoginParameterUser" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Passwort</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncLoginParameterPassword" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </div>
-            <hr class="hLine-settings">
-            <h5>Projekte</h5>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">URL (ohne Parameter)</span>
-                </div>
-                <input type="text" class="form-control" id="syncProjectUrl" placeholder="REST URL, über die die Projekte von dem externen Dienst abgerufen werden..." data-bind="value: syncProjectUrl">
-            </div>
-            <div class="mb-3">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Interner Parametername</th>
-                                <th>Externer Parametername</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Jahr</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncProjectParameterYear" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Monat</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncProjectParameterMonth" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </div>
-            <hr class="hLine-settings">
-            <h5>Aufgaben Arten</h5>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">URL (ohne Parameter)</span>
-                </div>
-                <input type="text" class="form-control" id="syncJobtypeUrl" placeholder="REST URL, über die die Job Arten von dem externen Dienst abgerufen werden..." data-bind="value: syncJobtypeUrl">
-            </div>
-            <hr class="hLine-settings">
-            <h5>Aufgaben</h5>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">URL (ohne Parameter)</span>
-                </div>
-                <input type="text" class="form-control" id="syncJobUrl" placeholder="REST URL, über die eine Aufgabe bei dem externen Dienst angelegt wird..." data-bind="value: syncJobUrl">
-            </div>
-            <div class="mb-3">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Interner Parametername</th>
-                                <th>Externer Parametername</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Tag des Monats</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterDay" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Dauer der Aufgabe</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterDuration" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Beschreibung</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterDescription" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Projekt ID</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterProject" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Aufgaben Art ID</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterJobtype" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                            <tr>
-                                <td>Notizen</td>
-                                <td><input type="text" class="form-control form-control-sm" data-bind="value: syncJobParameterNote" placeholder="Namen des Parameters eingeben..."></td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </div>
+            <input type="text" class="form-control" id="syncLoginUrl" placeholder="REST Basis URL um sich mit dem externen Dienst zu verbinden." data-bind="value: syncRestBaseUrl">
+        </div>
     </div>
 </div>
 <div class="background"></div>
