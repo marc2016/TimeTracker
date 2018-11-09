@@ -96,8 +96,10 @@ onload = function() {
   })
 
   this.loginClick = loginClick
+  this.syncLogin = syncLogin
   this.syncProjects = syncProjects
   this.syncJobtypes = syncJobTypes
+  this.saveSyncRestUrl = saveSyncRestUrl
   this.checkForUpdatesClick = checkForUpdatesClick
   this.closeApp = closeApp
 
@@ -171,9 +173,12 @@ onload = function() {
     owner: this
   });
 
+  this.syncRestUrl = ko.observable()
+
   ko.applyBindings(this, document.getElementById('mainNavbar'))
   ko.applyBindings(this, document.getElementById('modalLogin'))
   ko.applyBindings(this, document.getElementById('modalAbout'))
+  ko.applyBindings(this, document.getElementById('modalSetRestUrl'))
 
   if(store.get('syncAutoLogin') && store.get('syncPassword')){
     loginClick()
@@ -181,6 +186,22 @@ onload = function() {
   this.currentViewModel = this.timerlistViewModel
   openTimerList()
 };
+
+function syncLogin(){
+  var syncRestUrl = store.get('syncRestBaseUrl')
+  if(!syncRestUrl){
+    $('#modalSetRestUrl').modal('show')
+  } else {
+    $('#modalLogin').modal('show')
+  }
+}
+
+function saveSyncRestUrl(that){
+  store.set('syncRestBaseUrl',that.syncRestUrl())
+  sync.baseUrl = that.syncRestUrl()
+  $('#modalSetRestUrl').modal('hide')
+  $('#modalLogin').modal('show')
+}
 
 function closeApp(){
   log.info("App is closed for Update.")

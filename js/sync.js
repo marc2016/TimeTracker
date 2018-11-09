@@ -16,7 +16,7 @@ toastr.options = {
   "showDuration": "300",
   "hideDuration": "1000",
   "timeOut": "5000",
-  "extendedTimeOut": "1000",
+  "extendedTimeOut": "5000",
   "showEasing": "swing",
   "hideEasing": "linear",
   "showMethod": "fadeIn",
@@ -39,6 +39,10 @@ class Sync {
     }
 
     login(password, accountName, userEmail){
+        if(!this.baseUrl){
+            toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
+            return;  
+        }
         var user = store.get('syncUsername')
         var url = this.syncSystem.getDataLogin(this.baseUrl,user,password)
 
@@ -61,6 +65,10 @@ class Sync {
     }
         
     syncJobtypes(){
+        if(!this.baseUrl){
+            toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
+            return;  
+        }
         if(!this.checkLogin()){
             toastr.error('Sie sind nicht am externen System angemeldet.')
             return
@@ -88,8 +96,12 @@ class Sync {
     }
     
     syncProjects(){
+        if(!this.baseUrl){
+            toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
+            return;  
+        }
         if(!this.checkLogin()){
-        toastr.error('Sie sind nicht am externen System angemeldet.')
+            toastr.error('Sie sind nicht am externen System angemeldet.')
           return
         }
 
@@ -119,6 +131,10 @@ class Sync {
     }
 
     syncJob(job,projectList,jobtypeList){
+        if(!this.baseUrl){
+            toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
+            return;  
+        }
         if(!this.checkLogin()){
             toastr.error('Sie sind nicht am externen System angemeldet.')
             return

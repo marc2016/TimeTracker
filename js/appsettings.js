@@ -3,6 +3,7 @@ ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
 var _ = require('lodash');
 var dt = require( 'datatables.net' )();
+var sync = require('./sync.js')
 
 class AppSettings extends BaseViewModel {
 
@@ -102,6 +103,7 @@ class AppSettings extends BaseViewModel {
                 },
                 write: function (value) {
                     this.store.set('syncRestBaseUrl', value)
+                    sync.baseUrl = value
                 },
                 owner: this
             });

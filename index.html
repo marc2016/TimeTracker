@@ -94,7 +94,7 @@
               </a>
               <div class="dropdown-menu dropdown-menu-right">
                   <a class="dropdown-item" href="#" ><span data-bind="text: accountName"></span></a>
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fas fa-sign-in-alt"></i> Login</a>
+                  <a class="dropdown-item" href="#" data-bind="click: syncLogin"><i class="fas fa-sign-in-alt"></i> Login</a>
                   <a class="dropdown-item" href="#" data-bind="click: syncProjects"><i class="fas fa-sync-alt"></i> Projekte synchronisieren</a>
                   <a class="dropdown-item" href="#" data-bind="click: syncJobtypes"><i class="fas fa-sync-alt"></i> Aufgaben Arten synchronisieren</a>
               </div>
@@ -226,6 +226,25 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalSetRestUrl" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Service URL konfigurieren...</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                <input id="inputJobDuration" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="value: syncRestUrl" placeholder="REST Basis URL um sich mit dem externen Dienst zu verbinden." >  
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
+                  <button id="btnSaveDuration" type="button" class="btn btn-primary" data-bind="click: saveSyncRestUrl.bind($root)">Speichern</button>
+              </div>
+          </div>
       </div>
     </div>
   </body>
