@@ -65,12 +65,19 @@ const WindowsToaster = require('node-notifier').WindowsToaster;
 var windowsToaster = new WindowsToaster({
   withFallback: false,
   customPath: void 0 ,
-  appID: "TimeTracker"
+  appID: "TimeTracker",
+  wait: true
+});
+windowsToaster.on('click', function (notifierObject, options) {
+  var window = require('electron').remote.getCurrentWindow()
+    window.show()
+    window.focus()
 });
 
 onload = function() {
   log.info("App started.")
 
+  this.remote = remote
   this.userEmail = ko.observable()
   this.avatar =  ko.computed(function() {
     return gravatar.url(this.userEmail(), {protocol: 'http', s: '25', d: 'retro'});
@@ -231,7 +238,7 @@ function timerUpdateNotifier(updateValue){
       message: "Aufgabe: "+_.truncate(jobDescription,{'length': 25})+"\nDauer: "+utils.getTimeString(updateValue.duration),
       icon: iconPath,
       sound: true, 
-      wait: false,
+      wait: true,
       appID: "TimeTracker"
   }, function(error, response) {
       console.log(response);
