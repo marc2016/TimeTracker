@@ -68,11 +68,12 @@ if (!gotTheLock) {
     log.info("External protocol call: "+deeplinkingUrl)
 
     var urlList = _.split(deeplinkingUrl,'/')
-      if(_.includes(deeplinkingUrl,'newJob')){
-        log.info('External URL "newJob" found.')
-        var jobDescription = urlList[urlList.length-1]
-        mainWindow.webContents.send('newJob', jobDescription)
-      }
+    log.info("urlList: "+urlList)
+    if(_.includes(urlList,'newjob')){
+      log.info('External URL "newJob" found.')
+      var jobDescription = urlList[urlList.length-1]
+      mainWindow.webContents.send('newJob', jobDescription)
+    }
 
     if (mainWindow) {
       if (mainWindow.isMinimized()) myWindow.restore()
@@ -143,7 +144,9 @@ if (!gotTheLock) {
 }
 
 function createWindow() {
-  // Create the browser window.
+  
+  log.info("Create window.")
+
   mainWindow = new BrowserWindow({
     width: 680,
     height: 820,
