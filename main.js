@@ -1,11 +1,14 @@
 const electron = require('electron')
 const app = electron.app
+const protocol = electron.protocol
 
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
 const splashScreen = require('@trodi/electron-splashscreen')
 const electronLocalshortcut = require('electron-localshortcut');
+
+const _ = require('lodash')
 
 var userDataPath = app.getPath('userData')+'/userdata/'
 
@@ -24,8 +27,8 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+let deeplinkingUrl
+let tray = null
 let mainWindow
 
 const mainOpts = {
@@ -50,17 +53,93 @@ const splashscreenConfig = {
   }
 };
 
-var shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
+app.setAsDefaultProtocolClient('tt')
 
-if (shouldQuit) {
-  app.quit();
-  return;
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (process.platform == 'win32') {
+      deeplinkingUrl = commandLine.slice(1)
+    }
+
+    log.info("External protocol call: "+deeplinkingUrl)
+
+    var urlList = _.split(deeplinkingUrl,'/')
+      if(_.includes(deeplinkingUrl,'newJob')){
+        log.info('External URL "newJob" found.')
+        var jobDescription = urlList[urlList.length-1]
+        mainWindow.webContents.send('newJob', jobDescription)
+      }
+
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) myWindow.restore()
+      mainWindow.focus()
+    }
+  })
+
+  app.on('open-url', function (event, url) {
+    event.preventDefault()
+    deeplinkingUrl = url
+    log("open-url# " + deeplinkingUrl)
+  })
+  app.on('ready', function(){
+    mainWindow = splashScreen.initSplashScreen(splashscreenConfig);
+    mainWindow.setMenu(null);
+    
+    mainWindow.on('closed', function () {
+      mainWindow = null
+    })
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
+  
+    electronLocalshortcut.register(mainWindow, 'F12', () => {mainWindow.webContents.toggleDevTools()});  
+  })
+  app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+  app.on('activate', function () {
+    if (mainWindow === null) {
+      createWindow()
+      
+    }
+  })
+  app.on('ready', () => {
+    protocol.registerFileProtocol('tt', (request, callback) => {
+      const url = request.url.substr(7)
+    }, (error) => {
+      if (error) console.error('Failed to register protocol')
+    })
+    
+    tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
+    tray.on('click', () => {
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+    })
+    mainWindow.on('show', () => {
+      tray.setHighlightMode('always')
+    })
+    mainWindow.on('hide', () => {
+      tray.setHighlightMode('never')
+    })
+    tray.setToolTip('TimeTracker')
+  
+    global.tray = tray
+  
+    global.menu = Menu
+  
+    global.autoUpdater = autoUpdater
+  
+    global.vars = {
+      
+    }
+  })
 }
 
 function createWindow() {
@@ -73,71 +152,9 @@ function createWindow() {
     icon: path.join(__dirname, 'icons/stopwatch.ico')
   })
 
-  
+  if (process.platform == 'win32') {
+    deeplinkingUrl = process.argv.slice(1)
+  }
+  log.info("External protocol call: "+deeplinkingUrl)
+
 }
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', function(){
-  //createWindow()
-  mainWindow = splashScreen.initSplashScreen(splashscreenConfig);
-  mainWindow.setMenu(null);
-  
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-
-  electronLocalshortcut.register(mainWindow, 'F12', () => {mainWindow.webContents.toggleDevTools()});  
-})
-
-
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-    
-  }
-})
-
-let tray = null
-app.on('ready', () => {
-  
-  tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
-  tray.on('click', () => {
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-  })
-  mainWindow.on('show', () => {
-    tray.setHighlightMode('always')
-  })
-  mainWindow.on('hide', () => {
-    tray.setHighlightMode('never')
-  })
-  tray.setToolTip('TimeTracker')
-
-  global.tray = tray
-
-  global.menu = Menu
-
-  global.autoUpdater = autoUpdater
-
-  global.vars = {
-    
-  }
-})

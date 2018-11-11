@@ -1,3 +1,5 @@
+const electron = require('electron')
+
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 
@@ -96,6 +98,10 @@ class TimerList extends BaseViewModel {
       this.loaded = true
       if(this.callAfterLoad)
         this.callAfterLoad()
+    }.bind(this))
+
+    electron.ipcRenderer.on('newJob', function(event, jobDescription){
+      this.addNewItem(jobDescription)
     }.bind(this))
     
   }
@@ -330,8 +336,11 @@ class TimerList extends BaseViewModel {
     }.bind(this))
   }
 
-  addNewItem(){
-    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:"", date:this.currentDate.format('YYYY-MM-DD'), lastSync: "", billable: false}
+  addNewItem(jobDescription){
+    if(!jobDescription){
+      jobDescription = ""
+    }
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:jobDescription, date:this.currentDate.format('YYYY-MM-DD'), lastSync: "", billable: false}
     this.db.insert(newEntry, function (err, dbEntry) {
       dbEntry = ko.mapping.fromJS(dbEntry)
       dbEntry.isRunning = ko.observable()

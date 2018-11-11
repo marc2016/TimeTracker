@@ -1,3 +1,4 @@
+const electron = require('electron')
 const remote = require('electron').remote;
 const app = remote.app;
 var vars = remote.getGlobal('vars')
@@ -77,7 +78,7 @@ windowsToaster.on('click', function (notifierObject, options) {
 onload = function() {
   log.info("App started.")
 
-  this.remote = remote
+  
   this.userEmail = ko.observable()
   this.avatar =  ko.computed(function() {
     return gravatar.url(this.userEmail(), {protocol: 'http', s: '25', d: 'retro'});
