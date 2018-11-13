@@ -71,7 +71,7 @@ if (!gotTheLock) {
     log.info("urlList: "+urlList)
     if(_.includes(urlList,'newjob')){
       log.info('External URL "newJob" found.')
-      var jobDescription = urlList[urlList.length-1]
+      var jobDescription = decodeURIComponent(urlList[urlList.length-1])
       mainWindow.webContents.send('newJob', jobDescription)
     }
 
