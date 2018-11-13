@@ -90,17 +90,21 @@ onload = function() {
 
   this.updateAvailable = ko.observable(false)
   autoUpdater.on('update-available', () => {
+    log.info("Update is available.")
     this.updateAvailable(true)
   })
   autoUpdater.on('update-not-available', () => {
+    log.info("Update is not available.")
     this.updateAvailable(false)
   })
-  autoUpdater.on('download-downloaded', (ev, progressObj) => {
+  autoUpdater.on('update-downloaded', (ev, progressObj) => {
+    log.info("Update is downloaded.")
     this.updateAvailable('ready')
   })
   this.downloadProgress = ko.observable()
-  autoUpdater.on('download-progress', (ev, progressObj) => {
-    this.downloadProgress(progressObj.percent)
+  autoUpdater.on('download-progress', (info) => {
+    if(info)
+      this.downloadProgress(_.round(info.percent))
   })
 
   this.loginClick = loginClick
