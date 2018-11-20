@@ -59,6 +59,7 @@ var footer = require('./js/footer.js')
 
 this.projectsSettingViewModel = undefined
 this.appSettingsViewModel = undefined
+this.jobtableViewModel = undefined
 this.jobtypeSettingsViewModel = undefined
 this.timerlistViewModel = undefined
 
@@ -150,6 +151,7 @@ onload = function() {
   this.jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
   this.appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
   this.timerlistViewModel = new TimerList(['timerlistMainContent','modalAddNote','modalChangeJobDuration','modalDelete'], jobtimer)
+  this.jobtableViewModel = new jobtable(['jobtableMainContent'])
 
   this.pagemenu = ko.observableArray()
   this.menuClick = menuClick
@@ -259,13 +261,7 @@ function openTimerList(){
 }
 
 function openJobTable(){
-  changeView(undefined)
-  $('#mainContent').show()
-  $('#mainContent').load('pages/jobtable.html', function(){
-    jobtable.viewId = 'jobtableMainContent'
-    jobtable.onLoad()
-  }.bind(this))
-  $('#navJobTable').addClass("selected")
+  changeView(this.jobtableViewModel)
 }
 
 function openAppSettings(){

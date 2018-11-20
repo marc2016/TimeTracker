@@ -1,4 +1,5 @@
 var remote = require('electron').remote;
+var BaseViewModel = require('./base.js')
 var dt = require( 'datatables.net-bs4' )( $ );
 
 var _ = require('lodash');
@@ -41,22 +42,44 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
     }, 0 );
 } );
 
-var self = module.exports = {
+class JobTable extends BaseViewModel {
 
-    viewId:undefined,
-    isBound: function() {
-        return !!ko.dataFor(document.getElementById(viewId));
-    },
-    db: undefined,
-    onLoad: function(database,databaseProjects){
-        var Datastore = require('nedb')
-        self.db = dataAccess.getDb('jobs');
-        self.db_projects = dataAccess.getDb('projects')
+    constructor(views){
+        super(views)
+
+        $('#jobtable').load('pages/jobtable.html', function(){
+            this.hide()
+            this.loaded = true
+        }.bind(this))
+    }
+
+    show(){
+        if(!this.loaded){
+          this.callAfterLoad = this.show
+          return
+        }
+        this.onLoad()
+        $('#jobtable').removeClass('invisible')
+    }
+    
+    hide(){
+        $('#jobtable').addClass('invisible')
+    }
+    
+    getMenu(){
+        return []
+    }
+
+    onLoad() {
+        super.onLoad()
+
+        this.db = dataAccess.getDb('jobs');
+        this.db_projects = dataAccess.getDb('projects')
         var Table = require('table-builder');
         
-        self.db.find({}, function (err, jobDocs) {
+        this.db.find({}, function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
-            self.db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
+            this.db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
                 
                 _.forEach(jobDocs, function(value){
                     var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
@@ -110,6 +133,9 @@ var self = module.exports = {
                     });
                 } );
             });
-        });
+            
+        }.bind(this));
     }
 }
+
+module.exports = JobTable
