@@ -156,7 +156,7 @@ class ProcasSync {
         _.set(syncJobParameter, "beschreibung", job.description)
         _.set(syncJobParameter, "projekt_id", job.externalProjectId)
         _.set(syncJobParameter, "taetigkeit_id", job.externalJobtypeId)
-        _.set(syncJobParameter, "projektzusatz", job.note)
+        _.set(syncJobParameter, "projektzusatz", job.jobNote)
         _.set(syncJobParameter, "abrechenbar", billable)
         
         var args = {
