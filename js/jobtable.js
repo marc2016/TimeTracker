@@ -1,5 +1,6 @@
 var remote = require('electron').remote;
 var BaseViewModel = require('./base.js')
+var ko = require('knockout');
 var dt = require( 'datatables.net-bs4' )( $ );
 
 var _ = require('lodash');
@@ -49,6 +50,11 @@ class JobTable extends BaseViewModel {
 
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
+            
+            this.currentMonth = ko.observable(moment())
+            this.currentMonth.subscribe(this.refreshTable.bind(this));
+
+            
             this.loaded = true
         }.bind(this))
     }
@@ -70,14 +76,13 @@ class JobTable extends BaseViewModel {
         return []
     }
 
-    onLoad() {
-        super.onLoad()
-
+    refreshTable(currentDate){
         this.db = dataAccess.getDb('jobs');
         this.db_projects = dataAccess.getDb('projects')
         var Table = require('table-builder');
         
-        this.db.find({}, function (err, jobDocs) {
+        var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
+        this.db.find({date: regex}).exec(function (err, jobDocs) {
             var projectIds = _.map(jobDocs, 'projectId')
             this.db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
                 
@@ -100,21 +105,26 @@ class JobTable extends BaseViewModel {
                 .setHeaders(headers) 
                 .setData(jobDocs)
                 .render()
+
                 $('#table').html(htmlTable)
                 var jobTable = $('#jobs').DataTable({
                     "language": {
                         "url": "resources/dataTables.german.lang"
                     },
+                    "columnDefs": [
+                        { "width": "70px", "targets": 0 }
+                    ],
                     drawCallback: function () {
                         var api = this.api();
                         var sum = _.sumBy(api.column( 4,  {"filter": "applied"} ).data(), function(element){
                             return parseFloat(element.replace(",","."))
                         })
                         $('#tableFooterLeft').html(
-                          'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
+                            'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
                         );
-                      }
+                    }
                 });
+
                 $('#table').on( 'click', 'tr', function () {
                     var rowData = jobTable.row( this ).data()
                     var dataObj = {
@@ -135,6 +145,23 @@ class JobTable extends BaseViewModel {
             });
             
         }.bind(this));
+    }
+
+    onLoad() {
+        super.onLoad()
+
+        $.find('#textCurrentMonth')[0].value = this.currentMonth().format('MMMM YYYY')
+        $('#textCurrentMonth').datepicker({
+            language: 'de',
+            autoClose: true,
+            todayButton: new Date(),
+            onSelect:function onSelect(fd, date) {
+                this.currentMonth(moment(date))
+            }.bind(this)
+        })
+
+        this.refreshTable(this.currentMonth())
+       
     }
 }
 
