@@ -11,7 +11,28 @@ var self = module.exports = {
         return formated + "/" + decimal
     },
 
-    roundDuration: function(value){
+    roundDuration(type,value){
+        switch (type) {
+            case 'round':
+                return self.roundNormalDuration(value)
+            case 'roundUp':
+                return self.roundUpDuration(value)
+            case 'roundDown':
+                return self.roundDownDuration(value)
+            default:
+                return undefined
+        }
+    },
+
+    roundNormalDuration: function(value){
         return (Math.round(value * 4) / 4).toFixed(2)
+    },
+
+    roundUpDuration: function(value){
+        return (Math.ceil(value * 4) / 4).toFixed(2)
+    },
+
+    roundDownDuration: function(value){
+        return (Math.floor(value * 4) / 4).toFixed(2)
     }
 }

@@ -136,8 +136,8 @@ class ProcasSync {
     getDataSyncJob(baseUrl, job){
         var date = moment(job.date, "YYYY-MM-DD").format('D.M.YYYY');
 
-        var duration =  moment.duration(job.elapsedSeconds, "seconds").format("h", 2)
-        duration = utils.roundDuration(duration).replace('.',',')
+        var duration =  job.duration
+        duration = duration.replace('.',',')
 
         var billable = undefined
         if(job.billable){

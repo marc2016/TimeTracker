@@ -2,11 +2,6 @@
     <div class="container">
         <h3>Allgemein</h3>
         <div class="form-group">
-            <label for="userEmail">E-Mail für Gravater</label>
-            <input type="text" class="form-control" id="userEmail" placeholder="E-Mail Adresse um Gravater Bild zu laden..." data-bind="value: userEmail">
-        </div>
-
-        <div class="form-group">
             <label for="background">Hintergrund</label>
             <ul class="thumbnails image_picker_selector" data-bind="foreach: backgrounds">
                 <li>
@@ -14,6 +9,23 @@
                 </li>
             </ul>
         </div>
+
+        <div class="form-group">
+            <label for="background">Zeiten runden</label><br>
+            
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-primary" data-bind="css:{ active: roundDuration() == 'round'}, click: roundDurationClick.bind($data,'round')">
+                  <input type="radio" name="roundDurationOptions" value="round" > normal
+                </label>
+                <label class="btn btn-primary" data-bind="css:{ active: roundDuration() == 'roundUp'},click: roundDurationClick.bind($data,'roundUp')">
+                  <input type="radio" name="roundDurationOptions" value="roundUp" >  Aufrunden
+                </label>
+                <label class="btn btn-primary" data-bind="css:{ active: roundDuration() == 'roundDown'},click: roundDurationClick.bind($data,'roundDown')">
+                  <input type="radio" name="roundDurationOptions" value="roundDown" > Abrunden
+                </label>
+              </div>
+        </div>
+
         <h3>Benachrichtigungen</h3>
         <div class="form-group form-check">
             <input class="form-check-input" type="Checkbox" value="true" id="timerNotificationsCheckbox" data-bind="checked: timerNotificationsEnabled">

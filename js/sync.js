@@ -155,6 +155,10 @@ class Sync {
             toastr.warning("Externe ID der Aufgaben Art ist nicht gesetzt.")
         }
 
+        var duration =  moment.duration(job.elapsedSeconds(), "seconds").format("h", 2)
+        duration = utils.roundDuration(store.get('roundDuration','round'),duration)
+        job.duration = duration
+
         var jobToSync = ko.mapping.toJS(job);
 
         jobToSync.externalJobtypeId = jobTypeId

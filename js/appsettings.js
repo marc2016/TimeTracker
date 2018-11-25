@@ -57,6 +57,16 @@ class AppSettings extends BaseViewModel {
 
             this.loadBackgrounds()
 
+            this.roundDuration = ko.pureComputed({
+                read: function () {
+                    return this.store.get('roundDuration', 'round');
+                },
+                write: function (value) {
+                    this.store.set('roundDuration', value)
+                },
+                owner: this
+            });
+            
             this.timerNotificationsEnabled = ko.pureComputed({
                 read: function () {
                     return this.store.get('timerNotificationsEnabled', false);
@@ -110,6 +120,10 @@ class AppSettings extends BaseViewModel {
 
         }.bind(this))
         
+    }
+
+    roundDurationClick(value, data){
+        this.roundDuration(value)
     }
 }
 
