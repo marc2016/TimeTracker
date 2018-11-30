@@ -8,6 +8,10 @@ var toastr = require('toastr');
 var moment = require('moment');
 var momentDurationFormatSetup = require("moment-duration-format");
 
+var utils = require('./utils')
+const Store = require('electron-store');
+const store = new Store();
+
 var dataAccess = require('./dataaccess.js')
 
 var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
@@ -54,6 +58,26 @@ class JobTable extends BaseViewModel {
             this.currentMonth = ko.observable(moment())
             this.currentMonth.subscribe(this.refreshTable.bind(this));
 
+            this.jobTable = undefined
+
+            var that = this
+            $('#table').on( 'click', 'tr', function () {
+                var rowData = that.jobTable.row( this ).data()
+                var dataObj = {
+                    "date":rowData[0],
+                    "description":rowData[1],
+                    "project":rowData[2],
+                    "duration":rowData[4]
+                }
+                navigator.clipboard.writeText(JSON.stringify(dataObj))
+                .then(() => {
+                    toastr.info('In Zwischenablage kopiert...')
+                })
+                .catch(err => {
+                    // This can happen if the user denies clipboard permissions:
+                    console.error('Could not copy text: ', err);
+                });
+            } );
             
             this.loaded = true
         }.bind(this))
@@ -89,7 +113,9 @@ class JobTable extends BaseViewModel {
                 _.forEach(jobDocs, function(value){
                     var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
                     value.formattedTime = formatted
+                    
                     var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
+                    decimal = utils.roundDuration(store.get('roundDuration','round'),decimal)
                     value.formattedTimeDeciaml = decimal.replace('.',',')
 
                     value.projectName = "-"   
@@ -107,7 +133,7 @@ class JobTable extends BaseViewModel {
                 .render()
 
                 $('#table').html(htmlTable)
-                var jobTable = $('#jobs').DataTable({
+                this.jobTable = $('#jobs').DataTable({
                     "language": {
                         "url": "resources/dataTables.german.lang"
                     },
@@ -125,24 +151,8 @@ class JobTable extends BaseViewModel {
                     }
                 });
 
-                $('#table').on( 'click', 'tr', function () {
-                    var rowData = jobTable.row( this ).data()
-                    var dataObj = {
-                        "date":rowData[0],
-                        "description":rowData[1],
-                        "project":rowData[2],
-                        "duration":rowData[4]
-                    }
-                    navigator.clipboard.writeText(JSON.stringify(dataObj))
-                    .then(() => {
-                        toastr.info('In Zwischenablage kopiert...')
-                    })
-                    .catch(err => {
-                        // This can happen if the user denies clipboard permissions:
-                        console.error('Could not copy text: ', err);
-                    });
-                } );
-            });
+                
+            }.bind(this));
             
         }.bind(this));
     }
