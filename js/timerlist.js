@@ -56,6 +56,7 @@ class TimerList extends BaseViewModel {
 
       this.currentDate = new moment()
       this.currentJob = ko.observable()
+      this.currentJobForNote = ko.observable()
       this.itemToDelete = ko.observable()
       
       this.db = dataAccess.getDb('jobs')
@@ -424,7 +425,7 @@ class TimerList extends BaseViewModel {
   }
 
   changeNoteClick(that,data){
-    that.currentJob(data)
+    that.currentJobForNote(data)
     $('#modalAddNote').modal('show')
   }
   
