@@ -103,12 +103,14 @@ class JobTable extends BaseViewModel {
     async refreshTable(currentDate){
         this.db = dataAccess.getDb('jobs');
         this.db_projects = dataAccess.getDb('projects')
+        this.db_jobtypes = dataAccess.getDb('jobtypes')
         var Table = require('table-builder');
         
         var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
         var jobDocs = await this.db.find({date: regex})
         var projectIds = _.map(jobDocs, 'projectId')
         var projectDocs = await this.db_projects.find({ _id: { $in: projectIds }})
+        var jobtypeDocs = await this.db_jobtypes.find({})
             
         _.forEach(jobDocs, function(value){
             var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
@@ -123,6 +125,13 @@ class JobTable extends BaseViewModel {
                 var project = _.find(projectDocs, {'_id':value.projectId})
                 if(project){
                     value.projectName = project.name
+                }
+            }
+            value.jobType = "-"
+            if(value.jobtypeId != undefined) {
+                var jobType = _.find(jobtypeDocs, {'_id':value.jobtypeId})
+                if(jobType){
+                    value.jobType = jobType.name
                 }
             }
         })
