@@ -6416,6 +6416,9 @@ a.text-dark:hover, a.text-dark:focus {
 .custom-select {
   background: none !important; }
 
+.dataTable {
+  width: 100% !important; }
+
 #footer {
   color: #FFFFFF;
   background-color: #a4244a;

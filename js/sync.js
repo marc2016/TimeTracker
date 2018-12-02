@@ -88,7 +88,7 @@ class Sync {
                 dataAccess.getDb('jobtypes').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true }, function (err, numReplaced, upsert) {
                     countOfUpdates += numReplaced
                 });
-                dataAccess.getDb('jobtypes').persistence.compactDatafile()
+                dataAccess.getDb('jobtypes').nedb.persistence.compactDatafile()
             })
             
             toastr.success('Aufgaben Arten wurden synchronisiert.')
@@ -122,7 +122,7 @@ class Sync {
             dataAccess.getDb('projects').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true }, function (err, numReplaced, upsert) {
                 countOfUpdates += numReplaced
             });
-            dataAccess.getDb('projects').persistence.compactDatafile()
+            dataAccess.getDb('projects').nedb.persistence.compactDatafile()
             })
             
             toastr.success('Projekte wurden synchronisiert.')

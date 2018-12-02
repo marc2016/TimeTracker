@@ -14,7 +14,7 @@ const store = new Store();
 
 var dataAccess = require('./dataaccess.js')
 
-var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
+var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt", "jobType":"Art","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
 
 toastr.options = {
     "closeButton": false,
@@ -100,61 +100,57 @@ class JobTable extends BaseViewModel {
         return []
     }
 
-    refreshTable(currentDate){
+    async refreshTable(currentDate){
         this.db = dataAccess.getDb('jobs');
         this.db_projects = dataAccess.getDb('projects')
         var Table = require('table-builder');
         
         var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-        this.db.find({date: regex}).exec(function (err, jobDocs) {
-            var projectIds = _.map(jobDocs, 'projectId')
-            this.db_projects.find({ _id: { $in: projectIds }}, function (err, projectDocs) {
-                
-                _.forEach(jobDocs, function(value){
-                    var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
-                    value.formattedTime = formatted
-                    
-                    var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
-                    decimal = utils.roundDuration(store.get('roundDuration','round'),decimal)
-                    value.formattedTimeDeciaml = decimal.replace('.',',')
-
-                    value.projectName = "-"   
-                    if(value.projectId != undefined) {
-                        var project = _.find(projectDocs, {'_id':value.projectId})
-                        if(project){
-                            value.projectName = project.name
-                        }
-                    }
-                })
-    
-                var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
-                .setHeaders(headers) 
-                .setData(jobDocs)
-                .render()
-
-                $('#table').html(htmlTable)
-                this.jobTable = $('#jobs').DataTable({
-                    "language": {
-                        "url": "resources/dataTables.german.lang"
-                    },
-                    "columnDefs": [
-                        { "width": "70px", "targets": 0 }
-                    ],
-                    drawCallback: function () {
-                        var api = this.api();
-                        var sum = _.sumBy(api.column( 4,  {"filter": "applied"} ).data(), function(element){
-                            return parseFloat(element.replace(",","."))
-                        })
-                        $('#tableFooterLeft').html(
-                            'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
-                        );
-                    }
-                });
-
-                
-            }.bind(this));
+        var jobDocs = await this.db.find({date: regex})
+        var projectIds = _.map(jobDocs, 'projectId')
+        var projectDocs = await this.db_projects.find({ _id: { $in: projectIds }})
             
-        }.bind(this));
+        _.forEach(jobDocs, function(value){
+            var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
+            value.formattedTime = formatted
+            
+            var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
+            decimal = utils.roundDuration(store.get('roundDuration','round'),decimal)
+            value.formattedTimeDeciaml = decimal.replace('.',',')
+
+            value.projectName = "-"   
+            if(value.projectId != undefined) {
+                var project = _.find(projectDocs, {'_id':value.projectId})
+                if(project){
+                    value.projectName = project.name
+                }
+            }
+        })
+
+        var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
+        .setHeaders(headers) 
+        .setData(jobDocs)
+        .render()
+
+        $('#table').html(htmlTable)
+        this.jobTable = $('#jobs').DataTable({
+            "language": {
+                "url": "resources/dataTables.german.lang"
+            },
+            responsive: true,
+            "columnDefs": [
+                { "width": "70px", "targets": 0 }
+            ],
+            drawCallback: function () {
+                var api = this.api();
+                var sum = _.sumBy(api.column( 4,  {"filter": "applied"} ).data(), function(element){
+                    return parseFloat(element.replace(",","."))
+                })
+                $('#tableFooterLeft').html(
+                    'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
+                );
+            }
+        });
     }
 
     onLoad() {

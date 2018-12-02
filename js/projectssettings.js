@@ -17,37 +17,35 @@ class ProjectsSettings extends BaseViewModel {
         this.self = this
     }
 
-    saveProjects() {
+    async saveProjects() {
         var that = this
-        ko.utils.arrayForEach(this.projectList(), function (element) {
-            that.database.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ }, function (err, numReplaced) {} )
+        await _.forEach(this.projectList(), async function (element) {
+            await that.database.update({ _id:element._id() }, {  name: element.name(), externalId: element.externalId(), active: element.active() },{ })
         })
-        this.database.persistence.compactDatafile()
+        this.database.nedb.persistence.compactDatafile()
     }
 
-    addNewProject(){
+    async addNewProject(){
         var newProjectName = document.getElementById('inputNewProjectName')
         
         var newProject = {name:newProjectName.value, active:true}
         var that = this
-        this.database.insert(newProject, function (err, dbEntry) {
-            that.refreshProjectList()
-            $('#modalAddNewProject').modal('toggle');
-        });
+        var dbEntry = await this.database.insert(newProject)
+        that.refreshProjectList()
+        $('#modalAddNewProject').modal('toggle');
     }
 
-    refreshProjectList(){
+    async refreshProjectList(){
         var that = this
         this.projectList.removeAll()
-        this.database.find({}).sort({ name: 1 }).exec( function (err, docs) {
-            var observableDocs = ko.mapping.fromJS(docs,that.projectList)
-            _.forEach(observableDocs(), function(element){
-                if(!element.externalId){
-                    element.externalId = ko.observable()
-                }
-            })
-            ko.utils.arrayPushAll(that.projectList, observableDocs())
+        var docs = await this.database.find({})
+        var observableDocs = ko.mapping.fromJS(docs,that.projectList)
+        _.forEach(observableDocs(), function(element){
+            if(!element.externalId){
+                element.externalId = ko.observable()
+            }
         })
+        ko.utils.arrayPushAll(that.projectList, observableDocs())
     }
 
     clickSelectProject(that, data){

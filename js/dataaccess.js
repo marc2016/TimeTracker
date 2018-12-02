@@ -1,4 +1,4 @@
-var Datastore = require('nedb')
+var Datastore = require('nedb-promise')
 const remote = require('electron').remote;
 const app = remote.app;
 

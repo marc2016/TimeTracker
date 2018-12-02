@@ -75,6 +75,8 @@
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.1",
     "nedb": "^1.8.0",
+    "nedb-promise": "^2.0.1",
+    "nedb-promises": "^3.0.2",
     "node-notifier": "^5.2.1",
     "node-rest-client": "^3.1.0",
     "npm": "^5.10.0",
