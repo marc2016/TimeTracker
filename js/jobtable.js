@@ -135,14 +135,30 @@ class JobTable extends BaseViewModel {
                 }
             }
         })
-
+        
+        var that = this
         var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
         .setHeaders(headers) 
         .setData(jobDocs)
         .render()
 
         $('#table').html(htmlTable)
+        $('#table thead tr').clone(true).appendTo( '#table thead' );
+        $('#table thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
+    
+            $( 'input', this ).on( 'keyup change', function () {
+                if ( that.jobTable.column(i).search() !== this.value ) {
+                    that.jobTable
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
         this.jobTable = $('#jobs').DataTable({
+            orderCellsTop: true,
             "language": {
                 "url": "resources/dataTables.german.lang"
             },
