@@ -178,7 +178,7 @@ class JobTable extends BaseViewModel {
             ],
             drawCallback: function () {
                 var api = this.api();
-                var sum = _.sumBy(api.column( 4,  {"filter": "applied"} ).data(), function(element){
+                var sum = _.sumBy(api.column( api.columns()[0].length-2,  {"filter": "applied"} ).data(), function(element){
                     return parseFloat(element.replace(",","."))
                 })
                 $('#tableFooterLeft').html(
