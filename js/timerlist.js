@@ -186,10 +186,14 @@ class TimerList extends BaseViewModel {
   }
   async refreshProjectList(){
     var docs = await this.db_projects.find({active:true})
+    docs = _.sortBy(docs, 'name')
+    this.projectList.removeAll()
     ko.utils.arrayPushAll(this.projectList, docs)
   }
   async refreshJobtypeList(){
     var docs = await this.db_jobtypes.find({active:true})
+    docs = _.sortBy(docs, 'name')
+    this.jobtypeList.removeAll()
     ko.utils.arrayPushAll(this.jobtypeList, docs)
   }
 
