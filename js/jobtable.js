@@ -14,7 +14,7 @@ const store = new Store();
 
 var dataAccess = require('./dataaccess.js')
 
-var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt", "jobType":"Art","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)" };
+var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt", "jobType":"Art","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)","lastSync":"Sync." };
 
 toastr.options = {
     "closeButton": false,
@@ -97,7 +97,17 @@ class JobTable extends BaseViewModel {
     }
     
     getMenu(){
-        return []
+        return [
+            {
+              icon: 'fas fa-sync-alt',
+              name: 'Alle synchronisieren',
+              method: this.syncAllFilteredJobs.bind(this)
+            }
+          ]
+    }
+
+    syncAllFilteredJobs(){
+        console.log('Sync all')
     }
 
     async refreshTable(currentDate){
