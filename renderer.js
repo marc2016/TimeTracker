@@ -115,6 +115,7 @@ onload = function() {
   this.saveSyncRestUrl = saveSyncRestUrl
   this.checkForUpdatesClick = checkForUpdatesClick
   this.closeApp = closeApp
+  this.openTimerList = openTimerList
 
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
   
@@ -197,7 +198,7 @@ onload = function() {
   if(store.get('syncAutoLogin') && store.get('syncPassword')){
     loginClick()
   }
-  this.currentViewModel = this.timerlistViewModel
+  
   openTimerList()
 };
 
@@ -287,6 +288,8 @@ function openJobtypeSettings(){
 }
 
 function changeView(newViewModel){
+  if(this.currentViewModel && this.currentViewModel == newViewModel)
+    return;
   $('#mainContent').hide()
   if(this.currentViewModel)
     this.currentViewModel.hide()
