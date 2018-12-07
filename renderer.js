@@ -312,10 +312,19 @@ function loginClick(){
 }
 
 function syncProjects(){
-  sync.syncProjects()
+  try {
+    sync.syncProjects()
+  } catch(error){
+    toastr.error("Beim Synchronisieren der Projekte ist ein Fehler aufgetreten.")
+  }
+  
 }
 
 function syncJobTypes(){
-  sync.syncJobtypes()
+  try{
+    sync.syncJobtypes()
+  } catch(error){
+    toastr.error("Beim Synchronisieren der Aufgabenarten ist ein Fehler aufgetreten.")
+  }
 }
 

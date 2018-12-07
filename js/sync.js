@@ -47,7 +47,7 @@ class Sync {
         var url = this.syncSystem.getDataLogin(this.baseUrl,user,password)
 
         this.client.get(url, function (data, response) {
-            if(data.status == 500){
+            if(response.statusCode != 200){
                 toastr.error('Anmeldung fehlgeschlagen. Bitte Daten prüfen.')  
                 return
             }            
@@ -76,7 +76,7 @@ class Sync {
 
         var requestData = this.syncSystem.getDataJobtypes(this.baseUrl)
         this.client.get(requestData.url,requestData.args, function (data, response) {
-            if(data.status == 500){
+            if(response.statusCode != 200){
                 toastr.error('Aufgaben Arten wurden nicht synchronisiert.')
                 return
             }
@@ -110,7 +110,7 @@ class Sync {
         log.info("Project sync URL: "+requestData.url)
         
         this.client.get(requestData.url,requestData.args, function (data, response) {
-            if(data.status == 500){
+            if(response.statusCode != 200){
                 toastr.error('Projekte wurden nicht synchronisiert.')
                 return
             }
@@ -170,7 +170,7 @@ class Sync {
         log.info("Job syn body: "+requestData.args.data)
         
         this.client.post(requestData.url, requestData.args, function (postData, response) {
-            if(postData.status == 500){
+            if(response.statusCode != 200){
               toastr.error('Synchronisation der Aufgabe ist fehlgeschlagen.')  
               return
             }

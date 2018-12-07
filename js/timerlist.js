@@ -146,7 +146,11 @@ class TimerList extends BaseViewModel {
   }
 
   syncEntry(that,data){
-    sync.syncJob(data,that.projectList,that.jobtypeList)
+    try{
+      sync.syncJob(data,that.projectList,that.jobtypeList)
+    } catch(error){
+      toastr.error("Beim Synchronisieren der Aufgabe ist ein Fehler aufgetreten.")
+    }
   }
 
   saveJobDuration(data, that){
