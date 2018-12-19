@@ -148,6 +148,12 @@ class JobTable extends BaseViewModel {
         
         var that = this
         var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
+        .setPrism('lastSync', function (cellData) {
+            if(cellData){
+                return cellData+ '<i class="fas fa-check-circle"></i>'
+            }
+            return '<i class="fas fa-times-circle"></i>'
+        })
         .setHeaders(headers) 
         .setData(jobDocs)
         .render()
