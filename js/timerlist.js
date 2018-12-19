@@ -54,7 +54,7 @@ class TimerList extends BaseViewModel {
     $('#timerList').load('pages/timerlist.html', function(){
       this.hide()
 
-      this.currentDate = new moment()
+      this.currentDate = ko.observable(new moment())
       this.currentJob = ko.observable()
       this.currentJobForNote = ko.observable()
       this.itemToDelete = ko.observable()
@@ -74,22 +74,20 @@ class TimerList extends BaseViewModel {
         this.saveAll()
       }.bind(this));
 
-      this.currentDate = new moment();
-      $("#textCurrentDate").change(this.currentDateChanged)
+      this.currentDate.subscribe(this.currentDateChanged.bind(this))
 
-      $.find('#textCurrentDate')[0].value = this.currentDate.format('DD.MM.YYYY')
       $('#textCurrentDate').datepicker({
         language: 'de',
         autoClose:true,
         todayButton: new Date(),
+        maxDate: new Date(),
         onSelect:function onSelect(fd, date) {
-          this.currentDate = moment(date)
-          this.currentDateChanged()
+          this.currentDate(moment(date))
         }.bind(this)
       })
 
     
-      footer.onLoad(this.currentDate, this.db, jobtimer)
+      footer.onLoad(this.currentDate(), this.db, jobtimer)
       footer.leftFooterAction = this.goToToday
 
       this.jobtimer.timeSignal.subscribe(this.timerStep.bind(this))
@@ -117,7 +115,7 @@ class TimerList extends BaseViewModel {
     // var tray = remote.getGlobal('tray');
     // tray.setContextMenu(self.trayContextMenu)
   
-    var docs = await this.db.find({date: this.currentDate.format('YYYY-MM-DD')})
+    var docs = await this.db.find({date: this.currentDate().format('YYYY-MM-DD')})
     this.refreshJobTimerList(docs)
     this.refreshTimeSum()
   }
@@ -240,19 +238,18 @@ class TimerList extends BaseViewModel {
     this.createAutoComplete()
   }
   
-  async currentDateChanged(){
+  async currentDateChanged(value){
     this.saveAll()
     var lastEntryId = this.currentEntryId
-    $.find('#textCurrentDate')[0].value = this.currentDate.format('DD.MM.YYYY')
-    var docs = await this.db.find({date: this.currentDate.format('YYYY-MM-DD')})
+    // $.find('#textCurrentDate')[0].value = this.currentDate().format('DD.MM.YYYY')
+    var docs = await this.db.find({date: value.format('YYYY-MM-DD')})
     this.refreshJobTimerList(docs)
     this.refreshTimeSum()
-    footer.initChart(this.currentDate)
+    footer.initChart(value)
   }
   
   nextDay(){
-    this.currentDate.add(1,'days');
-    this.currentDateChanged()
+    this.currentDate(this.currentDate().add(1,'days'))
   }
   
   getTimeString(seconds){
@@ -284,15 +281,14 @@ class TimerList extends BaseViewModel {
 
   
   async transferEntry(that,data){
-    that.currentDate = new moment();
-    var newEntry = {jobNote:data.jobNote(), jobtypeId: data.jobtypeId(), projectId: data.projectId(),elapsedSeconds:0, description:data.description(), date:that.currentDate.format('YYYY-MM-DD'), billable:that.billable(), lastSync: ""}
-    var dbEntry = await that.db.insert(newEntry)
-    that.currentDateChanged()  
+    var newDate = new moment()
+    var newEntry = {jobNote:data.jobNote(), jobtypeId: data.jobtypeId(), projectId: data.projectId(),elapsedSeconds:0, description:data.description(), date:newDate.format('YYYY-MM-DD'), billable:that.billable(), lastSync: ""}
+    await that.db.insert(newEntry)
+    that.currentDate(newDate)
   }
   
   previousDay(){
-    this.currentDate.subtract(1,'days');
-    this.currentDateChanged()
+    this.currentDate(this.currentDate().subtract(1,'days'))
   }
   
   async saveAll(){
@@ -331,7 +327,7 @@ class TimerList extends BaseViewModel {
     if(!jobDescription){
       jobDescription = ""
     }
-    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:jobDescription, date:this.currentDate.format('YYYY-MM-DD'), lastSync: "", billable: false}
+    var newEntry = {jobNote:"", jobtypeId: "", projectId: "",elapsedSeconds:0, description:jobDescription, date:this.currentDate().format('YYYY-MM-DD'), lastSync: "", billable: false}
     var dbEntry = await this.db.insert(newEntry)
     dbEntry = ko.mapping.fromJS(dbEntry)
     dbEntry.isRunning = ko.observable()
@@ -383,8 +379,7 @@ class TimerList extends BaseViewModel {
   }
   
   goToToday(){
-    this.currentDate = new moment()
-    this.currentDateChanged()
+    this.currentDate(new moment())
   }
   
   timerStep(updateValue){

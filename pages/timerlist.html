@@ -1,12 +1,12 @@
 <div id="timerlistMainContent">
   <div class="dateSelector">
-    <a class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;" data-bind="click: previousDay.bind($root)">
+    <button class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;" data-bind="click: previousDay.bind($root)">
       <i class="fa fa-angle-double-left" title="Zurück"></i>
-    </a>
-    <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" readonly />
-    <a class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root)">
+    </button>
+    <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" data-bind="value: currentDate().format('DD.MM.YYYY')" readonly />
+    <button class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root), enable: currentDate().isBefore(moment(),'day')">
       <i class="fa fa-angle-double-right" title="Weiter"></i>
-    </a>
+    </button>
     <hr class="hLine">
   </div>
 
