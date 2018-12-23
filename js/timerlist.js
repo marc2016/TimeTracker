@@ -50,6 +50,9 @@ class TimerList extends BaseViewModel {
   constructor(views, jobtimer){
     super(views)
     this.jobtimer = jobtimer
+
+    dataAccess.projectsChanged.subscribe(value => this.refreshProjectList())
+    dataAccess.jobtypesChanged.subscribe(value => this.refreshJobtypeList())
   
     $('#timerList').load('pages/timerlist.html', function(){
       this.hide()

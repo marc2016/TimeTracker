@@ -64,7 +64,7 @@ class Sync {
         return this.syncSystem.checkLogin()
     }
         
-    syncJobtypes(){
+    async syncJobtypes(){
         if(!this.baseUrl){
             toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
             return;  
@@ -75,7 +75,7 @@ class Sync {
         }
 
         var requestData = this.syncSystem.getDataJobtypes(this.baseUrl)
-        this.client.get(requestData.url,requestData.args, function (data, response) {
+        await this.client.get(requestData.url,requestData.args, async function (data, response) {
             if(response.statusCode != 200){
                 toastr.error('Aufgaben Arten wurden nicht synchronisiert.')
                 return
@@ -84,18 +84,18 @@ class Sync {
             var responseData = this.syncSystem.handleResponseJobtypes
 
             var countOfUpdates = 0;
-            _.forEach(responseData, function(element) {
-                dataAccess.getDb('jobtypes').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true }, function (err, numReplaced, upsert) {
-                    countOfUpdates += numReplaced
-                });
+            await _.forEach(responseData, async function(element) {
+                await dataAccess.getDb('jobtypes').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true });
                 dataAccess.getDb('jobtypes').nedb.persistence.compactDatafile()
             })
             
+            dataAccess.jobtypesChanged.next()
+
             toastr.success('Aufgaben Arten wurden synchronisiert.')
         }.bind(this));
     }
     
-    syncProjects(){
+    async syncProjects(){
         if(!this.baseUrl){
             toastr.error('Die Basis URL des Rest Service wurde nicht gesetzt.')
             return;  
@@ -109,7 +109,7 @@ class Sync {
 
         log.info("Project sync URL: "+requestData.url)
         
-        this.client.get(requestData.url,requestData.args, function (data, response) {
+        await this.client.get(requestData.url,requestData.args, async function (data, response) {
             if(response.statusCode != 200){
                 toastr.error('Projekte wurden nicht synchronisiert.')
                 return
@@ -118,16 +118,15 @@ class Sync {
             var responseData = this.syncSystem.handleResponseProjects(data,response)
 
             var countOfUpdates = 0;
-            _.forEach(responseData, function(element) {
-            dataAccess.getDb('projects').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true }, function (err, numReplaced, upsert) {
-                countOfUpdates += numReplaced
-            });
-            dataAccess.getDb('projects').nedb.persistence.compactDatafile()
+            await _.forEach(responseData, async function(element) {
+                await dataAccess.getDb('projects').update({ externalId: element.externalId }, { externalId: element.externalId, name:element.name, active: element.active }, { upsert: true });
+                dataAccess.getDb('projects').nedb.persistence.compactDatafile()
             })
             
+            dataAccess.projectsChanged.next()
+
             toastr.success('Projekte wurden synchronisiert.')
         }.bind(this))
-        
     }
 
     syncJob(job,projectList,jobtypeList){
