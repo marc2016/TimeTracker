@@ -311,18 +311,18 @@ function loginClick(){
   sync.login(this.syncPassword(),this.accountName, this.userEmail)
 }
 
-function syncProjects(){
+async function syncProjects(){
   try {
-    sync.syncProjects()
+    await sync.syncProjects()
   } catch(error){
     toastr.error("Beim Synchronisieren der Projekte ist ein Fehler aufgetreten.")
   }
   
 }
 
-function syncJobTypes(){
+async function syncJobTypes(){
   try{
-    sync.syncJobtypes()
+    await sync.syncJobtypes()
   } catch(error){
     toastr.error("Beim Synchronisieren der Aufgabenarten ist ein Fehler aufgetreten.")
   }

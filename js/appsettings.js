@@ -4,6 +4,7 @@ var BaseViewModel = require('./base.js')
 var _ = require('lodash');
 var dt = require( 'datatables.net' )();
 var sync = require('./sync.js')
+var Holidays = require('date-holidays')
 
 class AppSettings extends BaseViewModel {
 
@@ -51,11 +52,51 @@ class AppSettings extends BaseViewModel {
             this.store = store
             this.self = this
 
+            this.hd = new Holidays()
+
             $("#selectImage").imagepicker({
                 hide_select: true
             });
 
             this.loadBackgrounds()
+
+            this.countries = ko.computed(function() {
+                var tmpContries = new Array()
+                _.forIn(this.hd.getCountries(), function(value, key) {
+                    var newObj = new Object()
+                    newObj["id"] = key
+                    newObj["name"] = value
+                    tmpContries.push(newObj)
+                });
+                return tmpContries
+            }, this);
+
+            this.selectedCountry = ko.computed({
+                read: function () {
+                    return this.store.get('selectedCountry', 'DE');
+                },
+                write: function (value) {
+                    this.store.set('selectedCountry', value)
+                    this.states(this.getStates(value))
+                },
+                owner: this
+            }).extend({ notify: 'always' });
+
+            this.states = ko.observable()
+
+            this.selectedState = ko.pureComputed({
+                read: function () {
+                    return this.store.get('selectedState', 'NW');
+                },
+                write: function (value) {
+                    if(value){
+                        this.store.set('selectedState', value)
+                    } else {
+                        this.store.delete('selectedState')
+                    }
+                },
+                owner: this
+            });
 
             this.roundDuration = ko.pureComputed({
                 read: function () {
@@ -120,6 +161,19 @@ class AppSettings extends BaseViewModel {
 
         }.bind(this))
         
+    }
+
+    getStates(country) {   
+        if(!country)
+            return undefined
+        var tmpStates = new Array()
+        _.forIn(this.hd.getStates(country), function(value, key) {
+            var newObj = new Object()
+            newObj["id"] = key
+            newObj["name"] = value
+            tmpStates.push(newObj)
+        });
+        return tmpStates
     }
 
     roundDurationClick(value, data){

@@ -206,6 +206,10 @@ assert-plus@1.0.0, assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
 
+astronomia@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/astronomia/-/astronomia-2.0.1.tgz#11187803dae91cd5464afb1fa7ba532752e38d17"
+
 async-exit-hook@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/async-exit-hook/-/async-exit-hook-2.0.1.tgz#8bd8b024b0ec9b1c01cccb9af9db29bd717dfaf3"
@@ -428,6 +432,12 @@ cacache@^11.0.1, cacache@^11.0.2:
     ssri "^6.0.0"
     unique-filename "^1.1.0"
     y18n "^4.0.0"
+
+caldate@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/caldate/-/caldate-1.0.2.tgz#08849473606be9fdf7a5d814692c488fb1df6358"
+  dependencies:
+    moment-timezone "^0.5.14"
 
 call-limit@~1.1.0:
   version "1.1.0"
@@ -736,6 +746,40 @@ datatables.net@1.10.19:
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.19.tgz#97a1ed41c85e62d61040603481b59790a172dd1f"
   dependencies:
     jquery ">=1.7"
+
+date-chinese@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/date-chinese/-/date-chinese-1.0.5.tgz#3cb98dae85aed9b8b795e65241077f9c8e4186b7"
+  dependencies:
+    astronomia "^2.0.0"
+
+date-easter@^0.2.2:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/date-easter/-/date-easter-0.2.3.tgz#82f70bacccf7ba43f48722447c7c34df18e5037c"
+
+date-holidays-parser@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/date-holidays-parser/-/date-holidays-parser-1.2.2.tgz#67001572b652e437cf8a034d8e20d852c16ee696"
+  dependencies:
+    astronomia "^2.0.0"
+    caldate "^1.0.2"
+    date-chinese "^1.0.5"
+    date-easter "^0.2.2"
+    lodash.get "^4.4.2"
+    lodash.merge "^4.6.1"
+    lodash.omit "^4.5.0"
+    lodash.set "^4.3.2"
+    moment-timezone "^0.5.14"
+
+date-holidays@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/date-holidays/-/date-holidays-1.2.10.tgz#bb0898458e7a606390a77991357d4b9c8faa9b7c"
+  dependencies:
+    date-holidays-parser "^1.2.2"
+    js-yaml "^3.12.0"
+    lodash.omit "^4.5.0"
+    lodash.pick "^4.4.0"
+    prepin "^1.0.1"
 
 debug@2.6.9, debug@^2.1.3, debug@^2.2.0, debug@^2.6.8:
   version "2.6.9"
@@ -1795,9 +1839,29 @@ lodash.clonedeep@~4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
 
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+
 lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+
+lodash.merge@^4.6.1:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
+
+lodash.omit@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.omit/-/lodash.omit-4.5.0.tgz#6eb19ae5a1ee1dd9df0b969e66ce0b7fa30b5e60"
+
+lodash.pick@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
+
+lodash.set@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
 
 lodash.union@~4.6.0:
   version "4.6.0"
@@ -2030,9 +2094,23 @@ mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+moment-business-days@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/moment-business-days/-/moment-business-days-1.1.3.tgz#2922c3ffab8640a84dd27484336a5e0b3c07175a"
+
 moment-duration-format@^2.2.1:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/moment-duration-format/-/moment-duration-format-2.2.2.tgz#b957612de26016c9ad9eb6087c054573e5127779"
+
+moment-timezone@^0.5.14:
+  version "0.5.23"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.23.tgz#7cbb00db2c14c71b19303cb47b0fb0a6d8651463"
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0":
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
 
 moment@^2.10.2, moment@^2.22.2:
   version "2.22.2"
@@ -2668,6 +2746,10 @@ popper.js@^1.14.4:
 prepend-http@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
+
+prepin@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/prepin/-/prepin-1.0.1.tgz#cd41e027fd5b4cc28ce591639bb7b14d2f4f0618"
 
 pretty-bytes@^1.0.2:
   version "1.0.4"

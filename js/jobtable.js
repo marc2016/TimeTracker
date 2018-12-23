@@ -5,12 +5,13 @@ var dt = require( 'datatables.net-bs4' )( $ );
 
 var _ = require('lodash');
 var toastr = require('toastr');
-var moment = require('moment');
-var momentDurationFormatSetup = require("moment-duration-format");
+//var moment = require('moment');
+var moment = require('moment-business-days');
+var Holidays = require('date-holidays')
 
 var utils = require('./utils')
 const Store = require('electron-store');
-const store = new Store();
+
 
 var dataAccess = require('./dataaccess.js')
 
@@ -54,7 +55,17 @@ class JobTable extends BaseViewModel {
 
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
-            
+
+            this.store = new Store();
+            var country = this.store.get('selectedCountry','DE')
+            var state = this.store.get('selectedState','NW')
+            var hd = new Holidays(country,state)
+            var holidays = _.map(hd.getHolidays(), function(value){ return value.date.split(" ")[0] })
+            moment.updateLocale('de', {
+                holidays: holidays,
+                holidayFormat: 'YYYY-MM-DD'
+             });
+
             this.currentMonth = ko.observable(moment())
             this.currentMonth.subscribe(this.refreshTable.bind(this));
 
@@ -127,7 +138,7 @@ class JobTable extends BaseViewModel {
             value.formattedTime = formatted
             
             var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
-            decimal = utils.roundDuration(store.get('roundDuration','round'),decimal)
+            decimal = utils.roundDuration(this.store.get('roundDuration','round'),parseFloat(decimal.replace(",",".")))
             value.formattedTimeDeciaml = decimal.replace('.',',')
 
             value.projectName = "-"   
@@ -144,7 +155,7 @@ class JobTable extends BaseViewModel {
                     value.jobType = jobType.name
                 }
             }
-        })
+        }.bind(this))
         
         var that = this
         var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
@@ -187,8 +198,9 @@ class JobTable extends BaseViewModel {
                 var sum = _.sumBy(api.column( api.columns()[0].length-2,  {"filter": "applied"} ).data(), function(element){
                     return parseFloat(element.replace(",","."))
                 })
+                
                 $('#tableFooterLeft').html(
-                    'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h'
+                    'Summe Dauer: '+sum.toFixed(2).replace(".",",") + ' h ' + '('+moment().startOf('month').businessDiff(moment())*8+'/'+moment().endOf('month').businessDaysIntoMonth()*8+' h)'
                 );
             }
         });
@@ -208,6 +220,9 @@ class JobTable extends BaseViewModel {
         })
 
         this.refreshTable(this.currentMonth())
+
+
+        
        
     }
 }
