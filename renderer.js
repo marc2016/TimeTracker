@@ -4,6 +4,11 @@ const app = remote.app;
 var vars = remote.getGlobal('vars')
 var log = require('electron-log')
 
+var $ = require("jquery");
+
+require( 'datatables.net' )( window, $ );
+require( 'datatables.net-bs4' )( window, $ );
+
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
 

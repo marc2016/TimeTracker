@@ -1,7 +1,6 @@
 var remote = require('electron').remote;
 var BaseViewModel = require('./base.js')
 var ko = require('knockout');
-var dt = require( 'datatables.net-bs4' )( $ );
 
 var _ = require('lodash');
 var toastr = require('toastr');
@@ -53,6 +52,8 @@ class JobTable extends BaseViewModel {
     constructor(views){
         super(views)
 
+        this.jobList = ko.observableArray()
+
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
 
@@ -90,6 +91,8 @@ class JobTable extends BaseViewModel {
                 });
             } );
             
+            this.initTable()
+
             this.loaded = true
         }.bind(this))
     }
@@ -125,7 +128,7 @@ class JobTable extends BaseViewModel {
         this.db = dataAccess.getDb('jobs');
         this.db_projects = dataAccess.getDb('projects')
         this.db_jobtypes = dataAccess.getDb('jobtypes')
-        var Table = require('table-builder');
+
         
         var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
         var jobDocs = await this.db.find({date: regex})
@@ -157,34 +160,23 @@ class JobTable extends BaseViewModel {
             }
         }.bind(this))
         
-        var that = this
-        var htmlTable = new Table({'id': 'jobs', 'class': 'table table-striped table-bordered'})
-        .setPrism('lastSync', function (cellData) {
-            if(cellData){
-                return cellData+ '<i class="fas fa-check-circle"></i>'
-            }
-            return '<i class="fas fa-times-circle"></i>'
-        })
-        .setHeaders(headers) 
-        .setData(jobDocs)
-        .render()
+        var tmpJobList = ko.mapping.fromJS(jobDocs)
+        ko.utils.arrayPushAll(this.jobList, tmpJobList())
+    }
 
-        $('#table').html(htmlTable)
-        $('#table thead tr').clone(true).appendTo( '#table thead' );
-        $('#table thead tr:eq(1) th').each( function (i) {
-            var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
-    
-            $( 'input', this ).on( 'keyup change', function () {
-                if ( that.jobTable.column(i).search() !== this.value ) {
-                    that.jobTable
-                        .column(i)
-                        .search( this.value )
-                        .draw();
-                }
-            } );
-        } );
+    async initTable(){
+
         this.jobTable = $('#jobs').DataTable({
+            
+            columns: [
+                { title:"Datum", data: 'date()'},
+                { title:"Aufgabe", data: 'description()'},
+                { title:"Projekt", data: 'projectName()'},
+                { title:"Art", data: 'jobType()'},
+                { title:"Dauer", data: 'formattedTime()'},
+                { title:"Dauer (d)", data: 'formattedTimeDeciaml()'},
+                { title:"Sync", data: 'lastSync()'}
+            ],
             orderCellsTop: true,
             "language": {
                 "url": "resources/dataTables.german.lang"
@@ -204,6 +196,23 @@ class JobTable extends BaseViewModel {
                 );
             }
         });
+        
+        this.jobList.subscribe(function(changes) {
+            _.forEach(changes, function(element){
+                switch(element.status) {
+                    case "added":
+                        this.jobTable.row.add( element.value ).draw();
+                        break
+                    case "deleted":
+                        var rowIdx = this.jobTable.column( 0 ).data().indexOf( element.value );
+                        this.jobTable.row( rowIdx ).remove().draw();
+                        break
+                }
+            }.bind(this))
+            
+
+        }.bind(this), null, "arrayChange")
+
     }
 
     onLoad() {
@@ -219,11 +228,25 @@ class JobTable extends BaseViewModel {
             }.bind(this)
         })
 
-        this.refreshTable(this.currentMonth())
-
-
+        if(!this.onlyOnce){
+            $('#table thead tr').clone(true).appendTo( '#table thead' );
+            $('#table thead tr:eq(1) th').each( function (i) {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
         
-       
+                $( 'input', this ).on( 'keyup change', function () {
+                    if ( that.jobTable.column(i).search() !== this.value ) {
+                        that.jobTable
+                            .column(i)
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+            this.onlyOnce = true
+        }
+        
+        this.refreshTable(this.currentMonth())
     }
 }
 

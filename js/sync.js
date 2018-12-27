@@ -155,7 +155,7 @@ class Sync {
         }
 
         var duration =  moment.duration(job.elapsedSeconds(), "seconds").format("h", 2)
-        duration = utils.roundDuration(store.get('roundDuration','round'),duration)
+        duration = utils.roundDuration(store.get('roundDuration','round'),duration.replace(",","."))
         job.duration = duration
 
         var jobToSync = ko.mapping.toJS(job);

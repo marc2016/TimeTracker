@@ -57,6 +57,7 @@
     "build-url": "^1.2.0",
     "chart.js": "^2.7.2",
     "chartjs-plugin-annotation": "^0.5.7",
+    "datatables.net-bs": "^1.10.19",
     "datatables.net-bs4": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "date-holidays": "^1.2.10",

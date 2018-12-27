@@ -2,7 +2,6 @@ var ko = require('knockout');
 ko.mapping = require('knockout-mapping')
 var BaseViewModel = require('./base.js')
 var _ = require('lodash');
-var dt = require( 'datatables.net' )();
 var sync = require('./sync.js')
 var Holidays = require('date-holidays')
 
