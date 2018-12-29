@@ -6423,6 +6423,11 @@ a.text-dark:hover, a.text-dark:focus {
 .dataTable {
   width: 100% !important; }
 
+td {
+  height: 10px;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important; }
+
 #footer {
   color: #FFFFFF;
   background-color: #a4244a;

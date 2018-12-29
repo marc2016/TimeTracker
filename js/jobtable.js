@@ -49,8 +49,23 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
 
 class JobTable extends BaseViewModel {
 
+    test(){
+        console.log("bla")
+    }
+
     constructor(views){
         super(views)
+
+        this.columns = [
+            { title:"Datum", data: 'date()', filter: true},
+            { title:"Aufgabe", data: 'description()', "width": "80%", filter: true},
+            { title:"Projekt", data: 'projectName()', filter: true},
+            { title:"Art", data: 'jobType()', filter: true},
+            { title:"Dauer", data: 'formattedTime()'},
+            { title:"Dauer (d)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
+            { title:"Sync", data: 'lastSync()'},
+            { title:"Aktion", data: null, defaultContent: '<a class="btn btn-default btn-sm table-btn" data-bind="click: test"><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'}
+        ]
 
         this.jobList = ko.observableArray()
 
@@ -160,6 +175,7 @@ class JobTable extends BaseViewModel {
             }
         }.bind(this))
         
+        this.jobList.removeAll()
         var tmpJobList = ko.mapping.fromJS(jobDocs)
         ko.utils.arrayPushAll(this.jobList, tmpJobList())
     }
@@ -167,27 +183,16 @@ class JobTable extends BaseViewModel {
     async initTable(){
 
         this.jobTable = $('#jobs').DataTable({
-            
-            columns: [
-                { title:"Datum", data: 'date()'},
-                { title:"Aufgabe", data: 'description()'},
-                { title:"Projekt", data: 'projectName()'},
-                { title:"Art", data: 'jobType()'},
-                { title:"Dauer", data: 'formattedTime()'},
-                { title:"Dauer (d)", data: 'formattedTimeDeciaml()'},
-                { title:"Sync", data: 'lastSync()'}
-            ],
+            rowId: '_id()',
+            columns: this.columns,
             orderCellsTop: true,
             "language": {
                 "url": "resources/dataTables.german.lang"
             },
             responsive: true,
-            "columnDefs": [
-                { "width": "70px", "targets": 0 }
-            ],
             drawCallback: function () {
                 var api = this.api();
-                var sum = _.sumBy(api.column( api.columns()[0].length-2,  {"filter": "applied"} ).data(), function(element){
+                var sum = _.sumBy(api.column( 'durationDecimal:name',  {"filter": "applied"} ).data(), function(element){
                     return parseFloat(element.replace(",","."))
                 })
                 
@@ -201,11 +206,14 @@ class JobTable extends BaseViewModel {
             _.forEach(changes, function(element){
                 switch(element.status) {
                     case "added":
-                        this.jobTable.row.add( element.value ).draw();
+                        var node = this.jobTable.row.add( element.value ).draw().node()
+                        ko.applyBindings(this,node)
                         break
                     case "deleted":
-                        var rowIdx = this.jobTable.column( 0 ).data().indexOf( element.value );
-                        this.jobTable.row( rowIdx ).remove().draw();
+                        var row = this.jobTable.row('#'+element.value._id())
+                        var node = row.node()
+                        ko.cleanNode(node)
+                        row.remove().draw();
                         break
                 }
             }.bind(this))
@@ -228,20 +236,27 @@ class JobTable extends BaseViewModel {
             }.bind(this)
         })
 
+        var that = this
         if(!this.onlyOnce){
             $('#table thead tr').clone(true).appendTo( '#table thead' );
             $('#table thead tr:eq(1) th').each( function (i) {
                 var title = $(this).text();
-                $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
+                var column = _.find(that.columns, value => value.title == title)
+                if(column.filter){
+                    $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
         
-                $( 'input', this ).on( 'keyup change', function () {
-                    if ( that.jobTable.column(i).search() !== this.value ) {
-                        that.jobTable
-                            .column(i)
-                            .search( this.value )
-                            .draw();
-                    }
-                } );
+                    $( 'input', this ).on( 'keyup change', function () {
+                        if ( that.jobTable.column(i).search() !== this.value ) {
+                            that.jobTable
+                                .column(i)
+                                .search( this.value )
+                                .draw();
+                        }
+                    } );    
+                } else {
+                    $(this).html( '' );
+                }
+                
             } );
             this.onlyOnce = true
         }
