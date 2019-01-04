@@ -99,6 +99,15 @@
     height: $navbar-height;
 }
 
+.navbar-seperator {
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    height: $navbar-height - 6px;
+    margin-top: 3px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .invisible{
     display: none !important;
 }
@@ -118,4 +127,22 @@ background: $maincolor;
 
 ::-webkit-scrollbar-thumb:hover {
 background: $maincolor;  
+}
+
+.navbar {
+    -webkit-app-region:drag;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    -webkit-user-select: none;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+textarea,
+ul {
+	-webkit-app-region: no-drag;
 }

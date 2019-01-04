@@ -121,6 +121,9 @@ onload = function() {
   this.checkForUpdatesClick = checkForUpdatesClick
   this.closeApp = closeApp
   this.openTimerList = openTimerList
+  this.closeWindow = closeWindow
+  this.minimizeWindow = minimizeWindow
+  this.maximizeWindow = maximizeWindow
 
   jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
   
@@ -223,7 +226,22 @@ function saveSyncRestUrl(that){
   $('#modalLogin').modal('show')
 }
 
-function closeApp(){
+function closeWindow(){
+  const window = remote.getCurrentWindow();
+  window.close();
+}
+
+function minimizeWindow(){
+  const window = remote.getCurrentWindow();
+  window.minimize();
+}
+
+function maximizeWindow(){
+  const window = remote.getCurrentWindow();
+  window.maximize();
+}
+
+async function closeApp(){
   log.info("App is closed for Update.")
   autoUpdater.quitAndInstall()
 }

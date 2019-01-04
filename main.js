@@ -37,7 +37,8 @@ const mainOpts = {
   minWidth: 480,
   minHeight: 450,
   icon: path.join(__dirname, 'icons/stopwatch.ico'),
-  show: false
+  show: false,
+  frame: false
 }
 
 // configure the splashscreen

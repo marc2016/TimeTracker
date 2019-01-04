@@ -6589,6 +6589,14 @@ td {
   color: #FFFFFF !important;
   height: 40px; }
 
+.navbar-seperator {
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 34px;
+  margin-top: 3px;
+  margin-left: 10px;
+  margin-right: 10px; }
+
 .invisible {
   display: none !important; }
 
@@ -6604,3 +6612,18 @@ td {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a4244a; }
+
+.navbar {
+  -webkit-app-region: drag; }
+
+h1, h2, h3, h4, h5, h6 {
+  -webkit-user-select: none; }
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+textarea,
+ul {
+  -webkit-app-region: no-drag; }
