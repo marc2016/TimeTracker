@@ -5,7 +5,9 @@ var ko = require('knockout');
 var _ = require('lodash');
 var toastr = require('toastr');
 //var moment = require('moment');
-var moment = require('moment-business-days');
+var Moment = require('moment-business-days');
+const MomentRange = require('moment-range');
+const moment = MomentRange.extendMoment(Moment);
 var Holidays = require('date-holidays')
 
 var utils = require('./utils')
@@ -68,6 +70,7 @@ class JobTable extends BaseViewModel {
         ]
 
         this.jobList = ko.observableArray()
+        this.currentRange = ko.observable(moment().startOf('month').range('month'))
 
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
@@ -82,8 +85,8 @@ class JobTable extends BaseViewModel {
                 holidayFormat: 'YYYY-MM-DD'
              });
 
-            this.currentMonth = ko.observable(moment())
-            this.currentMonth.subscribe(this.refreshTable.bind(this));
+            
+            this.currentRange.subscribe(this.refreshTable.bind(this));
 
             this.jobTable = undefined
 
@@ -139,14 +142,16 @@ class JobTable extends BaseViewModel {
         console.log('Sync all')
     }
 
-    async refreshTable(currentDate){
+    async refreshTable(currentRange){
         this.db = dataAccess.getDb('jobs');
         this.db_projects = dataAccess.getDb('projects')
         this.db_jobtypes = dataAccess.getDb('jobtypes')
 
         
-        var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
-        var jobDocs = await this.db.find({date: regex})
+        // var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
+        var days = Array.from(currentRange.by('day'));
+        var dates = days.map(m => m.format('YYYY-MM-DD'))
+        var jobDocs = await this.db.find({date: { $in: dates}})
         var projectIds = _.map(jobDocs, 'projectId')
         var projectDocs = await this.db_projects.find({ _id: { $in: projectIds }})
         var jobtypeDocs = await this.db_jobtypes.find({})
@@ -226,13 +231,17 @@ class JobTable extends BaseViewModel {
     onLoad() {
         super.onLoad()
 
-        $.find('#textCurrentMonth')[0].value = this.currentMonth().format('MMMM YYYY')
+        $.find('#textCurrentMonth')[0].value = this.currentRange().start.format('DD.MM.YY') + "-" + this.currentRange().end.format('DD.MM.YY')
         $('#textCurrentMonth').datepicker({
+            range: true,
             language: 'de',
             autoClose: true,
-            todayButton: new Date(),
+            todayButton: false,
+            dateFormat: 'dd.mm.yy',
             onSelect:function onSelect(fd, date) {
-                this.currentMonth(moment(date))
+                if(date && date.length == 2){
+                    this.currentRange(moment.range(date[0],date[1]))
+                }
             }.bind(this)
         })
 
@@ -261,7 +270,7 @@ class JobTable extends BaseViewModel {
             this.onlyOnce = true
         }
         
-        this.refreshTable(this.currentMonth())
+        this.refreshTable(this.currentRange())
     }
 }
 
