@@ -51,10 +51,6 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
 
 class JobTable extends BaseViewModel {
 
-    test(){
-        console.log("bla")
-    }
-
     constructor(views){
         super(views)
 
@@ -114,6 +110,12 @@ class JobTable extends BaseViewModel {
             this.loaded = true
         }.bind(this))
     }
+
+    myCallbackFunction (updatedCell, updatedRow, oldValue) {
+        console.log("The new value for the cell is: " + updatedCell.data());
+        console.log("The values for each cell in that row are: " + updatedRow.data());
+    }
+
 
     show(){
         if(!this.loaded){
@@ -226,6 +228,9 @@ class JobTable extends BaseViewModel {
 
         }.bind(this), null, "arrayChange")
 
+        this.jobTable.MakeCellsEditable({
+            "onUpdate": this.myCallbackFunction
+        });
     }
 
     onLoad() {
