@@ -63,7 +63,12 @@ class JobTable extends BaseViewModel {
             { title:"Dauer", data: 'formattedTime()'},
             { title:"Dauer (d)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
-            { title:"Aktion", data: null, defaultContent: '<a class="btn btn-default btn-sm table-btn" ><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'}
+            { title:"Aktion", data: null, defaultContent:
+                '<div class="btn-group" role="group">'+
+                    '<a class="btn btn-default btn-sm table-btn" ><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'+
+                    '<a class="btn btn-default btn-sm table-btn" data-bind="click: removeItemModal" ><i class="fas fa-trash" title="Löschen"></i></a>'+
+                '</div>'
+            }
         ]
 
         this.db = dataAccess.getDb('jobs');
@@ -72,6 +77,7 @@ class JobTable extends BaseViewModel {
 
         this.jobList = ko.observableArray()
         this.currentRange = ko.observable(moment().startOf('month').range('month'))
+        this.itemToDelete = ko.observable()
 
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
@@ -124,6 +130,19 @@ class JobTable extends BaseViewModel {
             this.loaded = true
         }.bind(this))
     }
+
+    removeItemModal(that,data){
+        $('#modalDelete').modal('show');
+        var id = $(data.currentTarget).closest('tr').attr('id')
+        var item = _.find(this.jobList(), element => element._id() == id)
+        that.itemToDelete(item)
+      }
+    
+      async removeItem(that,data){
+        await that.db.remove({ _id: data._id() }, {})
+        that.jobList.remove(function (item) { return item._id() == data._id(); })
+        $('#modalDelete').modal('hide');
+      }
 
     tableCellChanged (updatedCell, updatedRow, oldValue) {
         console.log("The new value for the cell is: " + updatedCell.data());

@@ -162,7 +162,7 @@ onload = function() {
   this.jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
   this.appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
   this.timerlistViewModel = new TimerList(['timerlistMainContent','modalAddNote','modalChangeJobDuration','modalDelete'], jobtimer)
-  this.jobtableViewModel = new jobtable(['jobtableMainContent'])
+  this.jobtableViewModel = new jobtable(['jobtableMainContent', 'modalDelete'])
 
   this.pagemenu = ko.observableArray()
   this.menuClick = menuClick
