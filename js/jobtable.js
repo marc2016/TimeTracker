@@ -13,6 +13,7 @@ var Holidays = require('date-holidays')
 var utils = require('./utils')
 const Store = require('electron-store');
 
+var log = require('electron-log');
 
 var dataAccess = require('./dataaccess.js')
 
@@ -57,13 +58,17 @@ class JobTable extends BaseViewModel {
         this.columns = [
             { title:"Datum", data: 'date()', filter: true},
             { title:"Aufgabe", data: 'description()', "width": "80%", filter: true},
-            { title:"Projekt", data: 'projectName()', filter: true},
-            { title:"Art", data: 'jobType()', filter: true},
+            { title:"Projekt", data: 'projectId()', filter: true},
+            { title:"Art", data: 'jobtypeId()', filter: true},
             { title:"Dauer", data: 'formattedTime()'},
             { title:"Dauer (d)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
-            { title:"Aktion", data: null, defaultContent: '<a class="btn btn-default btn-sm table-btn" data-bind="click: test"><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'}
+            { title:"Aktion", data: null, defaultContent: '<a class="btn btn-default btn-sm table-btn" ><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'}
         ]
+
+        this.db = dataAccess.getDb('jobs');
+        this.db_projects = dataAccess.getDb('projects')
+        this.db_jobtypes = dataAccess.getDb('jobtypes')
 
         this.jobList = ko.observableArray()
         this.currentRange = ko.observable(moment().startOf('month').range('month'))
@@ -81,29 +86,38 @@ class JobTable extends BaseViewModel {
                 holidayFormat: 'YYYY-MM-DD'
              });
 
+            if(this.koWatcher){
+                this.koWatcher.dispose()
+            }
+            this.koWatcher = ko.watch(this.jobList, { depth: -1 }, function(parents, child, item) {
+                log.info("Job changed: "+child())
+                if(!item){
+                    this.save(parents[0])
+                }
+            }.bind(this));
             
             this.currentRange.subscribe(this.refreshTable.bind(this));
 
             this.jobTable = undefined
 
-            var that = this
-            $('#table').on( 'click', 'tr', function () {
-                var rowData = that.jobTable.row( this ).data()
-                var dataObj = {
-                    "date":rowData[0],
-                    "description":rowData[1],
-                    "project":rowData[2],
-                    "duration":rowData[4]
-                }
-                navigator.clipboard.writeText(JSON.stringify(dataObj))
-                .then(() => {
-                    toastr.info('In Zwischenablage kopiert...')
-                })
-                .catch(err => {
-                    // This can happen if the user denies clipboard permissions:
-                    console.error('Could not copy text: ', err);
-                });
-            } );
+            // var that = this
+            // $('#table').on( 'click', 'tr', function () {
+            //     var rowData = that.jobTable.row( this ).data()
+            //     var dataObj = {
+            //         "date":rowData[0],
+            //         "description":rowData[1],
+            //         "project":rowData[2],
+            //         "duration":rowData[4]
+            //     }
+            //     navigator.clipboard.writeText(JSON.stringify(dataObj))
+            //     .then(() => {
+            //         toastr.info('In Zwischenablage kopiert...')
+            //     })
+            //     .catch(err => {
+            //         // This can happen if the user denies clipboard permissions:
+            //         console.error('Could not copy text: ', err);
+            //     });
+            // } );
             
             this.initTable()
 
@@ -111,11 +125,16 @@ class JobTable extends BaseViewModel {
         }.bind(this))
     }
 
-    myCallbackFunction (updatedCell, updatedRow, oldValue) {
+    tableCellChanged (updatedCell, updatedRow, oldValue) {
         console.log("The new value for the cell is: " + updatedCell.data());
         console.log("The values for each cell in that row are: " + updatedRow.data());
     }
 
+    async save(job){
+        log.info("Save method is called.")
+        await this.db.update({ _id:job._id() }, { $set: { billable: job.billable(), lastSync: job.lastSync(), jobNote: job.jobNote(), description: job.description(), elapsedSeconds: job.elapsedSeconds(), projectId: job.projectId(), jobtypeId: job.jobtypeId() } },{ multi: false })
+        this.db.nedb.persistence.compactDatafile()
+    }
 
     show(){
         if(!this.loaded){
@@ -145,18 +164,13 @@ class JobTable extends BaseViewModel {
     }
 
     async refreshTable(currentRange){
-        this.db = dataAccess.getDb('jobs');
-        this.db_projects = dataAccess.getDb('projects')
-        this.db_jobtypes = dataAccess.getDb('jobtypes')
+        this.projectDocs = await this.db_projects.find({})
+        this.jobtypeDocs = await this.db_jobtypes.find({})
 
-        
-        // var regex =  new RegExp(currentDate.format('YYYY-MM') + '-(.*)');
         var days = Array.from(currentRange.by('day'));
         var dates = days.map(m => m.format('YYYY-MM-DD'))
         var jobDocs = await this.db.find({date: { $in: dates}})
         var projectIds = _.map(jobDocs, 'projectId')
-        var projectDocs = await this.db_projects.find({ _id: { $in: projectIds }})
-        var jobtypeDocs = await this.db_jobtypes.find({})
             
         _.forEach(jobDocs, function(value){
             var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
@@ -165,21 +179,6 @@ class JobTable extends BaseViewModel {
             var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
             decimal = utils.roundDuration(this.store.get('roundDuration','round'),parseFloat(decimal.replace(",",".")))
             value.formattedTimeDeciaml = decimal.replace('.',',')
-
-            value.projectName = "-"   
-            if(value.projectId != undefined) {
-                var project = _.find(projectDocs, {'_id':value.projectId})
-                if(project){
-                    value.projectName = project.name
-                }
-            }
-            value.jobType = "-"
-            if(value.jobtypeId != undefined) {
-                var jobType = _.find(jobtypeDocs, {'_id':value.jobtypeId})
-                if(jobType){
-                    value.jobType = jobType.name
-                }
-            }
         }.bind(this))
         
         this.jobList.removeAll()
@@ -189,9 +188,44 @@ class JobTable extends BaseViewModel {
 
     async initTable(){
 
+        this.projectDocs = await this.db_projects.find({})
+        this.jobtypeDocs = await this.db_jobtypes.find({})
+
+        var that = this
         this.jobTable = $('#jobs').DataTable({
             rowId: '_id()',
             columns: this.columns,
+            columnDefs:[
+                {
+                    "data": null,
+                    "defaultContent": "-",
+                    "targets": "_all"
+                },
+                {
+                    targets:0,
+                    render: function(data){
+                        return moment(data, 'YYYY-MM-DD').format('DD.MM.YYYY');
+                    }
+                },
+                {
+                    targets: 2,
+                    render: function(data){
+                        var project = _.find(that.projectDocs, {'_id':data})
+                        if(project){
+                            return project.name
+                        }
+                    }
+                },
+                {
+                    targets: 3,
+                    render: function(data){
+                        var jobtype = _.find(that.jobtypeDocs, {'_id':data})
+                        if(jobtype){
+                            return jobtype.name
+                        }
+                    }
+                }
+            ],
             orderCellsTop: true,
             "language": {
                 "url": "resources/dataTables.german.lang"
@@ -228,8 +262,42 @@ class JobTable extends BaseViewModel {
 
         }.bind(this), null, "arrayChange")
 
+        var projectValues = _.map(this.projectDocs, function(value){
+            return {
+                "value": value._id,
+                "display": value.name
+            }
+        })
+        projectValues = _.sortBy(projectValues, ['display'])
+
+        var jobtypeValues = _.map(this.jobtypeDocs, function(value){
+            return {
+                "value": value._id,
+                "display": value.name
+            }
+        })
+        jobtypeValues = _.sortBy(jobtypeValues, ['display'])
+
         this.jobTable.MakeCellsEditable({
-            "onUpdate": this.myCallbackFunction
+            "inputCss": "form-control table-input",
+            "selectCss": "form-control selectpicker table-select",
+            "onUpdate": this.tableCellChanged,
+            "inputTypes": [
+                {
+                    "column": 0,
+                    "type": "datepicker",
+                },
+                {
+                    "column":2, 
+                    "type": "list",
+                    "options":projectValues
+                },
+                {
+                    "column":3, 
+                    "type": "list",
+                    "options":jobtypeValues
+                }
+            ]
         });
     }
 
@@ -257,7 +325,7 @@ class JobTable extends BaseViewModel {
                 var title = $(this).text();
                 var column = _.find(that.columns, value => value.title == title)
                 if(column.filter){
-                    $(this).html( '<input type="text" placeholder="Filtern nach '+title+'" />' );
+                    $(this).html( '<input type="text" class="form-control" placeholder="Filtern nach '+title+'" />' );
         
                     $( 'input', this ).on( 'keyup change', function () {
                         if ( that.jobTable.column(i).search() !== this.value ) {

@@ -123,7 +123,7 @@ jQuery.fn.dataTable.Api.register('MakeCellsEditable()', function (settings) {
 });
 
 function getInputHtml(currentColumnIndex, settings, oldValue) {
-    var inputSetting, inputType, input, inputCss, confirmCss, cancelCss;
+    var inputSetting, inputType, input, inputCss, selectCss, confirmCss, cancelCss;
 
     input = {"focus":true,"html":null}
 
@@ -137,6 +137,7 @@ function getInputHtml(currentColumnIndex, settings, oldValue) {
 	}
 
     if (settings.inputCss) { inputCss = settings.inputCss; }
+    if (settings.selectCss) { selectCss = settings.selectCss; }
     if (settings.confirmationButton) {
         confirmCss = settings.confirmationButton.confirmCss;
         cancelCss = settings.confirmationButton.cancelCss;
@@ -144,7 +145,7 @@ function getInputHtml(currentColumnIndex, settings, oldValue) {
     }
     switch (inputType) {
         case "list":
-            input.html = "<select class='" + inputCss + "' onchange='$(this).updateEditableCell(this);'>";
+            input.html = "<select class='" + selectCss + "' onchange='$(this).updateEditableCell(this);'>";
             $.each(inputSetting.options, function (index, option) {
                 if (oldValue == option.value) {
                    input.html = input.html + "<option value='" + option.value + "' selected>" + option.display + "</option>"
@@ -156,7 +157,7 @@ function getInputHtml(currentColumnIndex, settings, oldValue) {
             input.focus = false;
             break;
         case "list-confirm": // List w/ confirm
-            input.html = "<select class='" + inputCss + "'>";
+            input.html = "<select class='" + selectCss + "'>";
             $.each(inputSetting.options, function (index, option) {
                 if (oldValue == option.value) {
                    input.html = input.html + "<option value='" + option.value + "' selected>" + option.display + "</option>"
@@ -169,26 +170,19 @@ function getInputHtml(currentColumnIndex, settings, oldValue) {
             break;
         case "datepicker": //Both datepicker options work best when confirming the values
         case "datepicker-confirm":
-            // Makesure jQuery UI is loaded on the page
-            if (typeof jQuery.ui == 'undefined') {
-                alert("jQuery UI is required for the DatePicker control but it is not loaded on the page!");
-                break;
-            }
-	        jQuery(".datepick").datepicker("destroy");
-	        input.html = "<input id='ejbeatycelledit' type='text' name='date' class='datepick " + inputCss + "'   value='" + oldValue + "'></input> &nbsp;<a href='javascript:void(0);' class='" + confirmCss + "' onclick='$(this).updateEditableCell(this)'>Confirm</a> <a href='javascript:void(0);' class='" + cancelCss + "' onclick='$(this).cancelEditableCell(this)'>Cancel</a>";
+            
+	        input.html = "<input id='ejbeatycelledit' type='text' name='date' class='datepick " + inputCss + "'   value='" + oldValue + "'></input>";
 	        setTimeout(function () { //Set timeout to allow the script to write the input.html before triggering the datepicker
-	            var icon = "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif";
-                // Allow the user to provide icon
-	            if (typeof inputSetting.options !== 'undefined' && typeof inputSetting.options.icon !== 'undefined') {
-	                icon = inputSetting.options.icon;
-	            }
-	            var self = jQuery('.datepick').datepicker(
-                    {
-                        showOn: "button",
-                        buttonImage: icon,
-                        buttonImageOnly: true,
-                        buttonText: "Select date"
-                    });
+	            var datepickerObj = jQuery('.datepick').datepicker({
+                    language: 'de',
+                    autoClose: true,
+                    todayButton: false,
+                    dateFormat: 'dd.mm.yyyy',
+                    onSelect:function onSelect(fd, date,picker) {
+                        $(this).updateEditableCell(picker.el);
+                    }.bind(this)
+                }).data('datepicker')
+                datepickerObj.show()
 	        },100);
 	        break;
         case "text-confirm": // text input w/ confirm

@@ -6428,6 +6428,13 @@ td {
   padding-top: 4px !important;
   padding-bottom: 4px !important; }
 
+.table-input {
+  height: 30px; }
+
+.table-select {
+  height: 30px;
+  padding-top: 2px; }
+
 #footer {
   color: #FFFFFF;
   background-color: #a4244a;
