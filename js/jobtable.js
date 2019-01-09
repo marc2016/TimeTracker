@@ -17,8 +17,6 @@ var log = require('electron-log');
 
 var dataAccess = require('./dataaccess.js')
 
-var headers = { "date": "Datum","description" : "Aufgabe", "projectName":"Projekt", "jobType":"Art","formattedTime": "Dauer", "formattedTimeDeciaml": "Dauer (d)","lastSync":"Sync." };
-
 toastr.options = {
     "closeButton": false,
     "debug": false,
@@ -61,7 +59,7 @@ class JobTable extends BaseViewModel {
             { title:"Projekt", data: 'projectId()', filter: true},
             { title:"Art", data: 'jobtypeId()', filter: true},
             { title:"Dauer", data: 'formattedTime()'},
-            { title:"Dauer (d)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
+            { title:"Dauer (dez.)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
             { title:"Aktion", data: null, defaultContent:
                 '<div class="btn-group" role="group">'+
@@ -189,7 +187,6 @@ class JobTable extends BaseViewModel {
         var days = Array.from(currentRange.by('day'));
         var dates = days.map(m => m.format('YYYY-MM-DD'))
         var jobDocs = await this.db.find({date: { $in: dates}})
-        var projectIds = _.map(jobDocs, 'projectId')
             
         _.forEach(jobDocs, function(value){
             var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
@@ -202,6 +199,9 @@ class JobTable extends BaseViewModel {
         
         this.jobList.removeAll()
         var tmpJobList = ko.mapping.fromJS(jobDocs)
+        _.forEach(tmpJobList(), function(value) {
+            utils.addMissingProperties(value)
+        });
         ko.utils.arrayPushAll(this.jobList, tmpJobList())
     }
 
@@ -214,6 +214,8 @@ class JobTable extends BaseViewModel {
         this.jobTable = $('#jobs').DataTable({
             rowId: '_id()',
             columns: this.columns,
+            fixedHeader: true,
+            lengthMenu: [ [15, 25, 50, -1], [15, 25, 50, "Alle"] ],
             columnDefs:[
                 {
                     "data": null,
@@ -343,6 +345,8 @@ class JobTable extends BaseViewModel {
             $('#table thead tr:eq(1) th').each( function (i) {
                 var title = $(this).text();
                 var column = _.find(that.columns, value => value.title == title)
+                $(this).off()
+                $(this).removeClass()
                 if(column.filter){
                     $(this).html( '<input type="text" class="form-control" placeholder="Filtern nach '+title+'" />' );
         
