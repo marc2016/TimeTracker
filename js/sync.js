@@ -81,7 +81,7 @@ class Sync {
                 return
             }
             
-            var responseData = this.syncSystem.handleResponseJobtypes
+            var responseData = this.syncSystem.handleResponseJobtypes(data,response)
 
             var countOfUpdates = 0;
             await _.forEach(responseData, async function(element) {
