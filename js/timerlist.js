@@ -332,14 +332,14 @@ class TimerList extends BaseViewModel {
   }
   
   removeItemModal(that,data){
-    $('#modalDelete').modal('show');
     that.itemToDelete(data)
+    $('#modalDeleteEntry').modal('show');
   }
 
   async removeItem(that,data){
     await that.db.remove({ _id: data._id() }, {})
     that.jobTimerList.remove(function (item) { return item._id() == data._id(); })
-    $('#modalDelete').modal('hide');
+    $('#modalDeleteEntry').modal('hide');
   }
 
   pauseTimer(){
