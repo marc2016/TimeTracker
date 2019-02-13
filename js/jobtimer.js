@@ -11,8 +11,8 @@ var self = module.exports = {
     timeSignal: undefined,
     _timeSignalSource: undefined,
 
-    startSignal: undefined,
-    stopSignal: undefined,
+    startSignal: new Subject(),
+    stopSignal: new Subject(),
 
     _offsetSeconds: undefined,
     _startDate: undefined,
@@ -26,6 +26,7 @@ var self = module.exports = {
         self._offsetSeconds = seconds
         self._startDate = moment()
         self._pauser.next(false)
+        self.startSignal.next(self._currentData())
     },
 
     isRunning: function(){
@@ -33,7 +34,7 @@ var self = module.exports = {
     },
 
     _timeUpdate: function(x, idx, obs) {
-        return { "duration": self._calculateDiff(), "jobId": self.currentJobId, "jobDescription": self.currentJobDescription }
+        return self._currentData()
     },
 
     _calculateDiff: function() {
@@ -45,6 +46,10 @@ var self = module.exports = {
         return diff
     },
 
+    _currentData: function(){
+        return { "duration": self._calculateDiff(), "jobId": self.currentJobId, "jobDescription": self.currentJobDescription }
+    },
+
     stop: function() {
         self._pauser.next(true)
         var returnValue = self._calculateDiff()
@@ -53,8 +58,7 @@ var self = module.exports = {
         self._offsetSeconds = undefined
         self._startDate = undefined
 
-        if(self._stopEmitter)
-            self._stopEmitter.next()
+        self.stopSignal.next(self._currentData())
         
         return returnValue
     }
@@ -62,6 +66,3 @@ var self = module.exports = {
 
 self._timeSignalSource = interval(1000).pipe(map(self._timeUpdate))
 self.timeSignal = self._pauser.pipe(switchMap(paused => paused ? never() : self._timeSignalSource))
-
-self.startSignal = Observable.create(e => self._startEmitter = e)
-self.stopSignal = Observable.create(e => self._stopEmitter = e)

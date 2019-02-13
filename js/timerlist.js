@@ -60,6 +60,8 @@ class TimerList extends BaseViewModel {
       this.currentDate = ko.observable(new moment())
       this.currentJob = ko.observable()
       this.currentJobForNote = ko.observable()
+      this.currentJobForDuration = ko.observable()
+      this.lastJobBeforeJobDurationChange = ko.observable()
       this.itemToDelete = ko.observable()
       
       this.db = dataAccess.getDb('jobs')
@@ -94,6 +96,8 @@ class TimerList extends BaseViewModel {
       footer.leftFooterAction = this.goToToday
 
       this.jobtimer.timeSignal.subscribe(this.timerStep.bind(this))
+      this.jobtimer.stopSignal.subscribe(this.timerStop.bind(this))
+      this.jobtimer.startSignal.subscribe(this.timerStart.bind(this))
 
       this.handleModalChangeJobDuration()
 
@@ -167,14 +171,25 @@ class TimerList extends BaseViewModel {
       match.elapsedSeconds(time)
       $('#modalChangeJobDuration').modal('toggle');
     }
+
+    if(!that.jobtimer.isRunning() && that.lastJobBeforeJobDurationChange()){
+      var job = that.lastJobBeforeJobDurationChange()
+      that.jobtimer.start(job._id(), job.elapsedSeconds(), job.description())
+    }
+
     that.refreshTimeSum()
   }
 
   handleModalChangeJobDuration(){
+    var that = this
     $('#modalChangeJobDuration').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget)
       var duration = button.attr('duration')
       var jobId = button.attr('jobId')
+      if(that.currentJob() && that.currentJob()._id() == jobId){
+        that.lastJobBeforeJobDurationChange(that.currentJob())
+        that.jobtimer.stop()
+      }
       var modal = $(this)
       modal.find('.modal-body input').val(duration)
       $('#btnSaveDuration').attr('jobId', jobId)
@@ -343,16 +358,30 @@ class TimerList extends BaseViewModel {
   }
 
   pauseTimer(){
+    this.jobtimer.stop()
+  }
+
+  timerStop(currentData){
     var elementId = this.jobtimer.currentJobId
     this.currentJob().isRunning(false)
-    this.jobtimer.stop()
-  
     this.lastEntryId = elementId
     this.currentEntryId = undefined
     footer.refreshStatusBarEntry()
     this.currentJob(undefined)
     remote.getCurrentWindow().setOverlayIcon(null, "TimeTracker")
   }
+
+  timerStart(currentData){
+    var match = ko.utils.arrayFirst(this.jobTimerList(), function(item) {
+      return currentData.jobId === item._id();
+    });
+    match.isRunning(true)
+    this.currentEntryId = match._id();
+    this.currentJob(match)
+    var overlayPath = path.join(__dirname,"../icons/overlay.png")
+    remote.getCurrentWindow().setOverlayIcon(overlayPath, 'Aufgabe läuft...')
+  }
+
   
   startTimer(that,data){
     if(that.jobtimer.isRunning() && that.jobtimer.currentJobId == data._id()){
@@ -362,14 +391,9 @@ class TimerList extends BaseViewModel {
     if(that.jobtimer.isRunning()){
       that.pauseTimer()
     }
-    that.currentJob(data)
-    var elementId = data._id()
-    that.currentEntryId = elementId;
-    data.isRunning(true)
-  
-    that.jobtimer.start(elementId, data.elapsedSeconds(), data.description())
-    var overlayPath = path.join(__dirname,"../icons/overlay.png")
-    remote.getCurrentWindow().setOverlayIcon(overlayPath, 'Aufgabe läuft...')
+    
+    that.jobtimer.start(data._id(), data.elapsedSeconds(), data.description())
+    
   }
   
   goToToday(){
@@ -405,6 +429,18 @@ class TimerList extends BaseViewModel {
   changeNoteClick(that,data){
     that.currentJobForNote(data)
     $('#modalAddNote').modal('show')
+  }
+
+  changeDurationClick(that,data){
+    that.currentJobForDuration(data)
+    var button = $(event.relatedTarget)
+    var duration = button.attr('duration')
+    var jobId = button.attr('jobId')
+    var modal = $(this)
+    modal.find('.modal-body input').val(duration)
+    $('#btnSaveDuration').attr('jobId', jobId)
+    document.getElementById("inputJobDuration").focus();
+    $('#modalChangeJobDuration').modal('show')
   }
   
   refreshTray(elapsedTime){
