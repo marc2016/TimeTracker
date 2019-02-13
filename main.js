@@ -45,7 +45,8 @@ const mainOpts = {
 const splashscreenConfig = {
   windowOpts: mainOpts,
   templateUrl: path.join(__dirname,"pages/splashscreen.html"),
-  minVisible: 5000,
+  minVisible: 1,
+  // minVisible: 5000,
   splashScreenOpts: {
       width: 500,
       height: 500,

@@ -58,12 +58,13 @@ class JobTable extends BaseViewModel {
             { title:"Aufgabe", data: 'description()', "width": "80%", filter: true},
             { title:"Projekt", data: 'projectId()', filter: true},
             { title:"Art", data: 'jobtypeId()', filter: true},
-            { title:"Dauer", data: 'formattedTime()'},
+            { title:"Dauer", data: 'elapsedSeconds()'},
             { title:"Dauer (dez.)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
             { title:"Aktion", data: null, defaultContent:
                 '<div class="btn-group" role="group">'+
-                    '<a class="btn btn-default btn-sm table-btn" ><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'+
+                    '<a class="btn btn-default btn-sm table-btn"><i class="fas fa-sticky-note" title="Notiz"></i></a>'+
+                    '<a class="btn btn-default btn-sm table-btn"><i class="fas fa-sync-alt" title="Synchronisieren"></i></a>'+
                     '<a class="btn btn-default btn-sm table-btn" data-bind="click: removeItemModal" ><i class="fas fa-trash" title="Löschen"></i></a>'+
                 '</div>'
             }
@@ -148,7 +149,7 @@ class JobTable extends BaseViewModel {
     }
 
     async save(job){
-        log.info("Save method is called.")
+        console.log(job)
         await this.db.update({ _id:job._id() }, { $set: { billable: job.billable(), lastSync: job.lastSync(), jobNote: job.jobNote(), description: job.description(), elapsedSeconds: job.elapsedSeconds(), projectId: job.projectId(), jobtypeId: job.jobtypeId() } },{ multi: false })
         this.db.nedb.persistence.compactDatafile()
     }
@@ -189,8 +190,8 @@ class JobTable extends BaseViewModel {
         var jobDocs = await this.db.find({date: { $in: dates}})
             
         _.forEach(jobDocs, function(value){
-            var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
-            value.formattedTime = formatted
+            // var formatted = moment.duration(value.elapsedSeconds, "seconds").format("hh:mm:ss",{trim: false})
+            // value.formattedTime = formatted
             
             var decimal = moment.duration(value.elapsedSeconds, "seconds").format("h", 2)
             decimal = utils.roundDuration(this.store.get('roundDuration','round'),parseFloat(decimal.replace(",",".")))
@@ -245,7 +246,16 @@ class JobTable extends BaseViewModel {
                             return jobtype.name
                         }
                     }
+                },
+                {
+                    targets: 4,
+                    render: function(data){
+                        var formatted = moment.duration(data, "seconds").format("hh:mm:ss",{trim: false})
+                        return formatted
+                    }
                 }
+                
+                
             ],
             orderCellsTop: true,
             "language": {
@@ -300,6 +310,7 @@ class JobTable extends BaseViewModel {
         jobtypeValues = _.sortBy(jobtypeValues, ['display'])
 
         this.jobTable.MakeCellsEditable({
+            "columns": [0,1,2,3,4],
             "inputCss": "form-control table-input",
             "selectCss": "form-control selectpicker table-select",
             "onUpdate": this.tableCellChanged,
@@ -307,6 +318,8 @@ class JobTable extends BaseViewModel {
                 {
                     "column": 0,
                     "type": "datepicker",
+                    "convert": function(oldValue) { return moment(oldValue, 'YYYY-MM-DD').format('DD.MM.YYYY') },
+                    "convertback": function(oldValue) { return moment(oldValue, 'DD.MM.YYYY').format('YYYY-MM-DD') },
                 },
                 {
                     "column":2, 
@@ -317,6 +330,12 @@ class JobTable extends BaseViewModel {
                     "column":3, 
                     "type": "list",
                     "options":jobtypeValues
+                },
+                {
+                    "column": 4,
+                    "type": "duration",
+                    "convert": function(oldValue) { return moment.duration(oldValue, "seconds").format("hh:mm:ss",{trim: false})},
+                    "convertback": utils.durationConvertBack
                 }
             ]
         });

@@ -73,7 +73,7 @@ class TimerList extends BaseViewModel {
         this.koWatcher.dispose()
       }
       this.koWatcher = ko.watch(this.jobTimerList, { depth: -1 }, function(parents, child, item) {
-        log.info("Job timer changed: "+child())
+        // log.info("Job timer changed: "+child())
         this.saveAll()
       }.bind(this));
 
@@ -160,16 +160,8 @@ class TimerList extends BaseViewModel {
       return item._id() == jobId;
     });
     var newDuration = $('#inputJobDuration')[0].value
-    var time = duration.parse(newDuration, "HH:mm:ss")/1000
-    if(!time){
-      time = duration.parse(newDuration, "HH:mm")/1000
-    }
-    if(!time){
-      time = duration.parse(newDuration, "H:mm")/1000
-    }
-    if(!time && newDuration.match(/,/).length == 1 && parseFloat(newDuration)){
-      time = parseFloat(newDuration.replace(',', '.'))*60*60
-    }
+    
+    var time = utils.durationConvertBack(newDuration)
 
     if(time){
       match.elapsedSeconds(time)
@@ -295,7 +287,6 @@ class TimerList extends BaseViewModel {
   }
   
   async saveAll(){
-    log.info("Save all method is called.")
     await _.forEach(this.jobTimerList(), async function (element) {
       await this.db.update({ _id:element._id() }, { $set: { billable: element.billable(), lastSync: element.lastSync(), jobNote: element.jobNote(), description: element.description(), elapsedSeconds: element.elapsedSeconds(), projectId: element.projectId(), jobtypeId: element.jobtypeId() } },{ multi: false })
     }.bind(this))

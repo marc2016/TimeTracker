@@ -41,5 +41,21 @@ var self = module.exports = {
 
     addMissingProperties: function(job) {
         _.defaults(job, {'projectId' : ko.observable(), 'jobtypeId': ko.observable(), 'jobNote': ko.observable(), 'lastSync': ko.observable(), 'billable': ko.observable()});
+    },
+
+    durationConvertBack: function(value){
+        
+        var time = duration.parse(value, "HH:mm:ss")/1000
+        if(!time){
+            time = duration.parse(value, "HH:mm")/1000
+        }
+        if(!time){
+            time = duration.parse(value, "H:mm")/1000
+        }
+        if(!time && ((value.match(/,/) && value.match(/,/).length == 1) || parseFloat(value))){
+            time = parseFloat(value.replace(',', '.'))*60*60
+        }
+
+        return time
     }
 }
