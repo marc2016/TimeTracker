@@ -139,6 +139,8 @@ if (!gotTheLock) {
   
     global.autoUpdater = autoUpdater
   
+    autoUpdater.checkForUpdatesAndNotify();
+    
     global.vars = {
       
     }
