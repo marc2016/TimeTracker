@@ -56,6 +56,10 @@ var self = module.exports = {
             time = parseFloat(value.replace(',', '.'))*60*60
         }
 
+        if(!time && value <= 0){
+            time = 0
+        }
+
         return time
     }
 }

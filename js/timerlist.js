@@ -167,7 +167,7 @@ class TimerList extends BaseViewModel {
     
     var time = utils.durationConvertBack(newDuration)
 
-    if(time){
+    if(time || time === 0){
       match.elapsedSeconds(time)
       $('#modalChangeJobDuration').modal('toggle');
     }
