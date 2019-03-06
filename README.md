@@ -1,4 +1,4 @@
-# The Cayman theme
+# TimeTracker
 
 [![Build Status](https://github.com/marc2016/TimeTracker.git?branch=master)](https://travis-ci.org/pages-themes/cayman)
 
