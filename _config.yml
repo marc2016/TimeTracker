@@ -1,1 +1,6 @@
 theme: jekyll-theme-cayman
+title: TimeTracker
+description: App to track working time of jobs.
+author:
+  name: Marc Lammers
+
