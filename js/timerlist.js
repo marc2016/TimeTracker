@@ -146,8 +146,26 @@ class TimerList extends BaseViewModel {
         icon: 'fa fa-plus-circle',
         name: 'Neuer Eintrag',
         method: this.addNewItem.bind(this)
+      },
+      {
+        icon: 'fas fa-umbrella-beach',
+        name: 'Urlaubstag',
+        method: this.addNoneWorkingDayToday.bind(this)
+      },
+      {
+        icon: 'fas fa-user-injured',
+        name: 'Krankheitstag',
+        method: this.addNoneWorkingDay.bind(this)
       }
     ]
+  }
+
+  addNoneWorkingDayToday(){
+    this.addNoneWorkingDay(new moment(),new moment())
+  }
+
+  addNoneWorkingDay(start, end){
+
   }
 
   syncEntry(that,data){
