@@ -10,6 +10,8 @@ const electronLocalshortcut = require('electron-localshortcut');
 
 const _ = require('lodash')
 
+const nativeImage = require('electron').nativeImage
+
 var userDataPath = app.getPath('userData')+'/userdata/'
 
 autoUpdater.logger = log;
@@ -121,7 +123,9 @@ if (!gotTheLock) {
       if (error) console.error('Failed to register protocol')
     })
     
-    tray = new Tray(path.join(__dirname, 'icons/stopwatch.ico'))
+    const trayIconPath = path.join(__dirname, 'icons/logo_tray@2x.png')
+    const trayIcon = nativeImage.createFromPath(trayIconPath);
+    tray = new Tray(trayIcon)
     tray.on('click', () => {
       mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
     })
