@@ -1,6 +1,7 @@
 const electron = require('electron')
 const app = electron.app
 const protocol = electron.protocol
+const os = require("os");
 
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
@@ -123,7 +124,13 @@ if (!gotTheLock) {
       if (error) console.error('Failed to register protocol')
     })
     
-    const trayIconPath = path.join(__dirname, 'icons/logo_tray@2x.png')
+    let trayIconPath = undefined
+    if (process.platform == 'darwin') {
+      trayIconPath = path.join(__dirname, 'icons/logo_tray@2x.png')
+    } else {
+      trayIconPath = path.join(__dirname, 'icons/logo.ico')
+    }
+
     const trayIcon = nativeImage.createFromPath(trayIconPath);
     tray = new Tray(trayIcon)
     tray.on('click', () => {
