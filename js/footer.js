@@ -66,19 +66,20 @@ var self = module.exports = {
         var data = []
         var groups = _.groupBy(docs,'date')
         var result = _.transform(groups, function(result, value, key) {
-        var seconds = _.sumBy(value,'elapsedSeconds')
-        var sum = moment.duration(seconds, "seconds").format("h", 2)
-        result[moment(key,'YYYY-MM-DD').format('D')] = sum;
-        return true;
+            var seconds = _.sumBy(value,'elapsedSeconds')
+            var sum = moment.duration(seconds, "seconds").format("h", 2)
+            result[moment(key,'YYYY-MM-DD').format('D')] = sum;
+            return true;
         }, []);
-        for (var i = 0; i <= lastDayOfMonth; i++) {
-        data[i] = result[i+1]
+        for (var i = 0; i < lastDayOfMonth; i++) {
+            var value = result[i+1] ? result[i+1].replace(',','.') : 0;
+            data[i] = _.toNumber(value)
         }
     
         var daysArray = _.range(1,parseInt(currentDate.clone().endOf('month').format('D'))+1)
         var ctx = document.getElementById("chart").getContext('2d');
         if(self.monthChart != undefined){
-        self.monthChart.destroy()
+            self.monthChart.destroy()
         }
         self.monthChart = new Chart(ctx, {
         type: 'bar',
