@@ -48,19 +48,19 @@
   <script>require('./renderer.js')</script>
 
   <nav class="navbar navbar-expand-sm fixed-top navbar-dark" id="mainNavbar">
-    <div class="navbar-brand" data-bind="click: openTimerList" style="cursor: pointer;">
+    <div class="navbar-brand" data-bind="click: openTimerList" style="cursor: pointer;" tabindex="-1">
       <img src="icons/logo.png" width="25" height="25" alt="" class="d-inline-block logo">
       TimeTracker
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-      aria-expanded="false" aria-label="Toggle navigation">
+      aria-expanded="false" aria-label="Toggle navigation" tabindex="-1">
       <i class="fa fa-bars" aria-hidden="true" style="color: #FFFFFF;"></i>
     </button>
     <div class="navbar-collapse collapse" id="navbarNav">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
+            aria-haspopup="true" aria-expanded="false" tabindex="-1">
             <i class="fa fa-bars" title="Navigation"></i><span class="collapsedText"> Navigation</span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -83,7 +83,7 @@
         </li>
         <!-- ko foreach: pagemenu -->
         <li class="nav-item">
-          <a class="nav-link" href="#" data-bind="click: $parent.menuClick">
+          <a class="nav-link" href="#" data-bind="click: $parent.menuClick" tabindex="-1">
             <i data-bind="css: icon"></i> <span class="collapsedText" data-bind="text: name"></span>
           </a>
         </li>
@@ -101,7 +101,7 @@
             </div>
           </li> -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" tabindex="-1">
             <img class="loginImg" alt="Avatar" data-bind="attr:{src: avatar}">
           </a>
           <div class="dropdown-menu dropdown-menu-right">
@@ -114,23 +114,23 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-target="#modalAbout" data-toggle="modal">
+          <a class="nav-link" href="#" data-target="#modalAbout" data-toggle="modal" tabindex="-1">
             <i class="fas fa-info-circle"></i><span>&zwnj;</span>
           </a>
         </li>
         <div class="navbar-seperator"></div>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-bind="click: minimizeWindow">
+          <a class="nav-link" href="#" data-bind="click: minimizeWindow" tabindex="-1">
             <i class="fas fa-window-minimize"></i><span>&zwnj;</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-bind="click: maximizeWindow">
+          <a class="nav-link" href="#" data-bind="click: maximizeWindow" tabindex="-1">
             <i class="fas fa-window-maximize"></i><span>&zwnj;</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-bind="click: closeWindow">
+          <a class="nav-link" href="#" data-bind="click: closeWindow" tabindex="-1">
             <i class="fas fa-window-close"></i><span>&zwnj;</span>
           </a>
         </li>
