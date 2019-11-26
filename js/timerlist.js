@@ -176,8 +176,20 @@ class TimerList extends BaseViewModel {
     }
   }
 
-  saveJobDuration(data, that){
+  saveJobDurationInput(data, that){
+    if(event.keyCode === 13) {
+      var jobId = $(data).attr('jobId')
+      that.saveJobDuration(jobId, that)
+    }
+    
+  }
+
+  saveJobDurationButton(data, that){
     var jobId = $(data).attr('jobId')
+    that.saveJobDuration(jobId, that)
+  }
+
+  saveJobDuration(jobId, that){
     var match = ko.utils.arrayFirst(that.jobTimerList(), function(item) {
       return item._id() == jobId;
     });
@@ -200,7 +212,7 @@ class TimerList extends BaseViewModel {
 
   handleModalChangeJobDuration(){
     var that = this
-    $('#modalChangeJobDuration').on('show.bs.modal', function (event) {
+    $('#modalChangeJobDuration').on('shown.bs.modal', function (event) {
       var button = $(event.relatedTarget)
       var duration = button.attr('duration')
       var jobId = button.attr('jobId')
@@ -211,7 +223,9 @@ class TimerList extends BaseViewModel {
       var modal = $(this)
       modal.find('.modal-body input').val(duration)
       $('#btnSaveDuration').attr('jobId', jobId)
-      document.getElementById("inputJobDuration").focus();
+      $('#inputJobDuration').attr('jobId', jobId)
+      modal.find("#inputJobDuration").focus()
+      modal.find("#inputJobDuration").select()
     })
   }
   async refreshProjectList(){

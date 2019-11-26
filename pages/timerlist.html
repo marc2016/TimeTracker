@@ -1,10 +1,10 @@
 <div id="timerlistMainContent">
   <div class="dateSelector">
-    <button class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;" data-bind="click: previousDay.bind($root)">
+    <button class="btn btn-default btnDateChange" id="btnPreviousDay" style="float: left;" data-bind="click: previousDay.bind($root)" tabindex="-1">
       <i class="fa fa-angle-double-left" title="Zurück"></i>
     </button>
-    <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" data-bind="value: currentDate().format('DD.MM.YYYY')" readonly />
-    <button class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root), enable: currentDate().isBefore(moment(),'day')">
+    <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" data-bind="value: currentDate().format('DD.MM.YYYY')" readonly tabindex="-1" />
+    <button class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root), enable: currentDate().isBefore(moment(),'day')" tabindex="-1">
       <i class="fa fa-angle-double-right" title="Weiter"></i>
     </button>
     <hr class="hLine">
@@ -18,16 +18,16 @@
             <div class="col input-group-sm">
               <input data-bind="value: description, attr: { id: 'text-input-job_'+_id() }" class="form-control text-input-job"
                 type="text" placeholder="Tätigkeit">
-              <div class="row">
-                <div class="col-md-auto job-duration" data-toggle="modal" data-target="#modalChangeJobDuration"
-                  data-bind="attr: { jobId: _id(), duration: $parent.getFormatedDuration(elapsedSeconds()) }">
+              <div class="row timer-second-row">
+                <a class="col-md-auto job-duration job-duration-button" href="#" tabindex="0" data-toggle="modal" data-target="#modalChangeJobDuration"
+                data-bind="attr: { jobId: _id(), duration: $parent.getFormatedDuration(elapsedSeconds()) }">
                   <div class="row no-gutters" style="cursor: pointer;">
                     <div class="col-sm-auto" style="margin-right: 3px">Dauer: </div>
                     <div class="col-sm-auto">
                       <span data-bind="text: $parent.getTimeString(elapsedSeconds())" id="textTimer"></span>
                     </div>
                   </div>
-                </div>
+                </a>
                 <div class="col-md-auto job-duration collapsedBySize" data-bind="visible: lastSync">
                     <div class="row no-gutters">
                       <div class="col-sm-auto" style="margin-right: 3px">Letzte Sync.: </div>
@@ -48,7 +48,7 @@
               <select class="selectpicker form-control-sm jobtypeSelect" style="width: 100%" data-bind="options: $parent.jobtypeList, optionsCaption: 'Art der Aufgabe auswählen...', optionsText: function(item) {
                         return item.name}, optionsValue: '_id', value: jobtypeId">
               </select>
-              <div class="row">
+              <div class="row timer-second-row">
                 <div class="col">
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" data-bind="checked: billable, attr: {id: 'checkboxBillable'+_id()}">
@@ -149,12 +149,12 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Dauer</span>
                   </div>
-                  <input id="inputJobDuration" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" >
+                  <input id="inputJobDuration" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" data-bind="event: { keyup: saveJobDurationInput.bind($data,$element) }">
                 </div>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbruch</button>
-              <button id="btnSaveDuration" type="button" class="btn btn-primary" data-bind="click: saveJobDuration.bind($data,$element)">Speichern</button>
+              <button id="btnSaveDuration" type="button" class="btn btn-primary" data-bind="click: saveJobDurationButton.bind($data,$element)">Speichern</button>
           </div>
       </div>
   </div>
