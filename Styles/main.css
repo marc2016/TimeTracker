@@ -6931,6 +6931,17 @@ a.text-dark:hover, a.text-dark:focus {
   .visibleBySize {
     display: inline-block !important; } }
 
+.timer-second-row {
+  margin-top: 5px; }
+
+.job-duration-button:hover {
+  text-decoration: none; }
+
+.job-duration-button:focus {
+  border-color: #de698c;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(164, 36, 74, 0.25); }
+
 .job-duration {
   color: black; }
 
@@ -6993,7 +7004,7 @@ a.text-dark:hover, a.text-dark:focus {
   width: auto;
   font-size: 20px;
   border: 0px;
-  width: 100px;
+  width: 101px;
   background-color: rgba(255, 255, 255, 0); }
 
 .datepicker {
@@ -7127,6 +7138,9 @@ td {
 body {
   font-family: Roboto;
   font-weight: 300; }
+
+::selection {
+  background: #f5d2dc; }
 
 #mainContent {
   margin-top: 40px;

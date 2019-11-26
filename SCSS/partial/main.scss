@@ -3,6 +3,10 @@ body {
     font-weight: 300;
 }
 
+::selection {
+    background: $secondcolor;
+}
+
 #mainContent {
     margin-top: $navbar-height;
     margin-bottom: $footerHeight;

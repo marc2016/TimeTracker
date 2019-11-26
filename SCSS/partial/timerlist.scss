@@ -7,7 +7,21 @@
     }
 }
 
-.job-duration{
+.timer-second-row {
+  margin-top: 5px;
+}
+
+.job-duration-button:hover {
+  text-decoration: none;
+}
+
+.job-duration-button:focus {
+  border-color: #de698c;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(164, 36, 74, 0.25);
+}
+
+.job-duration {
   color: black;
 }
 
