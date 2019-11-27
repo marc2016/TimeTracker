@@ -128,6 +128,9 @@ class TimerList extends BaseViewModel {
     // var tray = remote.getGlobal('tray');
     // tray.setContextMenu(self.trayContextMenu)
   
+    this.db.ensureIndex({ fieldName: '_id', unique: true }, function (err) {});
+    this.db.ensureIndex({ fieldName: 'date' }, function (err) {});
+
     var docs = await this.db.find({date: this.currentDate().format('YYYY-MM-DD')})
     this.refreshJobTimerList(docs)
     this.refreshTimeSum()
