@@ -6,6 +6,9 @@ const os = require("os");
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
+var ko = require('knockout')
+ko.options.deferUpdates = true
+
 const splashScreen = require('@trodi/electron-splashscreen')
 const electronLocalshortcut = require('electron-localshortcut');
 
