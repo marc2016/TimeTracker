@@ -1,4 +1,5 @@
 const electron = require('electron')
+const app = require('electron').remote.app
 
 const { Observable, Subject, ReplaySubject, from, of, range } = require('rxjs');
 const { auditTime } = require('rxjs/operators');
@@ -58,6 +59,7 @@ class TimerList extends BaseViewModel {
       this.hide()
 
       this.currentDate = ko.observable(new moment())
+      this.today = ko.observable(new moment())
       this.currentJob = ko.observable()
       this.currentJobForNote = ko.observable()
       this.currentJobForDuration = ko.observable()
@@ -94,6 +96,10 @@ class TimerList extends BaseViewModel {
     
       footer.onLoad(this.currentDate(), this.db, jobtimer)
       footer.leftFooterAction = this.goToToday
+
+      app.on('browser-window-focus', function (event, win) {
+        this.today(new moment())
+      }.bind(this))
 
       this.jobtimer.timeSignal.subscribe(this.timerStep.bind(this))
       this.jobtimer.stopSignal.subscribe(this.timerStop.bind(this))

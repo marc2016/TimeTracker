@@ -4,7 +4,7 @@
       <i class="fa fa-angle-double-left" title="Zurück"></i>
     </button>
     <input id="textCurrentDate" type='text' class="currentDate" data-position="right top" data-bind="value: currentDate().format('DD.MM.YYYY')" readonly tabindex="-1" />
-    <button class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root), enable: currentDate().isBefore(moment(),'day')" tabindex="-1">
+    <button class="btn btn-default btnDateChange" id="btnNextDay" style="float: right;" data-bind="click: nextDay.bind($root), enable: currentDate().isBefore(today(),'day')" tabindex="-1">
       <i class="fa fa-angle-double-right" title="Weiter"></i>
     </button>
     <hr class="hLine">
