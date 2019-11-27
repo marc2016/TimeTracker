@@ -95,7 +95,6 @@ class JobTable extends BaseViewModel {
                 this.koWatcher.dispose()
             }
             this.koWatcher = ko.watch(this.jobList, { depth: -1 }, function(parents, child, item) {
-                log.info("Job changed: "+child())
                 if(!item){
                     this.save(parents[0])
                 }
