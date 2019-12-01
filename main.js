@@ -42,7 +42,7 @@ const mainOpts = {
   height: 820,
   minWidth: 480,
   minHeight: 450,
-  icon: path.join(__dirname, 'icons/stopwatch.ico'),
+  icon: path.join(__dirname, 'icons/logo.ico'),
   show: false,
   frame: false
 }
@@ -54,10 +54,10 @@ const splashscreenConfig = {
   minVisible: 1,
   // minVisible: 5000,
   splashScreenOpts: {
-      width: 500,
-      height: 500,
+      width: 512,
+      height: 512,
       transparent: true,
-      icon: path.join(__dirname, 'icons/stopwatch.ico')
+      icon: path.join(__dirname, 'icons/logo.ico')
   }
 };
 
@@ -170,7 +170,7 @@ function createWindow() {
     height: 820,
     minWidth: 480,
     minHeight: 450,
-    icon: path.join(__dirname, 'icons/stopwatch.ico')
+    icon: path.join(__dirname, 'icons/logo.ico')
   })
 
   if (process.platform == 'win32') {
