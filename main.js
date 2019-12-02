@@ -51,11 +51,10 @@ const mainOpts = {
 const splashscreenConfig = {
   windowOpts: mainOpts,
   templateUrl: path.join(__dirname,"pages/splashscreen.html"),
-  minVisible: 1,
-  // minVisible: 5000,
+  minVisible: 1000,
   splashScreenOpts: {
-      width: 512,
-      height: 512,
+      width: 600,
+      height: 600,
       transparent: true,
       icon: path.join(__dirname, 'icons/logo.ico')
   }
@@ -166,8 +165,8 @@ function createWindow() {
   log.info("Create window.")
 
   mainWindow = new BrowserWindow({
-    width: 680,
-    height: 820,
+    width: 1024,
+    height: 768,
     minWidth: 480,
     minHeight: 450,
     icon: path.join(__dirname, 'icons/logo.ico')
