@@ -72,7 +72,7 @@
     "gravatar": "^1.6.0",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
-    "knockout": "^3.4.2",
+    "knockout": "^3.5.0",
     "knockout-mapping": "^2.6.0",
     "lodash": "^4.17.5",
     "moment": "^2.22.2",
