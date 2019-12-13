@@ -240,6 +240,12 @@ class TimerList extends BaseViewModel {
     ko.utils.arrayPushAll(this.jobtypeList, docs)
   }
 
+  applySelectize() {
+    $('.projectSelect').selectize({
+      placeholder: 'Projekt auswählen...'
+    })
+  }
+
   refreshJobTimerList(docs){
     docs.forEach(function(item, index){
       if(!item.projectId){
@@ -277,6 +283,7 @@ class TimerList extends BaseViewModel {
     }
 
     this.createAutoComplete()
+    this.applySelectize()
   }
   
   async currentDateChanged(value){
@@ -286,10 +293,6 @@ class TimerList extends BaseViewModel {
     var docs = await this.db.find({date: value.format('YYYY-MM-DD')})
     this.refreshJobTimerList(docs)
     this.refreshTimeSum()
-    $('.projectSelect').selectize({
-      
-      placeholder: 'Projekt auswählen...'
-    })
     footer.initChart(value)
   }
   
