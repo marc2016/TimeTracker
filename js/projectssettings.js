@@ -39,6 +39,7 @@ class ProjectsSettings extends BaseViewModel {
         var that = this
         this.projectList.removeAll()
         var docs = await this.database.find({})
+        docs = _.sortBy(docs, [function(o) { return o.name? o.name.toUpperCase() : undefined }])
         var observableDocs = ko.mapping.fromJS(docs,that.projectList)
         _.forEach(observableDocs(), function(element){
             if(!element.externalId){
