@@ -89,6 +89,7 @@
     "popper.js": "^1.14.4",
     "register-protocol-win32": "^1.1.0",
     "rxjs": "^6.3.2",
+    "selectize": "^0.12.6",
     "string-template": "^1.0.0",
     "table-builder": "^2.1.1",
     "timer-machine": "^1.1.0",

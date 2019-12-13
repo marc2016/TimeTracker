@@ -38,13 +38,15 @@
                 </div>
               </div>
             </div>
-            <div class="col-2 collapsedBySize">
+            <div class="col collapsedBySize">              
+              
               <select class="selectpicker form-control-sm projectSelect" style="width: 100%" data-bind="options: $parent.projectList, optionsCaption: 'Projekt auswählen...', optionsText: function(item) {
                         return item.name}, optionsValue: '_id', value: projectId">
               </select>
               
             </div>
             <div class="col-2 collapsedBySize">
+            
               <select class="selectpicker form-control-sm jobtypeSelect" style="width: 100%" data-bind="options: $parent.jobtypeList, optionsCaption: 'Art der Aufgabe auswählen...', optionsText: function(item) {
                         return item.name}, optionsValue: '_id', value: jobtypeId">
               </select>

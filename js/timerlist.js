@@ -286,6 +286,10 @@ class TimerList extends BaseViewModel {
     var docs = await this.db.find({date: value.format('YYYY-MM-DD')})
     this.refreshJobTimerList(docs)
     this.refreshTimeSum()
+    $('.projectSelect').selectize({
+      
+      placeholder: 'Projekt auswählen...'
+    })
     footer.initChart(value)
   }
   
