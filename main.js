@@ -144,6 +144,9 @@ if (!gotTheLock) {
     mainWindow.on('hide', () => {
       tray.setHighlightMode('never')
     })
+
+    mainWindow.setFullScreen(true)
+    
     tray.setToolTip('TimeTracker')
   
     global.tray = tray
@@ -169,7 +172,8 @@ function createWindow() {
     height: 768,
     minWidth: 480,
     minHeight: 450,
-    icon: path.join(__dirname, 'icons/logo.ico')
+    icon: path.join(__dirname, 'icons/logo.ico'),
+    fullscreen: true
   })
 
   if (process.platform == 'win32') {
