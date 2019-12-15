@@ -7099,7 +7099,10 @@ a.text-dark:hover, a.text-dark:focus {
   border-color: gray !important; }
 
 .dateSelector {
-  height: auto;
+  border-bottom: #a4244a;
+  border-style: solid;
+  border-width: 0px 0px 2px 0px;
+  height: 40px;
   text-align: center;
   vertical-align: middle;
   background-color: rgba(255, 255, 255, 0.75);
@@ -7113,7 +7116,9 @@ a.text-dark:hover, a.text-dark:focus {
   font-size: 20px;
   border: 0px;
   width: 101px;
-  background-color: rgba(255, 255, 255, 0); }
+  background-color: rgba(255, 255, 255, 0);
+  font-family: Roboto;
+  font-weight: 300; }
 
 .datepicker {
   z-index: 9999999; }
