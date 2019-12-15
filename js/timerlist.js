@@ -244,6 +244,9 @@ class TimerList extends BaseViewModel {
     $('.projectSelect').selectize({
       placeholder: 'Projekt auswählen...'
     })
+    $('.jobtypeSelect').selectize({
+      placeholder: 'Art der Aufgabe auswählen...'
+    })
   }
 
   refreshJobTimerList(docs){
@@ -381,6 +384,7 @@ class TimerList extends BaseViewModel {
     dbEntry.isRunning(false)
     this.jobTimerList.push(dbEntry)
     this.createAutoComplete(dbEntry._id())
+    this.applySelectize()
     await this.saveAll()
   }
   
