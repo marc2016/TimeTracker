@@ -54,10 +54,10 @@ class JobTable extends BaseViewModel {
         super(views)
 
         this.columns = [
-            { title:"Datum", data: 'date()', filter: true},
-            { title:"Aufgabe", data: 'description()', "width": "80%", filter: true},
-            { title:"Projekt", data: 'projectId()', filter: true},
-            { title:"Art", data: 'jobtypeId()', filter: true},
+            { title:"Datum", data: 'date()', filter: true, "width": "65px"},
+            { title:"Aufgabe", data: 'description()', "width": "60%", filter: true},
+            { title:"Projekt", data: 'projectId()', filter: true, "width": "30%",},
+            { title:"Art", data: 'jobtypeId()', filter: true, "width": "10%",},
             { title:"Dauer", data: 'elapsedSeconds()'},
             { title:"Dauer (dez.)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
@@ -212,9 +212,13 @@ class JobTable extends BaseViewModel {
 
         var that = this
         this.jobTable = $('#jobs').DataTable({
+            scrollCollapse: true,
+            paging: false,
+            autoWidth: false,
             rowId: '_id()',
             columns: this.columns,
             fixedHeader: true,
+            scrollY: "58vh",
             lengthMenu: [ [15, 25, 50, -1], [15, 25, 50, "Alle"] ],
             columnDefs:[
                 {
