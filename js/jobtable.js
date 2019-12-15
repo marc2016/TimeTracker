@@ -372,7 +372,7 @@ class JobTable extends BaseViewModel {
 
         var that = this
         if(!this.onlyOnce){
-            $('#table thead tr').clone(true).appendTo( '#table thead' );
+            $('#table thead tr').first().clone(true).appendTo( '#table thead' );
             $('#table thead tr:eq(1) th').each( function (i) {
                 var title = $(this).text();
                 var column = _.find(that.columns, value => value.title == title)
