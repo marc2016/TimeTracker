@@ -2,7 +2,7 @@
   "build": {
     "appId": "de.timetracker.app",
     "productName": "TimeTracker",
-    "copyright": "Copyright © 2018 Marc Lammers",
+    "copyright": "Copyright © 2020 Marc Lammers",
     "extraResources": [
       "icons/logonotification.png"
     ],
