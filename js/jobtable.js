@@ -54,10 +54,10 @@ class JobTable extends BaseViewModel {
         super(views)
 
         this.columns = [
-            { title:"Datum", data: 'date()', filter: true, "width": "65px"},
-            { title:"Aufgabe", data: 'description()', "width": "60%", filter: true},
-            { title:"Projekt", data: 'projectId()', filter: true, "width": "30%",},
-            { title:"Art", data: 'jobtypeId()', filter: true, "width": "10%",},
+            { title:"Datum", data: 'date()', filter: true},
+            { title:"Aufgabe", data: 'description()',  filter: true},
+            { title:"Projekt", data: 'projectId()', filter: true},
+            { title:"Art", data: 'jobtypeId()', filter: true},
             { title:"Dauer", data: 'elapsedSeconds()'},
             { title:"Dauer (dez.)", data: 'formattedTimeDeciaml()', name:'durationDecimal'},
             { title:"Sync", data: 'lastSync()'},
@@ -149,7 +149,6 @@ class JobTable extends BaseViewModel {
     }
 
     async save(job){
-        console.log(job)
         await this.db.update({ _id:job._id() }, { $set: { billable: job.billable(), lastSync: job.lastSync(), jobNote: job.jobNote(), description: job.description(), elapsedSeconds: job.elapsedSeconds(), projectId: job.projectId(), jobtypeId: job.jobtypeId() } },{ multi: false })
         this.db.nedb.persistence.compactDatafile()
     }
@@ -231,12 +230,18 @@ class JobTable extends BaseViewModel {
                 },
                 {
                     targets:0,
+                    width: "80px",
                     render: function(data){
                         return moment(data, 'YYYY-MM-DD').format('DD.MM.YYYY');
                     }
                 },
                 {
+                    targets: 1,
+                    width: "40%",
+                },
+                {
                     targets: 2,
+                    width: "15%",
                     render: function(data){
                         var project = _.find(that.projectDocs, {'_id':data})
                         if(project){
@@ -246,6 +251,7 @@ class JobTable extends BaseViewModel {
                 },
                 {
                     targets: 3,
+                    
                     render: function(data){
                         var jobtype = _.find(that.jobtypeDocs, {'_id':data})
                         if(jobtype){
