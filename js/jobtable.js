@@ -77,6 +77,7 @@ class JobTable extends BaseViewModel {
         this.jobList = ko.observableArray()
         this.currentRange = ko.observable(moment().startOf('month').range('month'))
         this.itemToDelete = ko.observable()
+        this.inProgress = ko.observable(false)
 
         $('#jobtable').load('pages/jobtable.html', function(){
             this.hide()
@@ -181,6 +182,7 @@ class JobTable extends BaseViewModel {
     }
 
     async refreshTable(currentRange){
+        this.inProgress(true)
         this.projectDocs = await this.db_projects.find({})
         this.jobtypeDocs = await this.db_jobtypes.find({})
 
@@ -203,6 +205,7 @@ class JobTable extends BaseViewModel {
             utils.addMissingProperties(value)
         });
         ko.utils.arrayPushAll(this.jobList, tmpJobList())
+        this.inProgress(false)
     }
 
     async initTable(){

@@ -7,6 +7,22 @@ body {
     background: $secondcolor;
 }
 
+.progress-view {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.progress-icon {
+    color: $maincolor;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
 #mainContent {
     margin-top: $navbar-height;
     margin-bottom: $footerHeight;
