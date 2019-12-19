@@ -241,10 +241,10 @@ class TimerList extends BaseViewModel {
   }
 
   applySelectize() {
-    $('.projectSelect').selectize({
+    $('select.projectSelect').not('.selectized').selectize({
       placeholder: 'Projekt auswählen...'
     })
-    $('.jobtypeSelect').selectize({
+    $('select.jobtypeSelect').not('.selectized').selectize({
       placeholder: 'Art der Aufgabe auswählen...'
     })
   }
