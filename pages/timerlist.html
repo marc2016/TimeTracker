@@ -71,9 +71,6 @@
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntryWithCheck.bind($data,$parent), css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
                   <i class="fas fa-upload" title="Hochladen"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry.bind($data,$parent)">
-                    <i class="fas fa-external-link-alt" title="Übertragen"></i>
-                  </a>
                 <a class="btn btn-default collapsedBySize timer-btn" id="btnRemoveEntry" data-bind="click: $parent.removeItemModal.bind($data,$parent)">
                   <i class="fa fa-trash" title="Löschen"></i>
                 </a>
@@ -82,7 +79,6 @@
                   <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" data-bind="click: $parent.changeNoteClick.bind($data,$parent)" data-toggle="modal" data-target="#modalAddNote"><i class="fa fa-sticky-note" title="Notiz"></i> Notiz</a>
                     <a class="dropdown-item" data-bind="click: $parent.syncEntryWithCheck"><i class="fas fa-upload" title="Hochladen"></i> Hochladen</a>
-                    <a class="dropdown-item" data-bind="click: $parent.transferEntry.bind($data,$parent)"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
                     <a class="dropdown-item" data-bind="click: $parent.removeItem.bind($data,$parent)"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
                   </div>
                 </div>
