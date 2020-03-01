@@ -127,7 +127,7 @@ onload = function() {
   this.minimizeWindow = minimizeWindow
   this.maximizeWindow = maximizeWindow
 
-  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
+  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval'), 600000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
   
@@ -161,7 +161,7 @@ onload = function() {
   this.projectsSettingViewModel = new ProjectsSettings(['projectssettingsMainContent','modalAddNewProject'])
   this.jobtypeSettingsViewModel = new JobtypeSettings(['jobtypeSettingsMainContent','modalAddNewJobtype'])
   this.appSettingsViewModel = new AppSettings(['appsettingsMainContent'], store)
-  this.timerlistViewModel = new TimerList(['timerlistMainContent','modalAddNote','modalChangeJobDuration','modalDeleteEntry'], jobtimer)
+  this.timerlistViewModel = new TimerList(['timerlistMainContent','modalAddNote','modalChangeJobDuration','modalDeleteEntry','modalUploadEntryAgain'], jobtimer)
   this.jobtableViewModel = new jobtable(['jobtableMainContent', 'modalDelete'])
 
   this.pagemenu = ko.observableArray()

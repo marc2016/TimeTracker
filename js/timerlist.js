@@ -65,6 +65,7 @@ class TimerList extends BaseViewModel {
       this.currentJobForDuration = ko.observable()
       this.lastJobBeforeJobDurationChange = ko.observable()
       this.itemToDelete = ko.observable()
+      this.itemToSync = ko.observable()
       
       this.db = dataAccess.getDb('jobs')
       this.db_projects = dataAccess.getDb('projects')
@@ -167,7 +168,17 @@ class TimerList extends BaseViewModel {
 
   }
 
+  syncEntryWithCheck(that,data){
+    if(data.lastSync()) {
+      $('#modalUploadEntryAgain').modal('show')
+      that.itemToSync(data)
+    } else {
+      that.syncEntry(that, data)
+    }
+  }
+
   syncEntry(that,data){
+    $('#modalUploadEntryAgain').modal('hide')
     try{
       sync.syncJob(data,that.projectList,that.jobtypeList)
     } catch(error){

@@ -119,10 +119,10 @@ class AppSettings extends BaseViewModel {
 
             this.timerNotificationsInterval = ko.pureComputed({
                 read: function () {
-                    return this.store.get('timerNotificationsInterval', 600)/60;
+                    return this.store.get('timerNotificationsInterval', 600000)/60000;
                 },
                 write: function (value) {
-                    this.store.set('timerNotificationsInterval', value*60)
+                    this.store.set('timerNotificationsInterval', value*60000)
                 },
                 owner: this
             });
