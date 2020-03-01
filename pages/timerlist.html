@@ -68,7 +68,7 @@
                 <a class="btn btn-default collapsedBySize timer-btn" id="btnAddNote" data-toggle="modal" data-target="#modalAddNote" data-bind="click: $parent.changeNoteClick.bind($data,$parent)">
                   <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
-                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry.bind($data,$parent), css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
+                <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntryWithCheck.bind($data,$parent), css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
                   <i class="fas fa-upload" title="Hochladen"></i>
                 </a>
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry.bind($data,$parent)">
@@ -81,7 +81,7 @@
                   <i class="fa fa-angle-down" title="Mehr"></i>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" data-bind="click: $parent.changeNoteClick.bind($data,$parent)" data-toggle="modal" data-target="#modalAddNote"><i class="fa fa-sticky-note" title="Notiz"></i> Notiz</a>
-                    <a class="dropdown-item" data-bind="click: $parent.syncEntry"><i class="fas fa-upload" title="Hochladen"></i> Hochladen</a>
+                    <a class="dropdown-item" data-bind="click: $parent.syncEntryWithCheck"><i class="fas fa-upload" title="Hochladen"></i> Hochladen</a>
                     <a class="dropdown-item" data-bind="click: $parent.transferEntry.bind($data,$parent)"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
                     <a class="dropdown-item" data-bind="click: $parent.removeItem.bind($data,$parent)"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
                   </div>
@@ -109,6 +109,25 @@
       <div class="modal-footer" data-bind="with: itemToDelete">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
         <button type="button" class="btn btn-primary" data-bind="click: $parent.removeItem.bind($data,$parent)">Ja</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalUploadEntryAgain" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Warnung</h5>
+      </div>
+      <div class="modal-body">
+        <p>Soll der Eintrag nochmal hochgeladen werden?
+          <br>Eintrag wurde bereits hochgeladen und befindet sich dann doppelt im externen System.</p>
+      </div>
+      <div class="modal-footer" data-bind="with: itemToSync">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nein</button>
+        <button type="button" class="btn btn-primary" data-bind="click: $parent.syncEntry.bind($data,$parent)">Ja</button>
       </div>
     </div>
   </div>
