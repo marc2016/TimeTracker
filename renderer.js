@@ -260,7 +260,7 @@ function timerUpdateNotifier(updateValue){
     return
   }
 
-  var iconPath = path.join(__dirname, "../icons/logo.png")
+  var iconPath = path.join(__dirname, "icons/logonotification.png")
   var jobDescription = updateValue.jobDescription
   if(!jobDescription){
     jobDescription = "Unbenannte Aufgabe"
