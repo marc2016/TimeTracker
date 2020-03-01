@@ -69,7 +69,7 @@
                   <i class="fa fa-sticky-note" title="Notiz"></i>
                 </a>
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.syncEntry.bind($data,$parent), css: { disabled: !jobtypeId() || !projectId() || elapsedSeconds() <= 0 || !description() }">
-                  <i class="fas fa-sync-alt" title="Synchronisieren"></i>
+                  <i class="fas fa-upload" title="Hochladen"></i>
                 </a>
                 <a class="btn btn-default collapsedBySize timer-btn" data-bind="click: $parent.transferEntry.bind($data,$parent)">
                     <i class="fas fa-external-link-alt" title="Übertragen"></i>
@@ -81,7 +81,7 @@
                   <i class="fa fa-angle-down" title="Mehr"></i>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" data-bind="click: $parent.changeNoteClick.bind($data,$parent)" data-toggle="modal" data-target="#modalAddNote"><i class="fa fa-sticky-note" title="Notiz"></i> Notiz</a>
-                    <a class="dropdown-item" data-bind="click: $parent.syncEntry"><i class="fas fa-sync-alt" title="Synchronisieren"></i> Synchronisieren</a>
+                    <a class="dropdown-item" data-bind="click: $parent.syncEntry"><i class="fas fa-upload" title="Hochladen"></i> Hochladen</a>
                     <a class="dropdown-item" data-bind="click: $parent.transferEntry.bind($data,$parent)"><i class="fas fa-external-link-alt" title="Übertragen"></i> Übertragen</a>
                     <a class="dropdown-item" data-bind="click: $parent.removeItem.bind($data,$parent)"><i class="fa fa-trash" title="Löschen"></i> Löschen</a>
                   </div>
