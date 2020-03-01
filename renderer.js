@@ -127,7 +127,7 @@ onload = function() {
   this.minimizeWindow = minimizeWindow
   this.maximizeWindow = maximizeWindow
 
-  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval')*1000, 10*1000*60)).subscribe(timerUpdateNotifier)
+  jobtimer.timeSignal.pipe(auditTime(store.get('timerNotificationsInterval'), 600000)).subscribe(timerUpdateNotifier)
   
   $('#modals').load("pages/modals.html")
   
