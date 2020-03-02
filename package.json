@@ -32,7 +32,8 @@
     "start": "npm run sass && electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "build"
+    "release": "build",
+    "deploy": "electron-builder build --win --publish always"
   },
   "repository": {
     "type": "git",
