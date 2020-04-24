@@ -39,8 +39,8 @@ class ProcasSync {
         var url = buildUrl(baseUrl, {
             path: 'auth/user',
             queryParams: {
-                accountName: user,
-                passwort: password
+                accountName: this._getBase64String(user),
+                passwort: this._getBase64String(password)
             }
         });
 
@@ -177,6 +177,11 @@ class ProcasSync {
 
     handleResponseSyncJob(data,response){
         return
+    }
+
+    _getBase64String(value) {
+        var base64Value = window.btoa(value)
+        return base64Value.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
     }
   }
   const instance = new ProcasSync();
