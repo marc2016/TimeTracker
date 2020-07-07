@@ -45,7 +45,7 @@
   "author": "Marc Lammers",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^4.0.0-beta.7",
+    "electron": "^7.2.4",
     "electron-builder": "^20.28.4"
   },
   "dependencies": {
